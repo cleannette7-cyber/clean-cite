@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Avant / Après nettoyage à Bobigny | Clean-Cité Île-de-France</title>
+<meta name="description" content="Découvrez les interventions avant/après Clean-Cité : nettoyage de chantier, remise en état, bureaux, vitrines, tapis, canapés, terrasses et parties communes à Bobigny et en Île-de-France.">
+<link rel="canonical" href="https://clean-cite.org/avant-apres.html">
+<meta name="robots" content="index, follow">
+
+<link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
+<link rel="shortcut icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
+<link rel="apple-touch-icon" href="/images/favicon-clean-cite.png?v=4">
+
+<meta property="og:title" content="Avant / Après | Clean-Cité">
+<meta property="og:description" content="Réalisations de nettoyage professionnel Clean-Cité à Bobigny et en Île-de-France.">
+<meta property="og:url" content="https://clean-cite.org/avant-apres.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://clean-cite.org/images/logo-clean-cite.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --navy:#1a2f5e;
+  --navy-dark:#0f1e3d;
+  --orange:#f47920;
+  --blue:#2b6cb0;
+  --light:#f8f9fc;
+  --gray:#6b7280;
+  --light-gray:#e5e7eb;
+  --white:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  color:var(--navy);
+  background:var(--light);
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+
+/* ===== NAV ===== */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:900;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:10px 40px;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  box-shadow:0 2px 20px rgba(0,0,0,.08);
+}
+.nav-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.nav-city-logo{
+  height:54px;
+  width:auto;
+  display:block;
+  object-fit:contain;
+}
+.nav-worker{
+  height:58px;
+  width:auto;
+  display:block;
+  object-fit:contain;
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;
+  letter-spacing:2px;
+  color:var(--navy);
+  white-space:nowrap;
+}
+.nav-logo span{color:var(--orange);}
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+.nav-right a{
+  font-size:.88rem;
+  font-weight:800;
+  color:var(--navy);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  white-space:nowrap;
+  transition:color .2s ease;
+}
+.nav-right a:hover{color:var(--orange);}
+.nav-cta{
+  background:var(--orange);
+  color:white!important;
+  padding:10px 22px;
+  border-radius:50px;
+  box-shadow:0 4px 16px rgba(244,121,32,.36);
+}
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:8px;
+}
+.hamburger span{
+  display:block;
+  width:25px;
+  height:2.5px;
+  background:var(--navy);
+  border-radius:2px;
+}
+
+/* ===== HERO STYLE COMME PAGE TERRASSE ===== */
+.hero{
+  min-height:100vh;
+  padding:132px 60px 80px;
+  background:
+    radial-gradient(circle at right top, rgba(244,121,32,.16), transparent 34%),
+    linear-gradient(135deg,#ffffff 0%,#f8f9fc 54%,#fff5ed 100%);
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+  align-items:center;
+  gap:64px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  bottom:-2px;
+  left:0;
+  right:0;
+  height:85px;
+  background:var(--light);
+  clip-path:ellipse(60% 100% at 50% 100%);
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:820px;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:white;
+  color:var(--orange);
+  font-size:.82rem;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:9px 18px;
+  border-radius:999px;
+  box-shadow:0 12px 34px rgba(26,47,94,.08);
+  margin-bottom:28px;
+}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3.6rem,8vw,6.4rem);
+  line-height:.92;
+  letter-spacing:3px;
+  color:var(--navy);
+  margin-bottom:26px;
+}
+.hero h1 span{color:var(--orange);}
+.hero-sub{
+  max-width:720px;
+  font-size:1.08rem;
+  line-height:1.85;
+  color:#30415f;
+  margin-bottom:34px;
+}
+.hero-btns{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.btn-primary,
+.btn-outline,
+.btn-dark{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:15px 32px;
+  font-size:1rem;
+  font-weight:900;
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn-primary{
+  background:var(--orange);
+  color:white;
+  box-shadow:0 10px 28px rgba(244,121,32,.35);
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(244,121,32,.45);}
+.btn-outline{
+  background:white;
+  color:var(--navy);
+  border:2px solid rgba(26,47,94,.9);
+}
+.btn-outline:hover{transform:translateY(-2px);}
+.btn-dark{
+  background:var(--navy);
+  color:white;
+}
+.hero-visual{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.hero-card-visual{
+  width:min(520px,100%);
+  min-height:520px;
+  background:white;
+  border-radius:34px;
+  padding:44px 38px 36px;
+  box-shadow:0 28px 75px rgba(26,47,94,.17);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:26px;
+  overflow:hidden;
+  position:relative;
+}
+.hero-card-visual::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top right, rgba(244,121,32,.12), transparent 42%);
+  pointer-events:none;
+}
+.hero-logo-img{
+  width:70%;
+  max-width:260px;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  position:relative;
+  z-index:2;
+}
+.hero-agent-img{
+  width:78%;
+  max-width:330px;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  position:relative;
+  z-index:2;
+  filter:drop-shadow(0 18px 28px rgba(0,0,0,.22));
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  padding:90px 60px;
+}
+.intro{
+  max-width:820px;
+  margin:0 auto 46px;
+  text-align:center;
+}
+.section-label{
+  display:block;
+  color:var(--orange);
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4rem);
+  line-height:1;
+  letter-spacing:2px;
+  color:var(--navy);
+  margin-bottom:16px;
+}
+.section-sub{
+  color:var(--gray);
+  line-height:1.8;
+  font-size:1rem;
+}
+
+/* ===== GALERIE AVANT/APRÈS ===== */
+.gallery-status{
+  max-width:1000px;
+  margin:0 auto 26px;
+  background:white;
+  border:1px solid rgba(244,121,32,.22);
+  border-left:5px solid var(--orange);
+  border-radius:18px;
+  padding:18px 22px;
+  color:var(--gray);
+  line-height:1.65;
+  box-shadow:0 12px 30px rgba(26,47,94,.06);
+}
+.gallery-status strong{color:var(--navy);}
+.ba-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
+  gap:26px;
+  max-width:1180px;
+  margin:0 auto;
+}
+.ba-card{
+  background:white;
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 18px 55px rgba(26,47,94,.10);
+  border:1px solid rgba(26,47,94,.07);
+}
+.ba-head{
+  padding:24px 24px 12px;
+}
+.ba-head h3{
+  font-size:1.15rem;
+  font-weight:900;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.ba-head p{
+  color:var(--gray);
+  font-size:.92rem;
+  line-height:1.65;
+}
+.ba-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  padding:0 24px 18px;
+}
+.ba-chip{
+  display:inline-flex;
+  align-items:center;
+  background:#f1f5f9;
+  color:var(--navy);
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:.78rem;
+  font-weight:900;
+}
+.ba-chip.orange{
+  background:#fff7ed;
+  color:var(--orange);
+}
+.ba-photos{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:0 18px 22px;
+}
+.ba-photo{
+  height:230px;
+  border-radius:18px;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(145deg,#e7ebf2,#f8fafc);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.ba-photo.after{
+  background:linear-gradient(145deg,#fff7ed,#ffffff);
+}
+.ba-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.ba-photo span{
+  position:absolute;
+  top:12px;
+  left:12px;
+  z-index:2;
+  background:rgba(26,47,94,.92);
+  color:white;
+  border-radius:50px;
+  padding:6px 12px;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.ba-photo.after span{background:var(--orange);}
+.photo-empty{
+  padding:20px;
+  color:#64748b;
+  font-weight:900;
+  text-align:center;
+  font-size:.9rem;
+}
+.service-fallback{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  max-width:1180px;
+  margin:24px auto 0;
+}
+.service-card{
+  background:white;
+  border-radius:22px;
+  padding:28px 26px;
+  border:1px solid rgba(26,47,94,.08);
+  box-shadow:0 12px 34px rgba(26,47,94,.07);
+}
+.service-icon{
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(244,121,32,.12);
+  color:var(--orange);
+  font-size:1.45rem;
+  margin-bottom:16px;
+}
+.service-card h3{
+  font-size:1.05rem;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.service-card p{
+  color:var(--gray);
+  line-height:1.65;
+  font-size:.9rem;
+}
+
+/* ===== PROCESS ===== */
+.process{
+  background:white;
+}
+.steps{
+  max-width:1100px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+.step{
+  background:var(--light);
+  border-radius:22px;
+  padding:28px;
+  border:1px solid rgba(26,47,94,.06);
+}
+.step-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.4rem;
+  color:var(--orange);
+  line-height:1;
+  margin-bottom:12px;
+}
+.step h3{
+  font-size:1.05rem;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.step p{
+  color:var(--gray);
+  line-height:1.65;
+  font-size:.92rem;
+}
+
+/* ===== CTA ===== */
+.cta{
+  padding:86px 60px;
+  background:linear-gradient(135deg,var(--navy),var(--navy-dark));
+  text-align:center;
+}
+.cta h2{
+  font-family:'Bebas Neue',sans-serif;
+  color:white;
+  font-size:clamp(2.4rem,5vw,3.8rem);
+  letter-spacing:2px;
+  line-height:1;
+  margin-bottom:14px;
+}
+.cta p{
+  color:rgba(255,255,255,.72);
+  max-width:720px;
+  margin:0 auto 28px;
+  line-height:1.75;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  background:var(--navy);
+  color:rgba(255,255,255,.68);
+  padding:34px 60px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:16px;
+}
+footer .nav-logo{color:white;font-size:1.4rem;}
+footer p{font-size:.82rem;}
+
+/* ===== WHATSAPP ===== */
+.whatsapp-float{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:2000;
+  background:#25D366;
+  color:white;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 14px 35px rgba(0,0,0,.25);
+  font-size:1.75rem;
+  font-weight:900;
+  transition:transform .2s ease;
+}
+.whatsapp-float:hover{transform:translateY(-3px);}
+.whatsapp-float svg{
+  width:34px;
+  height:34px;
+  display:block;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1020px){
+  .hero{
+    grid-template-columns:1fr;
+    gap:42px;
+    padding:120px 24px 72px;
+  }
+  .hero-content{max-width:850px;}
+  .hero-card-visual{
+    width:min(430px,100%);
+    min-height:420px;
+    padding:34px 28px;
+  }
+  .hero-logo-img{max-width:220px;}
+  .hero-agent-img{max-width:290px;}
+  .steps{grid-template-columns:1fr;}
+}
+@media(max-width:860px){
+  nav{padding:10px 20px;}
+  .nav-city-logo{height:42px;}
+  .nav-worker{height:46px;}
+  .nav-logo{font-size:1.5rem;}
+  .hamburger{display:flex;}
+  .nav-right{
+    display:none;
+    position:fixed;
+    top:70px;
+    left:0;
+    right:0;
+    background:white;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0;
+    padding:16px 20px 24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+  }
+  .nav-right.open{display:flex;}
+  .nav-right a{
+    padding:13px 0;
+    border-bottom:1px solid var(--light-gray);
+  }
+  .nav-cta{
+    margin-top:12px;
+    text-align:center;
+    padding:14px;
+  }
+  .section{padding:64px 20px;}
+  .ba-photos{grid-template-columns:1fr;}
+  .ba-photo{height:220px;}
+  .cta{padding:70px 20px;}
+  footer{padding:28px 20px;flex-direction:column;text-align:center;}
+}
+@media(max-width:520px){
+  .nav-worker{display:none;}
+  .hero h1{font-size:3.4rem;}
+  .hero-card-visual{min-height:350px;padding:28px 22px;}
+  .hero-logo-img{max-width:190px;}
+  .hero-agent-img{max-width:250px;}
+  .hero-btns{flex-direction:column;align-items:stretch;}
+  .btn-primary,.btn-outline,.btn-dark{width:100%;}
+  .whatsapp-float{right:16px;bottom:16px;width:56px;height:56px;}
+  .whatsapp-float svg{width:31px;height:31px;}
+}
+
+
+/* ===== PATCH GLOBAL V2 : HERO PREMIUM HARMONISÉ ===== */
+.nav-brand .nav-worker{display:none!important;}
+.hero-card-visual{
+  position:relative!important;
+  width:min(470px,100%)!important;
+  min-height:500px!important;
+  border-radius:42px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(245,249,252,.92))!important;
+  box-shadow:0 34px 85px rgba(0,0,0,.24)!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.75)!important;
+  isolation:isolate!important;
+  display:block!important;
+  padding:0!important;
+}
+.hero-card-visual:before{content:""!important;position:absolute!important;width:360px!important;height:360px!important;border-radius:50%!important;right:-100px!important;bottom:-85px!important;background:radial-gradient(circle,rgba(244,121,32,.34),rgba(244,121,32,.04) 68%)!important;z-index:0!important;}
+.hero-card-visual:after{content:""!important;position:absolute!important;width:260px!important;height:260px!important;border-radius:50%!important;left:-90px!important;top:-80px!important;background:radial-gradient(circle,rgba(43,108,176,.25),rgba(43,108,176,.04) 70%)!important;z-index:0!important;}
+.hero-card-visual .hero-logo-img{display:none!important;}
+.hero-card-visual .hero-agent-img{position:absolute!important;right:12px!important;bottom:10px!important;max-width:390px!important;width:88%!important;height:auto!important;object-fit:contain!important;z-index:2!important;filter:drop-shadow(0 24px 28px rgba(26,47,94,.28))!important;}
+.hero-mini-card{position:absolute!important;z-index:3!important;background:white!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 14px 35px rgba(26,47,94,.16)!important;border:1px solid rgba(26,47,94,.08)!important;}
+.hero-mini-card strong{display:block!important;font-size:.84rem!important;font-weight:900!important;color:var(--navy,#1a2f5e)!important;}
+.hero-mini-card span{display:block!important;font-size:.72rem!important;color:var(--gray,#6b7280)!important;margin-top:2px!important;}
+.hero-mini-card.card-a{left:24px!important;top:34px!important;}
+.hero-mini-card.card-b{left:26px!important;bottom:54px!important;}
+.hero-mini-card.card-c{right:26px!important;top:160px!important;}
+.hero-shape-line{position:absolute!important;z-index:1!important;left:48px!important;right:48px!important;bottom:92px!important;height:14px!important;border-radius:99px!important;background:linear-gradient(90deg,var(--orange,#f47920),rgba(244,121,32,.16))!important;transform:rotate(-6deg)!important;}
+.hero-spark{position:absolute!important;z-index:1!important;width:10px!important;height:10px!important;border-radius:50%!important;background:var(--orange,#f47920)!important;box-shadow:0 0 0 8px rgba(244,121,32,.12)!important;}
+.hero-spark.s1{top:118px!important;right:58px!important}.hero-spark.s2{bottom:160px!important;left:80px!important;background:var(--blue,#2b6cb0)!important;box-shadow:0 0 0 8px rgba(43,108,176,.10)!important}
+@media(max-width:980px){.hero-card-visual{min-height:430px!important;width:min(420px,100%)!important}.hero-card-visual .hero-agent-img{max-width:340px!important}.hero-mini-card.card-c{display:none!important}}
+@media(max-width:520px){.hero-card-visual{min-height:380px!important;border-radius:30px!important}.hero-card-visual .hero-agent-img{max-width:295px!important;right:-2px!important}.hero-mini-card{padding:11px 12px!important}.hero-mini-card.card-a{left:14px!important;top:18px!important}.hero-mini-card.card-b{left:14px!important;bottom:34px!important}.hero-shape-line{left:25px!important;right:25px!important;bottom:72px!important}}
+
+
+
+/* ===== PATCH AVANT/APRÈS : CARTES VISUELLES ANIMÉES ===== */
+.service-card.photo-service{padding:0;overflow:hidden;background:white;}
+.service-card.photo-service .service-visual{height:220px;position:relative;overflow:hidden;background:#eaf0f7;}
+.service-card.photo-service .service-visual span{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation:serviceFade 8s infinite;}
+.service-card.photo-service .service-visual span:nth-child(2){animation-delay:4s;}
+.service-card.photo-service .service-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,50,.05),rgba(10,20,50,.60));}
+.service-card.photo-service .service-content{padding:24px;}
+.service-card.photo-service .service-tag{position:absolute;left:16px;bottom:14px;z-index:2;color:white;font-weight:900;font-size:.9rem;text-shadow:0 2px 10px rgba(0,0,0,.35);}
+@keyframes serviceFade{0%,44%{opacity:1;transform:scale(1.02)}50%,100%{opacity:0;transform:scale(1.08)}}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand" aria-label="Accueil Clean-Cité">
+    <img src="images/logo-clean-cite.png" class="nav-city-logo" alt="Logo Clean-Cité">
+    <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
+  </a>
+
+  <button class="hamburger" onclick="toggleMobile()" aria-label="Ouvrir le menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="nav-right" id="nav-right">
+    <a href="/espace-client.html" onclick="closeMobile()">Espace client</a>
+    <a href="index.html#services" onclick="closeMobile()">Services</a>
+    <a href="index.html#abonnement" onclick="closeMobile()">Abonnements</a>
+    <a href="avant-apres.html" onclick="closeMobile()">Avant / Après</a>
+    <a href="planning.html" onclick="closeMobile()">Planning</a>
+    <a href="index.html#contact" onclick="closeMobile()">Contact</a>
+    <a href="index.html#contact" class="nav-cta" onclick="closeMobile()">Demander un devis</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✦ Avant / Après — Bobigny 93 — Île-de-France</div>
+
+    <h1>AVANT / <span>APRÈS</span><br>INTERVENTIONS</h1>
+
+    <p class="hero-sub">
+      Découvrez les réalisations Clean-Cité : nettoyage de chantier en cours, fin de chantier,
+      remise en état, bureaux, vitrines, tapis, canapés, terrasses, parties communes et locaux professionnels.
+      Les photos publiées depuis l’espace admin s’affichent automatiquement sur cette page.
+    </p>
+
+    <div class="hero-btns">
+      <a href="index.html#contact" class="btn-primary">Demander un devis</a>
+      <a href="tel:0766536154" class="btn-outline">07 66 53 61 54</a>
+    </div>
+  </div>
+
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-card-visual">
+      <div class="hero-mini-card card-a"><strong>Devis rapide</strong><span>Réponse claire sous 24h</span></div>
+      <div class="hero-mini-card card-b"><strong>Bobigny · 93</strong><span>Intervention Île-de-France</span></div>
+      <div class="hero-mini-card card-c"><strong>Matériel pro</strong><span>Chantier, bureaux, vitres</span></div>
+      <span class="hero-spark s1"></span>
+      <span class="hero-spark s2"></span>
+      <span class="hero-shape-line"></span>
+      <img src="images/agent-nettoyage.png" class="hero-agent-img" alt="Agent Clean-Cité avec matériel professionnel" width="420" height="420">
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="section">
+  <div class="intro">
+    <span class="section-label">Réalisations Clean-Cité</span>
+    <h2 class="section-title">Des espaces remis au propre</h2>
+    <p class="section-sub">
+      Cette page présente les transformations réalisées par Clean-Cité. Dès que vous ajoutez une intervention
+      dans l’espace admin avec une photo avant et une photo après, elle apparaît automatiquement ici.
+    </p>
+  </div>
+
+  <div id="galleryStatus" class="gallery-status" style="display:none;"></div>
+  <div class="ba-grid" id="interventionsGrid"></div>
+
+  <div class="service-fallback" id="fallbackServices">
+    <article class="service-card photo-service">
+      <div class="service-visual"><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_101029_poty4l.jpg')"></span><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_102722_i3wtlf.jpg')"></span><div class="service-tag">Avant / Après — Fin de chantier</div></div>
+      <div class="service-content"><h3>Fin de chantier</h3><p>Photos avant/après de remises au propre après travaux : poussières, sols, surfaces et finitions.</p></div>
+    </article>
+    <article class="service-card photo-service">
+      <div class="service-visual"><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_100159_x4uxyx.jpg')"></span><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_100704_dd9uv7.jpg')"></span><div class="service-tag">Avant / Après — Bureaux & locaux</div></div>
+      <div class="service-content"><h3>Bureaux & locaux</h3><p>Entretien des espaces professionnels, sanitaires, sols, bureaux et zones de passage.</p></div>
+    </article>
+    <article class="service-card photo-service">
+      <div class="service-visual"><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779900561/1000079491_rcrinp.jpg')"></span><span style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779900319/20260519_134638_1_wem9qa.jpg')"></span><div class="service-tag">Avant / Après — Remise en état</div></div>
+      <div class="service-content"><h3>Remise en état</h3><p>Intervention approfondie après déménagement, travaux ou salissures importantes.</p></div>
+    </article>
+    <article class="service-card"><div class="service-icon">🪟</div><h3>Vitres & vitrines</h3><p>Nettoyage de surfaces vitrées accessibles pour commerces, bureaux et locaux professionnels.</p></article>
+    <article class="service-card"><div class="service-icon">🛋️</div><h3>Tapis, canapés & matelas</h3><p>Nettoyage textile en profondeur avec équipement professionnel adapté aux fibres.</p></article>
+    <article class="service-card"><div class="service-icon">🌿</div><h3>Terrasses & extérieurs</h3><p>Démoussage, nettoyage haute pression, balcons, cours, allées et espaces extérieurs.</p></article>
+  </div>
+</section>
+
+<section class="section process">
+  <div class="intro">
+    <span class="section-label">Comment ça fonctionne ?</span>
+    <h2 class="section-title">Une demande simple et rapide</h2>
+  </div>
+
+  <div class="steps">
+    <article class="step">
+      <div class="step-num">01</div>
+      <h3>Vous envoyez votre besoin</h3>
+      <p>Décrivez le type de prestation, la ville, la surface et l’état du lieu. Vous pouvez aussi envoyer des photos par WhatsApp.</p>
+    </article>
+    <article class="step">
+      <div class="step-num">02</div>
+      <h3>Clean-Cité estime l’intervention</h3>
+      <p>Nous analysons le niveau de nettoyage, le matériel nécessaire, la durée et la fréquence si besoin.</p>
+    </article>
+    <article class="step">
+      <div class="step-num">03</div>
+      <h3>Intervention soignée</h3>
+      <p>L’équipe intervient avec méthode pour rendre vos espaces propres, présentables et prêts à être utilisés.</p>
+    </article>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Besoin d’une remise au propre ?</h2>
+  <p>
+    Clean-Cité intervient à Bobigny, Paris, en Seine-Saint-Denis et en Île-de-France
+    pour les syndics, bureaux, commerces, chantiers, terrasses et locaux professionnels.
+  </p>
+  <a href="index.html#contact" class="btn-primary">Demander mon devis</a>
+</section>
+
+</main>
+
+<footer>
+  <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
+  <p>© 2026 Clean-Cité — SIRET : 989 248 554 00010 — Nettoyage professionnel en Île-de-France.</p>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20un%20devis%20pour%20une%20prestation%20de%20nettoyage." target="_blank" rel="noopener" aria-label="Contacter Clean-Cité sur WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M16.01 3.2c-7.04 0-12.76 5.63-12.76 12.57 0 2.22.6 4.39 1.73 6.29L3.2 28.8l6.93-1.76a12.95 12.95 0 0 0 5.88 1.43c7.03 0 12.75-5.63 12.75-12.57S23.04 3.2 16.01 3.2Zm0 22.99c-1.89 0-3.74-.5-5.35-1.45l-.38-.22-4.1 1.04 1.08-3.91-.25-.4a10.16 10.16 0 0 1-1.55-5.48c0-5.68 4.73-10.3 10.55-10.3 5.81 0 10.54 4.62 10.54 10.3s-4.73 10.42-10.54 10.42Zm5.78-7.7c-.32-.16-1.88-.92-2.17-1.03-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1.01 1.23-.18.21-.37.24-.69.08-.32-.16-1.35-.49-2.58-1.55-.95-.84-1.6-1.87-1.79-2.19-.18-.31-.02-.48.14-.64.14-.14.32-.37.48-.56.16-.18.21-.31.32-.52.1-.21.05-.39-.03-.55-.08-.16-.71-1.69-.97-2.31-.26-.6-.52-.52-.71-.53h-.61c-.21 0-.55.08-.84.39-.29.31-1.1 1.06-1.1 2.58s1.13 3 1.29 3.21c.16.21 2.22 3.34 5.38 4.69.75.32 1.34.51 1.8.65.76.24 1.45.21 2 .13.61-.09 1.88-.76 2.14-1.49.26-.73.26-1.36.18-1.49-.08-.13-.29-.21-.61-.37Z"/>
+  </svg>
+</a>
+
+<script>
+function toggleMobile(){
+  const nav = document.getElementById('nav-right');
+  if(nav){ nav.classList.toggle('open'); }
+}
+function closeMobile(){
+  const nav = document.getElementById('nav-right');
+  if(nav){ nav.classList.remove('open'); }
+}
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, function(char){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char] || char;
+  });
+}
+function pickImage(value){
+  if(!value) return '';
+  if(Array.isArray(value)) return pickImage(value[0]);
+  if(typeof value === 'object'){
+    return pickImage(value.url || value.path || value.src || value.file || value.image);
+  }
+  return String(value).trim();
+}
+function normalizeUrl(src){
+  src = pickImage(src);
+  if(!src) return '';
+  if(src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) return src;
+  if(src.startsWith('/')) return src;
+  if(src.startsWith('images/') || src.startsWith('uploads/') || src.startsWith('data/')) return '/' + src;
+  return '/images/uploads/' + src;
+}
+function getField(item, names){
+  for(const name of names){
+    if(item && Object.prototype.hasOwnProperty.call(item, name) && item[name] !== undefined && item[name] !== null && item[name] !== ''){
+      return item[name];
+    }
+  }
+  return '';
+}
+function imageBlock(src, label, extraClass){
+  const finalSrc = normalizeUrl(src);
+  if(finalSrc){
+    return `<div class="ba-photo ${extraClass || ''}">
+      <span>${label}</span>
+      <img src="${escapeHtml(finalSrc)}" alt="${label} intervention Clean-Cité" loading="lazy">
+    </div>`;
+  }
+  return `<div class="ba-photo ${extraClass || ''}">
+    <span>${label}</span>
+    <div class="photo-empty">Visuel ${label.toLowerCase()} non disponible</div>
+  </div>`;
+}
+function normalizeItems(data){
+  if(Array.isArray(data)) return data;
+  if(data && Array.isArray(data.interventions)) return data.interventions;
+  if(data && Array.isArray(data.items)) return data.items;
+  if(data && Array.isArray(data.realisations)) return data.realisations;
+  if(data && Array.isArray(data.galerie)) return data.galerie;
+  return [];
+}
+function renderInterventions(items){
+  const grid = document.getElementById('interventionsGrid');
+  const fallback = document.getElementById('fallbackServices');
+  const status = document.getElementById('galleryStatus');
+
+  const published = normalizeItems(items).filter(function(item){
+    return item && item.publier !== false && item.published !== false && item.brouillon !== true;
+  });
+
+  const withImages = published.filter(function(item){
+    const before = getField(item, ['photo_avant','photoAvant','image_avant','avant','before','photo_before']);
+    const after = getField(item, ['photo_apres','photoAprès','photo_après','photoApres','image_apres','image_après','apres','après','after','photo_after']);
+    return normalizeUrl(before) || normalizeUrl(after);
+  });
+
+  if(!withImages.length){
+    grid.innerHTML = '';
+    fallback.style.display = 'grid';
+    status.style.display = 'block';
+    status.innerHTML = '<strong>Galerie en cours de publication :</strong> les photos avant/après ajoutées dans l’espace admin apparaîtront ici automatiquement après publication Netlify.';
+    return;
+  }
+
+  fallback.style.display = 'none';
+  status.style.display = 'none';
+
+  grid.innerHTML = withImages.map(function(item){
+    const title = escapeHtml(getField(item, ['titre','title','nom','name']) || 'Intervention Clean-Cité');
+    const description = escapeHtml(getField(item, ['description','texte','details','content']) || 'Intervention de nettoyage professionnel réalisée par Clean-Cité.');
+    const ville = escapeHtml(getField(item, ['ville','city','localisation','zone']) || 'Île-de-France');
+    const type = escapeHtml(getField(item, ['type_prestation','type','service','categorie','catégorie']) || 'Nettoyage');
+    const date = escapeHtml(getField(item, ['date','jour']) || '');
+    const before = getField(item, ['photo_avant','photoAvant','image_avant','avant','before','photo_before']);
+    const after = getField(item, ['photo_apres','photoAprès','photo_après','photoApres','image_apres','image_après','apres','après','after','photo_after']);
+
+    return `<article class="ba-card">
+      <div class="ba-head">
+        <h3>${title}</h3>
+        <p>${description}</p>
+      </div>
+      <div class="ba-meta">
+        <span class="ba-chip orange">${type}</span>
+        <span class="ba-chip">${ville}</span>
+        ${date ? `<span class="ba-chip">${date}</span>` : ''}
+      </div>
+      <div class="ba-photos">
+        ${imageBlock(before, 'Avant', '')}
+        ${imageBlock(after, 'Après', 'after')}
+      </div>
+    </article>`;
+  }).join('');
+}
+async function loadInterventions(){
+  const urls = ['/data/interventions.json','data/interventions.json','/interventions.json','interventions.json'];
+  for(const url of urls){
+    try{
+      const response = await fetch(url, {cache:'no-store'});
+      if(!response.ok) continue;
+      const data = await response.json();
+      renderInterventions(data);
+      return;
+    }catch(error){}
+  }
+  renderInterventions([]);
+}
+loadInterventions();
+</script>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+if(window.netlifyIdentity){
+  window.netlifyIdentity.on('init', function(user){
+    if(!user){
+      window.netlifyIdentity.on('login', function(){ document.location.href = '/admin/'; });
+    }
+  });
+}
+</script>
+
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function () {
+  function hasIdentityToken() {
+    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
+  }
+  if (!window.netlifyIdentity) return;
+
+  window.netlifyIdentity.on("init", function (user) {
+    if (hasIdentityToken()) {
+      window.netlifyIdentity.open();
+    }
+    if (!user) {
+      window.netlifyIdentity.on("login", function () {
+        window.location.href = "/admin/";
+      });
+    }
+  });
+
+  window.netlifyIdentity.on("close", function () {
+    if (hasIdentityToken()) {
+      window.location.href = "/admin/";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

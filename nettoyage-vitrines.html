@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nettoyage de vitrines à Bobigny et Île-de-France | Clean-Cité</title>
+  <meta name="description" content="Clean-Cité réalise le nettoyage de vitrines de commerces, bureaux et locaux professionnels à Bobigny, Paris et en Île-de-France." />
+  <link rel="canonical" href="https://clean-cite.org/nettoyage-vitrines.html" />
+  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
+  <style>
+
+:root{
+  --blue:#062d59;
+  --blue-2:#0c3f78;
+  --orange:#f47b20;
+  --orange-2:#ff9b32;
+  --text:#12233d;
+  --muted:#617086;
+  --bg:#f6f9fd;
+  --white:#ffffff;
+  --line:rgba(12,63,120,.13);
+  --shadow:0 20px 60px rgba(6,45,89,.14);
+  --radius:26px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,#f7fbff 0%,#ffffff 55%,#f7fbff 100%);
+}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.container{width:min(1180px,92%);margin:auto}
+.topbar{
+  background:var(--white);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 8px 30px rgba(6,45,89,.06);
+}
+.nav{
+  width:min(1260px,94%);
+  margin:auto;
+  height:86px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:var(--blue);
+}
+.brand img{width:210px;max-height:68px;object-fit:contain}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:26px;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.nav-links a{color:var(--blue);opacity:.92}
+.nav-links a:hover,.nav-links a.active{color:var(--orange)}
+.dropdown{position:relative}
+.dropbtn{cursor:pointer;display:flex;align-items:center;gap:6px}
+.dropdown-menu{
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+  min-width:280px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:10px;
+}
+.dropdown:hover .dropdown-menu{display:block}
+.dropdown-menu a{
+  display:block;
+  padding:12px 14px;
+  border-radius:12px;
+  text-transform:none;
+  letter-spacing:0;
+  font-size:14px;
+  color:var(--text);
+}
+.dropdown-menu a:hover{background:#f3f7fc;color:var(--orange)}
+.nav-cta{
+  background:linear-gradient(135deg,var(--orange),var(--orange-2));
+  color:#fff !important;
+  padding:13px 22px;
+  border-radius:999px;
+  box-shadow:0 10px 24px rgba(244,123,32,.25);
+}
+.menu-btn{
+  display:none;
+  border:0;
+  background:var(--blue);
+  color:white;
+  border-radius:14px;
+  padding:11px 14px;
+  font-size:20px;
+}
+.mobile-menu{
+  display:none;
+  padding:0 4% 18px;
+  background:#fff;
+  border-top:1px solid var(--line);
+}
+.mobile-menu a{
+  display:block;
+  padding:12px 8px;
+  font-weight:800;
+  color:var(--blue);
+  border-bottom:1px solid rgba(6,45,89,.07);
+}
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:72px 0 62px;
+  background:
+    radial-gradient(circle at 78% 18%,rgba(244,123,32,.16),transparent 28%),
+    radial-gradient(circle at 20% 18%,rgba(12,63,120,.12),transparent 32%),
+    linear-gradient(135deg,#f6fbff 0%,#ffffff 48%,#eff6ff 100%);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  left:-5%;
+  right:-5%;
+  bottom:-1px;
+  height:72px;
+  background:#fff;
+  border-radius:50% 50% 0 0/100% 100% 0 0;
+}
+.hero-grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:54px;
+  align-items:center;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  color:#9a4a1e;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:0 8px 24px rgba(6,45,89,.07);
+  font-size:13px;
+}
+h1{
+  margin:28px 0 18px;
+  font-size:clamp(44px,6vw,82px);
+  line-height:.95;
+  letter-spacing:-.035em;
+  text-transform:uppercase;
+  color:var(--blue);
+  text-shadow:0 4px 0 rgba(6,45,89,.08);
+}
+h1 span{color:var(--orange)}
+.hero-sub{
+  max-width:660px;
+  color:#31445f;
+  font-size:19px;
+  line-height:1.75;
+  font-weight:600;
+}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;margin:30px 0 34px}
+.btn-primary,.btn-outline{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+  padding:15px 24px;
+  border-radius:999px;
+  font-weight:900;
+  transition:.2s ease;
+}
+.btn-primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--orange),var(--orange-2));
+  box-shadow:0 14px 30px rgba(244,123,32,.25);
+}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-outline{
+  color:var(--blue);
+  background:#fff;
+  border:2px solid rgba(6,45,89,.18);
+}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange)}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:22px;
+  border-top:1px solid var(--line);
+  padding-top:26px;
+  max-width:620px;
+}
+.stat-num{
+  display:block;
+  color:var(--orange);
+  font-size:34px;
+  font-weight:1000;
+  line-height:1;
+}
+.stat-label{
+  display:block;
+  margin-top:8px;
+  color:#50627a;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.visual-card{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(6,45,89,.12);
+  border-radius:36px;
+  box-shadow:var(--shadow);
+  padding:34px;
+  min-height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.agent-card{
+  width:min(390px,100%);
+  min-height:340px;
+  border-radius:28px;
+  background:linear-gradient(180deg,#ffffff,#eef5fd);
+  border:1px solid rgba(6,45,89,.10);
+  box-shadow:inset 0 -20px 40px rgba(6,45,89,.05);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
+.agent-card .logo-mini{width:160px;margin-bottom:8px}
+.agent-card .agent{width:230px;object-fit:contain}
+.section{padding:78px 0}
+.section-title{text-align:center;max-width:860px;margin:0 auto 44px}
+.eyebrow{
+  display:inline-block;
+  color:var(--orange);
+  font-size:13px;
+  text-transform:uppercase;
+  font-weight:1000;
+  letter-spacing:.12em;
+  margin-bottom:12px;
+}
+h2{
+  margin:0;
+  color:var(--blue);
+  font-size:clamp(32px,4vw,54px);
+  line-height:1.05;
+  letter-spacing:-.025em;
+}
+.section-title p{
+  margin:16px auto 0;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.7;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:26px;
+  box-shadow:0 12px 34px rgba(6,45,89,.07);
+  min-height:220px;
+}
+.icon{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(244,123,32,.14),rgba(6,45,89,.08));
+  font-size:26px;
+  margin-bottom:18px;
+}
+.card h3{margin:0 0 10px;color:var(--blue);font-size:20px}
+.card p{margin:0;color:#5f6e82;line-height:1.65}
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  align-items:stretch;
+}
+.panel{
+  border-radius:var(--radius);
+  padding:34px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 14px 40px rgba(6,45,89,.07);
+}
+.panel.blue{
+  background:linear-gradient(135deg,var(--blue),var(--blue-2));
+  color:white;
+}
+.panel.blue h2,.panel.blue h3{color:white}
+.checks{list-style:none;padding:0;margin:22px 0 0}
+.checks li{
+  position:relative;
+  padding-left:34px;
+  margin:14px 0;
+  color:inherit;
+  line-height:1.55;
+}
+.checks li:before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  top:0;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(244,123,32,.18);
+  color:var(--orange);
+  font-weight:900;
+}
+.price-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:28px;
+}
+.price{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  text-align:center;
+}
+.price strong{
+  display:block;
+  color:var(--orange);
+  font-size:32px;
+  margin-bottom:8px;
+}
+.price span{color:var(--muted);font-weight:800}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .full{grid-column:1/-1}
+input,select,textarea{
+  width:100%;
+  border:1px solid rgba(6,45,89,.16);
+  border-radius:16px;
+  padding:15px 16px;
+  font:inherit;
+  background:#fff;
+  color:var(--text);
+}
+textarea{min-height:130px;resize:vertical}
+button{
+  border:0;
+  cursor:pointer;
+  font:inherit;
+}
+.footer{
+  background:#061f3d;
+  color:#dce9f8;
+  padding:42px 0;
+}
+.footer-grid{
+  display:flex;
+  justify-content:space-between;
+  gap:22px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.footer a{color:white;font-weight:800}
+.float-phone{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:60;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#22c55e;
+  color:white;
+  font-size:28px;
+  box-shadow:0 16px 35px rgba(34,197,94,.35);
+}
+@media(max-width:980px){
+  .nav-links{display:none}
+  .menu-btn{display:block}
+  .mobile-menu.open{display:block}
+  .hero-grid,.split{grid-template-columns:1fr}
+  .visual-card{min-height:320px}
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .nav{height:76px}
+  .brand img{width:165px}
+  .hero{padding:52px 0 44px}
+  .hero-stats,.price-grid,.cards,.form-grid{grid-template-columns:1fr}
+  h1{font-size:42px}
+  .hero-sub{font-size:17px}
+}
+
+  
+
+/* ===== PATCH GLOBAL V2 : HERO PREMIUM HARMONISÉ ===== */
+.nav-brand .nav-worker{display:none!important;}
+.hero-card-visual{
+  position:relative!important;
+  width:min(470px,100%)!important;
+  min-height:500px!important;
+  border-radius:42px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(245,249,252,.92))!important;
+  box-shadow:0 34px 85px rgba(0,0,0,.24)!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.75)!important;
+  isolation:isolate!important;
+  display:block!important;
+  padding:0!important;
+}
+.hero-card-visual:before{content:""!important;position:absolute!important;width:360px!important;height:360px!important;border-radius:50%!important;right:-100px!important;bottom:-85px!important;background:radial-gradient(circle,rgba(244,121,32,.34),rgba(244,121,32,.04) 68%)!important;z-index:0!important;}
+.hero-card-visual:after{content:""!important;position:absolute!important;width:260px!important;height:260px!important;border-radius:50%!important;left:-90px!important;top:-80px!important;background:radial-gradient(circle,rgba(43,108,176,.25),rgba(43,108,176,.04) 70%)!important;z-index:0!important;}
+.hero-card-visual .hero-logo-img{display:none!important;}
+.hero-card-visual .hero-agent-img{position:absolute!important;right:12px!important;bottom:10px!important;max-width:390px!important;width:88%!important;height:auto!important;object-fit:contain!important;z-index:2!important;filter:drop-shadow(0 24px 28px rgba(26,47,94,.28))!important;}
+.hero-mini-card{position:absolute!important;z-index:3!important;background:white!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 14px 35px rgba(26,47,94,.16)!important;border:1px solid rgba(26,47,94,.08)!important;}
+.hero-mini-card strong{display:block!important;font-size:.84rem!important;font-weight:900!important;color:var(--navy,#1a2f5e)!important;}
+.hero-mini-card span{display:block!important;font-size:.72rem!important;color:var(--gray,#6b7280)!important;margin-top:2px!important;}
+.hero-mini-card.card-a{left:24px!important;top:34px!important;}
+.hero-mini-card.card-b{left:26px!important;bottom:54px!important;}
+.hero-mini-card.card-c{right:26px!important;top:160px!important;}
+.hero-shape-line{position:absolute!important;z-index:1!important;left:48px!important;right:48px!important;bottom:92px!important;height:14px!important;border-radius:99px!important;background:linear-gradient(90deg,var(--orange,#f47920),rgba(244,121,32,.16))!important;transform:rotate(-6deg)!important;}
+.hero-spark{position:absolute!important;z-index:1!important;width:10px!important;height:10px!important;border-radius:50%!important;background:var(--orange,#f47920)!important;box-shadow:0 0 0 8px rgba(244,121,32,.12)!important;}
+.hero-spark.s1{top:118px!important;right:58px!important}.hero-spark.s2{bottom:160px!important;left:80px!important;background:var(--blue,#2b6cb0)!important;box-shadow:0 0 0 8px rgba(43,108,176,.10)!important}
+@media(max-width:980px){.hero-card-visual{min-height:430px!important;width:min(420px,100%)!important}.hero-card-visual .hero-agent-img{max-width:340px!important}.hero-mini-card.card-c{display:none!important}}
+@media(max-width:520px){.hero-card-visual{min-height:380px!important;border-radius:30px!important}.hero-card-visual .hero-agent-img{max-width:295px!important;right:-2px!important}.hero-mini-card{padding:11px 12px!important}.hero-mini-card.card-a{left:14px!important;top:18px!important}.hero-mini-card.card-b{left:14px!important;bottom:34px!important}.hero-shape-line{left:25px!important;right:25px!important;bottom:72px!important}}
+
+</style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "Clean-Cité", "url": "https://clean-cite.org", "telephone": "+33766536154", "areaServed": ["Bobigny", "Seine-Saint-Denis", "Paris", "Île-de-France"], "description": "Clean-Cité réalise le nettoyage de vitrines de commerces, bureaux et locaux professionnels à Bobigny, Paris et en Île-de-France.", "address": {"@type": "PostalAddress", "addressLocality": "Bobigny", "addressRegion": "Île-de-France", "addressCountry": "FR"}}</script>
+
+<style>
+.whatsapp-float{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:2000;
+  background:#25D366;
+  color:white;
+  text-decoration:none;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  box-shadow:0 14px 35px rgba(0,0,0,.25);
+  font-weight:900;
+  transition:transform .2s ease;
+}
+.whatsapp-float svg{
+  width:34px;
+  height:34px;
+  display:block;
+}
+.whatsapp-float:hover{
+  transform:translateY(-3px);
+}
+@media(max-width:520px){
+  .whatsapp-float{right:16px;bottom:16px;width:56px;height:56px;}
+  .whatsapp-float svg{width:31px;height:31px;}
+}
+</style>
+
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <a class="brand" href="index.html" aria-label="Accueil Clean-Cité">
+        <img src="images/logo-clean-cite.png" alt="Logo Clean-Cité">
+      </a>
+      <div class="nav-links">
+        <div class="dropdown">
+          <a class="dropbtn" href="index.html#services">Services ▾</a>
+          <div class="dropdown-menu">
+            <a href="nettoyage-fin-de-chantier.html">Fin de chantier</a>
+<a href="nettoyage-bureaux.html">Bureaux</a>
+<a href="sortie-de-poubelles.html">Sortie de poubelles</a>
+<a href="nettoyage-vitrines.html" class="active">Vitrines</a>
+<a href="nettoyage-terrasses.html">Terrasses</a>
+          </div>
+        </div>
+        <a href="index.html">Accueil</a>
+<a href="#why">Pourquoi nous</a>
+<a href="#tarifs">Tarifs</a>
+<a href="avant-apres.html">Avant / Après</a>
+<a href="planning.html">Planning</a>
+<a href="#contact">Contact</a>
+        <a href="#contact" class="nav-cta">Pré-devis</a>
+      </div>
+      <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html" onclick="toggleMenu()">Accueil</a>
+<a href="nettoyage-fin-de-chantier.html" onclick="toggleMenu()">Fin de chantier</a>
+<a href="nettoyage-bureaux.html" onclick="toggleMenu()">Bureaux</a>
+<a href="sortie-de-poubelles.html" onclick="toggleMenu()">Sortie de poubelles</a>
+<a href="nettoyage-vitrines.html" onclick="toggleMenu()">Vitrines</a>
+<a href="nettoyage-terrasses.html" onclick="toggleMenu()">Terrasses</a>
+      <a href="#contact" onclick="toggleMenu()">Pré-devis</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="accueil">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-badge">✦ NETTOYAGE DE VITRINES — COMMERCES & LOCAUX PRO</div>
+          <h1>NETTOYAGE DE<br><span>VITRINES</span></h1>
+          <p class="hero-sub">Clean-Cité nettoie les vitrines, baies vitrées, portes vitrées et surfaces en verre pour commerces, bureaux et locaux professionnels à Bobigny et en Île-de-France.</p>
+          <div class="hero-btns">
+            <a href="#contact" class="btn-primary">Demander un devis</a>
+            <a href="tel:0766536154" class="btn-outline">07 66 53 61 54</a>
+          </div>
+          <div class="hero-stats">
+            <div><span class="stat-num">PRO</span><span class="stat-label">Commerces</span></div><div><span class="stat-num">NET</span><span class="stat-label">Sans traces</span></div><div><span class="stat-num">IDF</span><span class="stat-label">Intervention</span></div>
+          </div>
+        </div>
+        <div class="visual-card" aria-hidden="true">
+          <div class="agent-card">
+            <img src="images/logo-clean-cite.png" class="logo-mini" alt="">
+            <img src="images/agent-nettoyage.png" class="agent" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-title">
+          <span class="eyebrow">Nos prestations</span>
+          <h2>Une intervention propre, claire et organisée</h2>
+          <p>Des vitrines propres, lumineuses et soignées pour donner une meilleure image dès l’entrée.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+        <div class="icon">🪟</div>
+        <h3>Vitrines commerciales</h3>
+        <p>Nettoyage des vitrines de boutiques, restaurants, salons, bureaux et locaux professionnels.</p>
+      </article>
+<article class="card">
+        <div class="icon">✨</div>
+        <h3>Finition sans traces</h3>
+        <p>Nettoyage soigné pour limiter les traces, poussières, marques de doigts et dépôts visibles.</p>
+      </article>
+<article class="card">
+        <div class="icon">🚪</div>
+        <h3>Portes et encadrements</h3>
+        <p>Entretien des portes vitrées, poignées, encadrements et zones de contact selon l’accès.</p>
+      </article>
+<article class="card">
+        <div class="icon">📅</div>
+        <h3>Passage régulier</h3>
+        <p>Intervention ponctuelle ou contrat régulier selon la fréquentation et la visibilité de votre commerce.</p>
+      </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="container split">
+        <div class="panel blue">
+          <span class="eyebrow">Pourquoi Clean-Cité</span>
+          <h2>Un partenaire fiable pour vos locaux</h2>
+          <ul class="checks">
+            <li>Prestation adaptée aux commerces, agences, bureaux, restaurants et vitrines sur rue.</li>
+<li>Passages ponctuels ou réguliers selon vos besoins.</li>
+<li>Travail soigné pour préserver l’image de votre établissement.</li>
+<li>Intervention à Bobigny, Seine-Saint-Denis, Paris et Île-de-France.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <span class="eyebrow">Zone d’intervention</span>
+          <h2>Bobigny, Seine-Saint-Denis et Île-de-France</h2>
+          <p style="color:#617086;line-height:1.75;font-size:17px">
+            Clean-Cité intervient auprès des particuliers, professionnels, syndics, commerces et entreprises.
+            Chaque demande est étudiée selon la surface, l’état des lieux, l’accès, la fréquence souhaitée et le niveau de finition attendu.
+          </p>
+          <ul class="checks">
+            <li>Bobigny et villes proches : Drancy, Pantin, Bondy, Noisy-le-Sec, Romainville.</li>
+            <li>Interventions possibles à Paris et en petite couronne selon disponibilité.</li>
+            <li>Devis adapté à la prestation, à la fréquence et aux contraintes du site.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tarifs">
+      <div class="container">
+        <div class="section-title">
+          <span class="eyebrow">Tarifs</span>
+          <h2>Un prix adapté à votre besoin</h2>
+          <p>Les tarifs dépendent de la surface, de l’état du site, de l’accès, de la fréquence et du niveau de nettoyage demandé.</p>
+        </div>
+        <div class="price-grid">
+          <div class="price"><strong>Sur devis</strong><span>Selon surface</span></div>
+<div class="price"><strong>Ponctuel</strong><span>Ou régulier</span></div>
+<div class="price"><strong>Pro</strong><span>Finition propre</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container split">
+        <div class="panel">
+          <span class="eyebrow">Pré-devis gratuit</span>
+          <h2>Décrivez votre besoin</h2>
+          <p style="color:#617086;line-height:1.75;font-size:17px">
+            Envoyez votre demande avec la ville, la surface approximative, le type de locaux et la fréquence souhaitée.
+            Vous pouvez aussi appeler directement Clean-Cité.
+          </p>
+          <div class="hero-btns">
+            <a href="tel:0766536154" class="btn-primary">Appeler 07 66 53 61 54</a>
+            <a href="index.html#contact" class="btn-outline">Formulaire principal</a>
+          </div>
+        </div>
+        <form class="panel" name="pre-devis-clean-cite" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="pre-devis-clean-cite">
+          <input type="hidden" name="page-service" value="Nettoyage de vitrines">
+          <div class="form-grid">
+            <input name="nom" placeholder="Nom / Société" required>
+            <input name="telephone" placeholder="Téléphone" required>
+            <input name="email" type="email" placeholder="Email">
+            <input name="ville" placeholder="Ville">
+            <select name="service" required>
+              <option value="Nettoyage de vitrines">Nettoyage de vitrines</option>
+              <option value="Nettoyage fin de chantier">Nettoyage fin de chantier</option>
+<option value="Nettoyage de bureaux">Nettoyage de bureaux</option>
+<option value="Sortie de poubelles">Sortie de poubelles</option>
+<option value="Nettoyage de vitrines">Nettoyage de vitrines</option>
+<option value="Nettoyage de terrasses">Nettoyage de terrasses</option>
+<option value="Autre demande">Autre demande</option>
+            </select>
+            <input name="surface" placeholder="Surface approximative">
+            <textarea class="full" name="message" placeholder="Expliquez votre besoin : type de local, fréquence, état actuel, urgence..." required></textarea>
+            <button class="btn-primary full" type="submit">Envoyer ma demande</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Clean-Cité</strong><br>
+        Nettoyage professionnel à Bobigny et en Île-de-France.
+      </div>
+      <div>
+        <a href="tel:0766536154">07 66 53 61 54</a> · <a href="index.html#contact">Demander un devis</a>
+      </div>
+    </div>
+  </footer>
+
+  <a class="float-phone" href="tel:0766536154" aria-label="Appeler Clean-Cité">☎</a>
+
+  <script>
+    function toggleMenu(){
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+  </script>
+
+<a href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20demander%20un%20devis%20pour%20un%20nettoyage%20professionnel." class="whatsapp-float" target="_blank" rel="noopener" aria-label="Contacter Clean-Cité sur WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M16.02 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.25.59 4.46 1.71 6.4L3.2 28.8l6.56-1.68c1.86 1.01 3.97 1.55 6.25 1.55h.01c7.06 0 12.8-5.74 12.8-12.8S23.08 3.2 16.02 3.2zm0 23.3h-.01c-2.02 0-4-.54-5.72-1.57l-.41-.24-3.89 1 1.04-3.79-.27-.43c-1.13-1.79-1.73-3.85-1.73-5.97 0-6.07 4.94-11.01 11.01-11.01 6.07 0 11.01 4.94 11.01 11.01 0 6.07-4.94 11.01-11.01 11.01zm6.04-8.24c-.33-.17-1.96-.97-2.27-1.08-.3-.11-.52-.17-.74.17-.22.33-.85 1.08-1.04 1.3-.19.22-.38.25-.71.08-.33-.17-1.39-.51-2.65-1.63-.98-.87-1.64-1.95-1.83-2.28-.19-.33-.02-.51.14-.68.15-.15.33-.38.49-.57.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.57-.08-.17-.74-1.78-1.02-2.44-.27-.64-.54-.55-.74-.56h-.63c-.22 0-.57.08-.87.41-.3.33-1.14 1.11-1.14 2.71s1.17 3.15 1.33 3.37c.16.22 2.3 3.51 5.57 4.92.78.34 1.39.54 1.86.69.78.25 1.49.21 2.05.13.63-.09 1.96-.8 2.23-1.57.28-.77.28-1.43.19-1.57-.08-.14-.3-.22-.63-.39z"/>
+  </svg>
+</a>
+
+
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function () {
+  function hasIdentityToken() {
+    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
+  }
+  if (!window.netlifyIdentity) return;
+
+  window.netlifyIdentity.on("init", function (user) {
+    if (hasIdentityToken()) {
+      window.netlifyIdentity.open();
+    }
+    if (!user) {
+      window.netlifyIdentity.on("login", function () {
+        window.location.href = "/admin/";
+      });
+    }
+  });
+
+  window.netlifyIdentity.on("close", function () {
+    if (hasIdentityToken()) {
+      window.location.href = "/admin/";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

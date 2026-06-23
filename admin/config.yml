@@ -1,0 +1,117 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+site_url: "https://clean-cite.org"
+display_url: "https://clean-cite.org"
+logo_url: "/images/logo-clean-cite.png"
+locale: "fr"
+
+collections:
+  - name: "gestion_site"
+    label: "Gestion du site"
+    files:
+      - name: "interventions_avant_apres"
+        label: "Avant / Après de mes interventions"
+        file: "data/interventions.json"
+        format: "json"
+        fields:
+          - label: "Interventions"
+            name: "interventions"
+            widget: "list"
+            summary: "{{fields.titre}} — {{fields.type_prestation}} — {{fields.ville}}"
+            minimize_collapsed: true
+            fields:
+              - label: "Publier sur le site"
+                name: "publier"
+                widget: "boolean"
+                default: true
+              - label: "Titre"
+                name: "titre"
+                widget: "string"
+                required: true
+                hint: "Exemple : Nettoyage fin de chantier à Bobigny"
+              - label: "Type de prestation"
+                name: "type_prestation"
+                widget: "select"
+                required: true
+                options:
+                  - "Chantier en cours"
+                  - "Fin de chantier"
+                  - "Remise en état"
+                  - "Bureaux & locaux"
+                  - "Parties communes"
+                  - "Sortie de poubelles"
+                  - "Vitrerie"
+                  - "Tapis & canapés"
+                  - "Terrasses & extérieurs"
+                  - "Gestion des clés"
+                  - "Autre"
+              - label: "Ville / secteur"
+                name: "ville"
+                widget: "string"
+                required: false
+                default: "Île-de-France"
+              - label: "Date"
+                name: "date"
+                widget: "datetime"
+                required: false
+                date_format: "DD/MM/YYYY"
+                time_format: false
+                format: "YYYY-MM-DD"
+              - label: "Description courte"
+                name: "description"
+                widget: "text"
+                required: false
+              - label: "Photo avant"
+                name: "photo_avant"
+                widget: "image"
+                required: true
+                media_library:
+                  config:
+                    multiple: false
+              - label: "Photo après"
+                name: "photo_apres"
+                widget: "image"
+                required: true
+                media_library:
+                  config:
+                    multiple: false
+      - name: "planning_interventions"
+        label: "Planning des interventions"
+        file: "data/planning.json"
+        format: "json"
+        fields:
+          - label: "Planning"
+            name: "planning"
+            widget: "list"
+            summary: "{{fields.date}} - {{fields.heure}} - {{fields.type_prestation}}"
+            minimize_collapsed: true
+            fields:
+              - { label: "Publier sur le site", name: "publier", widget: "boolean", default: true }
+              - { label: "Date", name: "date", widget: "datetime", required: true, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+              - { label: "Heure", name: "heure", widget: "string", required: false, hint: "Exemple : 09h00 - 11h00" }
+              - label: "Type de prestation"
+                name: "type_prestation"
+                widget: "select"
+                options:
+                  - "Nettoyage de chantier"
+                  - "Parties communes"
+                  - "Bureaux & locaux"
+                  - "Vitrerie"
+                  - "Remise en état"
+                  - "Rendez-vous devis"
+                  - "Autre"
+              - { label: "Ville / secteur", name: "ville", widget: "string", required: false, hint: "Exemple : Bobigny, Paris, Saint-Denis" }
+              - label: "Statut"
+                name: "statut"
+                widget: "select"
+                options:
+                  - "Prévu"
+                  - "Confirmé"
+                  - "Terminé"
+                  - "Annulé"
+              - { label: "Note publique", name: "note", widget: "text", required: false, hint: "Ne pas mettre d'information privée client." }

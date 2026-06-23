@@ -1,0 +1,22 @@
+{
+  "planning": [
+    {
+      "publier": true,
+      "heure": "9h00-11h00",
+      "type_prestation": "Rendez-vous devis",
+      "ville": "bobigny",
+      "statut": "Confirmé",
+      "note": "être là-bas 5 minutes avant l'heure",
+      "date": "2026-05-15"
+    },
+    {
+      "publier": true,
+      "date": "2026-05-17",
+      "heure": "15h00 - 19h00",
+      "type_prestation": "Parties communes",
+      "ville": "paris 75",
+      "statut": "Confirmé",
+      "note": "être a l'heure"
+    }
+  ]
+}
