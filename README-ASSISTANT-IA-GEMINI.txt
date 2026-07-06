@@ -1,3 +1,14 @@
+
+MISE À JOUR DEMANDÉE
+- Bouton WhatsApp ajouté dans le hero, à côté du numéro de téléphone.
+- Le message technique « Ajoutez GEMINI_API_KEY… » n’est plus affiché aux visiteurs.
+- Tant que GEMINI_API_KEY n’est pas ajoutée dans Netlify, l’assistant affiche un message professionnel d’attente.
+
+IMPORTANT POUR ACTIVER LA VRAIE IA
+Dans Netlify > Project configuration > Environment variables, ajoutez :
+GEMINI_API_KEY = votre clé API Google AI Studio
+Puis relancez un déploiement : Deploys > Trigger deploy > Clear cache and deploy site.
+
 ASSISTANT IA CLEAN-CITÉ - GEMINI
 ================================
 

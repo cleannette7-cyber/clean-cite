@@ -84,9 +84,8 @@ exports.handler = async function handler(event) {
   }
 
   if (!process.env.GEMINI_API_KEY) {
-    return json(500, {
-      error: "Clé Gemini manquante.",
-      message: "Ajoutez GEMINI_API_KEY dans les variables d'environnement Netlify."
+    return json(200, {
+      reply: "L'assistant IA Clean-Cité est en cours d'activation. En attendant, je peux déjà vous orienter : pour un devis, indiquez la ville, la surface en m², le type de nettoyage et votre téléphone. Vous pouvez aussi utiliser le bouton WhatsApp ou appeler Clean-Cité au 07 66 53 61 54."
     });
   }
 
