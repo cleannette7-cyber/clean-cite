@@ -178,6 +178,13 @@
       flex-wrap: wrap;
     }
 
+    .dashboard-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .client-email {
       color: var(--orange);
       font-weight: 800;
@@ -352,12 +359,12 @@
   <section id="login-box" class="login-box">
     <h2>Connexion client</h2>
     <p>
-      Connectez-vous ou créez votre compte pour accéder à votre espace client Clean-Cité.
+      Connectez-vous à votre espace client Clean-Cité. Les comptes clients sont créés uniquement sur invitation par l'équipe Clean-Cité.
     </p>
 
     <div class="login-actions">
       <button class="btn-primary" onclick="ouvrirConnexion()">Se connecter</button>
-      <button class="btn-secondary" onclick="ouvrirInscription()">Créer un compte</button>
+      <a class="button-link btn-secondary" href="mailto:cleannette7@gmail.com?subject=Demande%20d%27acc%C3%A8s%20espace%20client%20Clean-Cit%C3%A9">Demander un accès</a>
     </div>
   </section>
 
@@ -368,7 +375,10 @@
         <p>Compte connecté : <span id="client-email" class="client-email"></span></p>
       </div>
 
-      <button class="btn-light" onclick="deconnexion()">Déconnexion</button>
+      <div class="dashboard-actions">
+        <a id="admin-link" href="/admin/" class="button-link btn-secondary hidden">Administration</a>
+        <button class="btn-light" onclick="deconnexion()">Déconnexion</button>
+      </div>
     </div>
 
     <div class="cards">
@@ -457,12 +467,26 @@
 </footer>
 
 <script>
+  const ADMIN_EMAIL = "cleannette7@gmail.com";
   const loginBox = document.getElementById("login-box");
   const dashboard = document.getElementById("dashboard");
   const clientEmail = document.getElementById("client-email");
   const emailForm = document.getElementById("email-form");
+  const adminLink = document.getElementById("admin-link");
   const form = document.getElementById("demande-client-form");
   const successMessage = document.getElementById("success-message");
+
+  function normalizeEmail(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function isAdminUser(user) {
+    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
+  }
+
+  function hasIdentityToken() {
+    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
+  }
 
   function afficherDashboard(user) {
     if (user) {
@@ -472,9 +496,15 @@
       const email = user.email || "";
       clientEmail.textContent = email;
       emailForm.value = email;
+      if (adminLink) {
+        adminLink.classList.toggle("hidden", !isAdminUser(user));
+      }
     } else {
       loginBox.classList.remove("hidden");
       dashboard.classList.add("hidden");
+      if (adminLink) {
+        adminLink.classList.add("hidden");
+      }
     }
   }
 
@@ -485,9 +515,7 @@
   }
 
   function ouvrirInscription() {
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.open("signup");
-    }
+    alert("Pour créer un compte client, demandez une invitation à Clean-Cité. Les inscriptions libres sont désactivées pour protéger l'espace client.");
   }
 
   function deconnexion() {
@@ -498,6 +526,9 @@
 
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", user => {
+      if (hasIdentityToken()) {
+        window.netlifyIdentity.open();
+      }
       afficherDashboard(user);
     });
 
@@ -538,32 +569,7 @@
 </script>
 
 
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-(function () {
-  function hasIdentityToken() {
-    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
-  }
-  if (!window.netlifyIdentity) return;
 
-  window.netlifyIdentity.on("init", function (user) {
-    if (hasIdentityToken()) {
-      window.netlifyIdentity.open();
-    }
-    if (!user) {
-      window.netlifyIdentity.on("login", function () {
-        window.location.href = "/admin/";
-      });
-    }
-  });
-
-  window.netlifyIdentity.on("close", function () {
-    if (hasIdentityToken()) {
-      window.location.href = "/admin/";
-    }
-  });
-})();
-</script>
 
 
 <!-- Assistant IA Clean-Cité Gemini -->

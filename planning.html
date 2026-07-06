@@ -525,25 +525,45 @@ chargerPlanning();
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
 (function () {
+  const ADMIN_EMAIL = "cleannette7@gmail.com";
+  const ADMIN_URL = "/admin/";
+  const CLIENT_URL = "/espace-client.html";
+
+  function normalizeEmail(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function isAdminUser(user) {
+    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
+  }
+
   function hasIdentityToken() {
     return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
   }
+
+  function redirectAfterIdentity(user) {
+    window.location.href = isAdminUser(user) ? ADMIN_URL : CLIENT_URL;
+  }
+
   if (!window.netlifyIdentity) return;
 
   window.netlifyIdentity.on("init", function (user) {
     if (hasIdentityToken()) {
       window.netlifyIdentity.open();
     }
+
     if (!user) {
-      window.netlifyIdentity.on("login", function () {
-        window.location.href = "/admin/";
+      window.netlifyIdentity.on("login", function (loggedUser) {
+        window.netlifyIdentity.close();
+        redirectAfterIdentity(loggedUser);
       });
     }
   });
 
   window.netlifyIdentity.on("close", function () {
     if (hasIdentityToken()) {
-      window.location.href = "/admin/";
+      const currentUser = window.netlifyIdentity.currentUser && window.netlifyIdentity.currentUser();
+      redirectAfterIdentity(currentUser);
     }
   });
 })();

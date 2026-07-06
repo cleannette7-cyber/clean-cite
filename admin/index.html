@@ -5,36 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Administration Clean-Cité</title>
-  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
+  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=5">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     body{font-family:Arial,sans-serif;background:#f8f9fc;color:#1a2f5e;margin:0}
     .admin-loading{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px}
-    .admin-loading div{background:#fff;border-radius:24px;box-shadow:0 16px 50px rgba(26,47,94,.12);padding:34px;max-width:560px}
+    .admin-loading div{background:#fff;border-radius:24px;box-shadow:0 16px 50px rgba(26,47,94,.12);padding:34px;max-width:620px}
     .admin-loading img{height:74px;object-fit:contain;margin-bottom:14px}
-    .admin-loading h1{margin:0 0 10px;font-size:28px}.admin-loading p{color:#6b7280;line-height:1.6;margin:0}
+    .admin-loading h1{margin:0 0 10px;font-size:28px}
+    .admin-loading p{color:#6b7280;line-height:1.6;margin:0 0 16px}
+    .admin-error{background:#fff1f2;color:#991b1b;border:1px solid #fecdd3;border-radius:14px;padding:14px;margin-top:16px;font-weight:700}
+    .admin-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+    .btn{display:inline-block;border:0;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;cursor:pointer}
+    .btn-primary{background:#f97316;color:white}
+    .btn-secondary{background:#0b5fa5;color:white}
   </style>
 </head>
 <body>
-  <div class="admin-loading">
+  <div class="admin-loading" id="admin-gate">
     <div>
       <img src="/images/logo-clean-cite.png" alt="Logo Clean-Cité">
       <h1>Espace admin Clean-Cité</h1>
-      <p>Connectez-vous pour ajouter vos photos avant / après, modifier le planning et publier les changements sur le site.</p>
+      <p id="admin-message">Vérification de l'accès administrateur...</p>
+      <div class="admin-actions" id="admin-actions"></div>
     </div>
   </div>
 
   <script>
+    const CLEAN_CITE_ADMIN_EMAIL = "cleannette7@gmail.com";
+
+    function normalizeEmail(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function isCleanCiteAdmin(user) {
+      return !!user && normalizeEmail(user.email) === CLEAN_CITE_ADMIN_EMAIL;
+    }
+
+    function setAdminMessage(html, error = false) {
+      const message = document.getElementById("admin-message");
+      if (!message) return;
+      message.innerHTML = html;
+      message.className = error ? "admin-error" : "";
+    }
+
+    function setAdminActions(html) {
+      const actions = document.getElementById("admin-actions");
+      if (actions) actions.innerHTML = html;
+    }
+
+    function loadDecapCms() {
+      setAdminMessage("Accès confirmé pour " + CLEAN_CITE_ADMIN_EMAIL + ". Chargement de l'administration...");
+      setAdminActions("");
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
+      script.onload = function () {
+        const gate = document.getElementById("admin-gate");
+        if (gate) gate.style.display = "none";
+      };
+      script.onerror = function () {
+        setAdminMessage("Erreur : l'administration n'a pas pu se charger. Réessayez dans quelques instants.", true);
+      };
+      document.body.appendChild(script);
+    }
+
+    function denyAccess(user) {
+      const email = user && user.email ? user.email : "ce compte";
+      setAdminMessage("Accès refusé : " + email + " n'est pas autorisé comme administrateur Clean-Cité. Seul " + CLEAN_CITE_ADMIN_EMAIL + " peut accéder à cette zone.", true);
+      setAdminActions('<a class="btn btn-secondary" href="/espace-client.html">Retour à l’espace client</a><button class="btn btn-primary" onclick="logoutAdmin()">Déconnexion</button>');
+    }
+
+    function logoutAdmin() {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.logout();
+      }
+      window.location.href = "/espace-client.html";
+    }
+
+    function openAdminLogin() {
+      setAdminMessage("Connectez-vous avec le compte administrateur Clean-Cité : " + CLEAN_CITE_ADMIN_EMAIL + ".");
+      setAdminActions('<button class="btn btn-primary" onclick="window.netlifyIdentity.open('login')">Se connecter</button><a class="btn btn-secondary" href="/">Retour au site</a>');
+    }
+
     if (window.netlifyIdentity) {
-      window.netlifyIdentity.on('init', function(user) {
-        if (!user) {
-          window.netlifyIdentity.on('login', function() {
-            document.location.href = '/admin/';
-          });
+      window.netlifyIdentity.on("init", function (user) {
+        if (isCleanCiteAdmin(user)) {
+          loadDecapCms();
+        } else if (user) {
+          denyAccess(user);
+        } else {
+          openAdminLogin();
         }
       });
+
+      window.netlifyIdentity.on("login", function (user) {
+        window.netlifyIdentity.close();
+        if (isCleanCiteAdmin(user)) {
+          loadDecapCms();
+        } else {
+          denyAccess(user);
+        }
+      });
+
+      window.netlifyIdentity.on("logout", function () {
+        window.location.href = "/espace-client.html";
+      });
+    } else {
+      setAdminMessage("Erreur : Netlify Identity n'est pas disponible sur ce site.", true);
     }
   </script>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>

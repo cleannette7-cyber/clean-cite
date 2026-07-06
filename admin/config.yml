@@ -1,6 +1,8 @@
 backend:
   name: git-gateway
   branch: main
+  # Sécurité Clean-Cité : l’accès /admin/ est aussi filtré par email dans admin/index.html.
+  # Seul cleannette7@gmail.com doit conserver le rôle admin dans Netlify Identity.
   accept_roles:
     - admin
 
