@@ -1,129 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://clean-cite.org/</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>1.00</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/avant-apres.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.75</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/espace-client.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.40</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-aubervilliers.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
     <loc>https://clean-cite.org/nettoyage-bobigny.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.90</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-bondy.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-bureaux.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-chantier-en-cours.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-drancy.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://clean-cite.org/nettoyage-fin-de-chantier.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://clean-cite.org/nettoyage-ile-de-france.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.90</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-montreuil.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
+    <loc>https://clean-cite.org/nettoyage-fin-de-chantier.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.90</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-noisy-le-sec.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <loc>https://clean-cite.org/nettoyage-bureaux.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/nettoyage-chantier-en-cours.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.88</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/sortie-de-poubelles.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.86</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/nettoyage-vitrines.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.86</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/nettoyage-terrasses.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.86</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/nettoyage-tapis-canapes.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.86</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/avant-apres.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/planning.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/espace-client.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.60</priority>
+  </url>
+
+  <url>
+    <loc>https://clean-cite.org/nettoyage-drancy.html</loc>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://clean-cite.org/nettoyage-pantin.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-paris.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <loc>https://clean-cite.org/nettoyage-aubervilliers.html</loc>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://clean-cite.org/nettoyage-saint-denis.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-tapis-canapes.html</loc>
-    <lastmod>2026-06-23</lastmod>
+    <loc>https://clean-cite.org/nettoyage-paris.html</loc>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-terrasses.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
+    <loc>https://clean-cite.org/nettoyage-montreuil.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.82</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/nettoyage-vitrines.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
+    <loc>https://clean-cite.org/nettoyage-bondy.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.82</priority>
   </url>
 
   <url>
-    <loc>https://clean-cite.org/planning.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.55</priority>
+    <loc>https://clean-cite.org/nettoyage-noisy-le-sec.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <priority>0.82</priority>
   </url>
 
-  <url>
-    <loc>https://clean-cite.org/sortie-de-poubelles.html</loc>
-    <lastmod>2026-06-23</lastmod>
-    <priority>0.85</priority>
-  </url>
 </urlset>

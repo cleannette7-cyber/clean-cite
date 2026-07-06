@@ -1,0 +1,5 @@
+# Redirections SEO Clean-Cité
+/sortie-de-poubelles.htm /sortie-de-poubelles.html 301!
+/ile-de-france.html /nettoyage-ile-de-france.html 301!
+https://www.clean-cite.org/* https://clean-cite.org/:splat 301!
+http://clean-cite.org/* https://clean-cite.org/:splat 301!

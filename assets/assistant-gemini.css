@@ -1,0 +1,54 @@
+/* Assistant IA Clean-Cité - Gemini */
+.ccai-root,
+.ccai-root * { box-sizing: border-box; }
+.ccai-root { position: fixed; right: 18px; bottom: 18px; z-index: 99999; font-family: 'Nunito', Arial, sans-serif; color: #1a2f5e; }
+.ccai-bubble { display: flex; align-items: center; gap: 10px; border: 0; cursor: pointer; padding: 13px 18px; border-radius: 999px; background: linear-gradient(135deg,#083F70,#0B5FA5); color: #fff; box-shadow: 0 14px 35px rgba(8,63,112,.35); font-weight: 900; letter-spacing: .2px; }
+.ccai-bubble span:first-child { width: 34px; height: 34px; border-radius: 999px; background: #F28C28; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.ccai-panel { position: fixed; right: 18px; bottom: 88px; width: min(390px, calc(100vw - 28px)); max-height: min(720px, calc(100vh - 110px)); background: #fff; border-radius: 22px; box-shadow: 0 24px 70px rgba(0,0,0,.22); overflow: hidden; display: none; border: 1px solid rgba(8,63,112,.12); }
+.ccai-root.open .ccai-panel { display: flex; flex-direction: column; }
+.ccai-header { background: linear-gradient(135deg,#083F70,#0B5FA5); color: #fff; padding: 15px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ccai-title { display: flex; align-items: center; gap: 10px; font-weight: 900; line-height: 1.15; }
+.ccai-title small { display: block; color: rgba(255,255,255,.78); font-weight: 700; font-size: 12px; margin-top: 3px; }
+.ccai-avatar { width: 38px; height: 38px; border-radius: 13px; background: #F28C28; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; font-size: 20px; box-shadow: 0 8px 20px rgba(0,0,0,.16); }
+.ccai-close { border: 0; background: rgba(255,255,255,.16); color: #fff; width: 34px; height: 34px; border-radius: 999px; cursor: pointer; font-size: 22px; line-height: 1; }
+.ccai-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: #f2f6fb; padding: 8px; }
+.ccai-tab { border: 0; cursor: pointer; padding: 10px 8px; border-radius: 999px; background: transparent; color: #1a2f5e; font-weight: 900; }
+.ccai-tab.active { background: #fff; box-shadow: 0 6px 18px rgba(8,63,112,.12); color: #F28C28; }
+.ccai-body { overflow: auto; background: #F5F9FC; min-height: 320px; max-height: 480px; }
+.ccai-view { display: none; padding: 14px; }
+.ccai-view.active { display: block; }
+.ccai-messages { height: 308px; overflow: auto; padding-right: 2px; }
+.ccai-msg { margin-bottom: 10px; display: flex; }
+.ccai-msg.user { justify-content: flex-end; }
+.ccai-msg > div { max-width: 86%; padding: 10px 12px; border-radius: 16px; font-size: 14px; line-height: 1.45; box-shadow: 0 4px 14px rgba(8,63,112,.08); }
+.ccai-msg.assistant > div { background: #fff; color: #1f2933; border-top-left-radius: 6px; }
+.ccai-msg.user > div { background: #083F70; color: #fff; border-top-right-radius: 6px; }
+.ccai-quick { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
+.ccai-chip { border: 1px solid rgba(8,63,112,.15); background: #fff; color: #083F70; border-radius: 999px; padding: 8px 10px; cursor: pointer; font-size: 12.5px; font-weight: 800; }
+.ccai-chatbar { display: flex; gap: 8px; margin-top: 10px; }
+.ccai-input { width: 100%; border: 1px solid #d7e2ee; border-radius: 14px; padding: 12px; font: inherit; outline: none; background: #fff; }
+.ccai-input:focus { border-color: #F28C28; box-shadow: 0 0 0 3px rgba(242,140,40,.14); }
+.ccai-send { border: 0; border-radius: 14px; background: #F28C28; color: #fff; font-weight: 900; padding: 0 14px; cursor: pointer; min-width: 72px; }
+.ccai-note { font-size: 12px; color: #6b7280; line-height: 1.45; margin-top: 8px; }
+.ccai-form { display: grid; gap: 9px; }
+.ccai-form label { font-size: 12px; font-weight: 900; color: #083F70; }
+.ccai-field { display: grid; gap: 5px; }
+.ccai-select, .ccai-textarea { width: 100%; border: 1px solid #d7e2ee; border-radius: 13px; padding: 11px; font: inherit; outline: none; background: #fff; }
+.ccai-textarea { min-height: 76px; resize: vertical; }
+.ccai-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ccai-estimate { background: #fff; border: 1px solid rgba(8,63,112,.10); border-radius: 16px; padding: 12px; box-shadow: 0 8px 24px rgba(8,63,112,.08); }
+.ccai-estimate strong { color: #F28C28; font-size: 22px; }
+.ccai-actions { display: grid; gap: 8px; margin-top: 8px; }
+.ccai-btn { border: 0; border-radius: 13px; padding: 12px 14px; cursor: pointer; font-weight: 900; text-align: center; text-decoration: none; font-size: 14px; display: block; }
+.ccai-btn.orange { background: #F28C28; color: #fff; }
+.ccai-btn.blue { background: #083F70; color: #fff; }
+.ccai-btn.light { background: #fff; color: #083F70; border: 1px solid rgba(8,63,112,.16); }
+.ccai-status { font-size: 13px; line-height: 1.45; padding: 10px 12px; border-radius: 13px; display: none; }
+.ccai-status.ok { display: block; background: #eaf8ef; color: #17633a; }
+.ccai-status.err { display: block; background: #fff0ed; color: #9a3412; }
+@media (max-width: 520px) {
+  .ccai-root { right: 12px; bottom: 12px; }
+  .ccai-panel { right: 12px; bottom: 76px; width: calc(100vw - 24px); max-height: calc(100vh - 94px); }
+  .ccai-bubble { padding: 11px 14px; }
+  .ccai-grid2 { grid-template-columns: 1fr; }
+}
