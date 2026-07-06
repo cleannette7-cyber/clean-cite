@@ -96,6 +96,16 @@ collections:
                 name: "publier"
                 widget: "boolean"
                 default: true
+              - label: "Email du client"
+                name: "client_email"
+                widget: "string"
+                required: true
+                hint: "IMPORTANT : mettre l’email exact du compte client. Seul ce client verra cette intervention dans son planning."
+              - label: "Nom du client / société"
+                name: "client_nom"
+                widget: "string"
+                required: false
+                hint: "Exemple : Résidence Les Jardins, Mme Diallo, Société ABC"
               - label: "Date"
                 name: "date"
                 widget: "datetime"

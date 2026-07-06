@@ -84,7 +84,11 @@
 
     function openAdminLogin() {
       setAdminMessage("Connectez-vous avec le compte administrateur Clean-Cité : " + CLEAN_CITE_ADMIN_EMAIL + ".");
-      setAdminActions('<button class="btn btn-primary" onclick="window.netlifyIdentity.open('login')">Se connecter</button><a class="btn btn-secondary" href="/">Retour au site</a>');
+      setAdminActions('<button class="btn btn-primary" id="admin-login-btn">Se connecter</button><a class="btn btn-secondary" href="/">Retour au site</a>');
+      setTimeout(function () {
+        const btn = document.getElementById("admin-login-btn");
+        if (btn) btn.onclick = function () { window.netlifyIdentity.open("login"); };
+      }, 0);
     }
 
     if (window.netlifyIdentity) {

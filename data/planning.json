@@ -7,7 +7,9 @@
       "ville": "bobigny",
       "statut": "Confirmé",
       "note": "être là-bas 5 minutes avant l'heure",
-      "date": "2026-05-15"
+      "date": "2026-05-15",
+      "client_email": "cleannette7@gmail.com",
+      "client_nom": "Clean-Cité / Test admin"
     },
     {
       "publier": true,
@@ -16,7 +18,9 @@
       "type_prestation": "Parties communes",
       "ville": "paris 75",
       "statut": "Confirmé",
-      "note": "être a l'heure"
+      "note": "être a l'heure",
+      "client_email": "cleannette7@gmail.com",
+      "client_nom": "Clean-Cité / Test admin"
     }
   ]
 }

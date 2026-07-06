@@ -14,3 +14,6 @@
   for = "/netlify/functions/*"
   [headers.values]
     Cache-Control = "no-store"
+
+[functions]
+  included_files = ["data/planning.json"]
