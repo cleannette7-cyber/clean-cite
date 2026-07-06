@@ -26,7 +26,7 @@ CONTENU DU ZIP
 ÉTAPE 3 — ACTIVER L’ESPACE ADMIN
 1. Dans Netlify, ouvrez votre site.
 2. Allez dans Identity et cliquez sur Enable Identity.
-3. Dans Registration preferences, choisissez Invite only.
+3. Dans Registration preferences, choisissez Open si vous voulez que les clients créent leur compte librement.
 4. Allez dans Services puis activez Git Gateway.
 5. Dans Identity > Invite users, invitez votre adresse email.
 6. Acceptez l’invitation reçue par email.

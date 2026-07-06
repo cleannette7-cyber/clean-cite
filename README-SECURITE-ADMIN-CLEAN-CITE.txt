@@ -5,7 +5,7 @@ cleannette7@gmail.com
 
 À faire dans Netlify pour terminer la sécurisation :
 1. Project configuration > Identity > Registration > Configure
-2. Mettre Registration sur Invite only / Sur invitation uniquement
+2. Mettre Registration sur Open / Ouvert pour autoriser la création libre de comptes clients
 3. Project configuration > Identity > Users
 4. Garder le rôle admin uniquement sur cleannette7@gmail.com
 5. Pour tous les autres comptes clients : retirer le rôle admin ou mettre client

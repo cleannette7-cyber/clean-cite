@@ -359,12 +359,13 @@
   <section id="login-box" class="login-box">
     <h2>Connexion client</h2>
     <p>
-      Connectez-vous à votre espace client Clean-Cité. Les comptes clients sont créés uniquement sur invitation par l'équipe Clean-Cité.
+      Connectez-vous ou créez librement votre compte client Clean-Cité pour envoyer une demande de devis,
+      suivre vos échanges et contacter rapidement notre équipe.
     </p>
 
     <div class="login-actions">
       <button class="btn-primary" onclick="ouvrirConnexion()">Se connecter</button>
-      <a class="button-link btn-secondary" href="mailto:cleannette7@gmail.com?subject=Demande%20d%27acc%C3%A8s%20espace%20client%20Clean-Cit%C3%A9">Demander un accès</a>
+      <button class="btn-secondary" onclick="ouvrirInscription()">Créer un compte</button>
     </div>
   </section>
 
@@ -515,7 +516,9 @@
   }
 
   function ouvrirInscription() {
-    alert("Pour créer un compte client, demandez une invitation à Clean-Cité. Les inscriptions libres sont désactivées pour protéger l'espace client.");
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.open("signup");
+    }
   }
 
   function deconnexion() {
@@ -535,6 +538,11 @@
     window.netlifyIdentity.on("login", user => {
       afficherDashboard(user);
       window.netlifyIdentity.close();
+    });
+
+    window.netlifyIdentity.on("signup", user => {
+      window.netlifyIdentity.close();
+      alert("Votre compte client a été créé. Si une confirmation email est demandée, ouvrez le mail reçu avant de vous connecter.");
     });
 
     window.netlifyIdentity.on("logout", () => {
