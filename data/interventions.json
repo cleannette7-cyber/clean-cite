@@ -26,6 +26,16 @@
       "description": "appartement témoin ",
       "photo_avant": "https://res.cloudinary.com/dljukcipa/image/upload/v1779900561/1000079491_rcrinp.jpg",
       "photo_apres": "https://res.cloudinary.com/dljukcipa/image/upload/v1779900319/20260519_134638_1_wem9qa.jpg"
+    },
+    {
+      "publier": true,
+      "ville": "Île-de-France",
+      "titre": "Bobigny ",
+      "type_prestation": "Remise en état",
+      "date": "2026-06-18",
+      "description": "enlèvement des débarras ",
+      "photo_avant": "/images/uploads/img-20260626-wa0005-1-.jpg",
+      "photo_apres": "/images/uploads/img-20260626-wa0006.jpg"
     }
   ]
 }
