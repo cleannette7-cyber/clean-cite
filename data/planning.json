@@ -2,25 +2,14 @@
   "planning": [
     {
       "publier": true,
-      "heure": "9h00-11h00",
-      "type_prestation": "Rendez-vous devis",
-      "ville": "bobigny",
-      "statut": "Confirmé",
-      "note": "être là-bas 5 minutes avant l'heure",
-      "date": "2026-05-15",
-      "client_email": "cleannette7@gmail.com",
-      "client_nom": "Clean-Cité / Test admin"
-    },
-    {
-      "publier": true,
-      "date": "2026-05-17",
-      "heure": "15h00 - 19h00",
-      "type_prestation": "Parties communes",
-      "ville": "paris 75",
-      "statut": "Confirmé",
-      "note": "être a l'heure",
-      "client_email": "cleannette7@gmail.com",
-      "client_nom": "Clean-Cité / Test admin"
+      "client_email": "fousseynit7@gmail.com",
+      "heure": "08h00 - 16h00",
+      "date": "2026-07-21",
+      "ville": "AUBER VILLIERS ",
+      "note": "Un chantier tranquille ",
+      "statut": "Terminé",
+      "type_prestation": "Nettoyage de chantier",
+      "client_nom": "Amar"
     }
   ]
 }
