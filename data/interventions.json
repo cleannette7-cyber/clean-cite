@@ -26,6 +26,16 @@
       "description": "appartement témoin ",
       "photo_avant": "https://res.cloudinary.com/dljukcipa/image/upload/v1779900561/1000079491_rcrinp.jpg",
       "photo_apres": "https://res.cloudinary.com/dljukcipa/image/upload/v1779900319/20260519_134638_1_wem9qa.jpg"
+    },
+    {
+      "publier": true,
+      "ville": "AUBERVILLIERS",
+      "titre": "Nettoyage avant visite ",
+      "type_prestation": "Chantier en cours",
+      "date": "2026-07-23",
+      "description": "Nettoyage et évacuation des matériaux non exploitables.",
+      "photo_avant": "/images/uploads/20260723_093309.jpg",
+      "photo_apres": "/images/uploads/20260723_100404.jpg"
     }
   ]
 }
