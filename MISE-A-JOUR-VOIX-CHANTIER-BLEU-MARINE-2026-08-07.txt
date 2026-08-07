@@ -1,0 +1,37 @@
+CLEAN-CITÉ — MISE À JOUR 2026-08-07
+====================================
+
+1. AGENT IA VOCAL
+- Ajout d'un bouton micro dans l'Assistant IA Clean-Cité.
+- Dictée vocale en français via les fonctions vocales du navigateur.
+- Le message dicté est transcrit puis envoyé automatiquement à Gemini.
+- Lecture vocale automatique des réponses de l'IA.
+- Bouton 🔊 / 🔇 pour activer ou couper la lecture des réponses.
+- Si le navigateur ne supporte pas le micro vocal, le chat texte reste disponible.
+- Aucun nouvel abonnement ni clé API n'est nécessaire pour le micro.
+- Le navigateur demande l'autorisation du micro au premier usage.
+- Netlify fournit le HTTPS nécessaire au fonctionnement du micro.
+
+2. CHANTIER EN COURS
+- Tarif : 28 € HT / heure / agent.
+- Journée type : 7 heures.
+- 1 agent pendant 7 h = 196 € HT / jour.
+- Le pré-devis demande désormais :
+  * nombre d'agents par jour ;
+  * nombre d'heures par jour ;
+  * nombre de jours.
+- Formule : agents × heures/jour × jours × 28 € HT.
+- Exemple : 2 agents × 7 h × 3 jours × 28 € = 1 176 € HT.
+- Les données sont reprises dans WhatsApp, l'email de devis et le contexte envoyé à l'IA.
+
+3. IDENTITÉ VISUELLE
+- Retour au bleu marine pour les grandes zones et les éléments principaux.
+- Bleu marine principal : #0B2447.
+- Bleu secondaire : #1E5A8A.
+- Conservation des touches dorées / beige du nouveau logo.
+- Suppression du noir/brun très foncé comme couleur principale.
+
+4. TARIFS ET SEO
+- Toutes les corrections de la version précédente sont conservées.
+- Agent IA synchronisé avec les tarifs 2026.
+- SEO, pages locales, sitemap, données structurées et nouveau logo conservés.

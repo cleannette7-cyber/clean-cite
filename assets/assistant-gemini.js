@@ -17,9 +17,13 @@
     messages: [
       {
         role: "assistant",
-        content: "Bonjour, je suis l'assistant IA Clean-Cité. Je peux vous aider à choisir une prestation, estimer un tarif indicatif ou préparer une demande de devis."
+        content: "Bonjour, je suis l'assistant IA Clean-Cité. Je peux vous aider à choisir une prestation, estimer un tarif indicatif ou préparer une demande de devis. Vous pouvez aussi me parler avec le micro."
       }
-    ]
+    ],
+    voiceReplies: true,
+    recognition: null,
+    listening: false,
+    pendingVoiceText: ""
   };
 
   function escapeHtml(value) {
@@ -57,7 +61,10 @@
             <span class="ccai-avatar">🤖</span>
             <div>Assistant IA Clean-Cité<small>Devis, questions, conseils et contact</small></div>
           </div>
-          <button class="ccai-close" type="button" aria-label="Fermer">×</button>
+          <div class="ccai-header-actions">
+            <button class="ccai-voice-toggle active" type="button" id="ccai-voice-toggle" aria-label="Désactiver les réponses vocales" aria-pressed="true" title="Réponses vocales activées">🔊</button>
+            <button class="ccai-close" type="button" aria-label="Fermer">×</button>
+          </div>
         </div>
 
         <div class="ccai-tabs">
@@ -75,9 +82,11 @@
               <button class="ccai-chip" type="button" data-q="Intervenez-vous en Île-de-France ?">Zone intervention</button>
             </div>
             <div class="ccai-chatbar">
-              <input class="ccai-input" id="ccai-input" type="text" placeholder="Écrivez votre demande...">
+              <input class="ccai-input" id="ccai-input" type="text" placeholder="Écrivez ou dictez votre demande...">
+              <button class="ccai-mic" type="button" id="ccai-mic" aria-label="Parler à l'assistant" title="Parler à l'assistant">🎙️</button>
               <button class="ccai-send" type="button" id="ccai-send">Envoyer</button>
             </div>
+            <p class="ccai-voice-status" id="ccai-voice-status">🎙️ Appuyez sur le micro pour parler. Votre navigateur demandera l'autorisation la première fois.</p>
             <p class="ccai-note">L'assistant donne des estimations indicatives. Le devis final est confirmé par l'équipe Clean-Cité.</p>
           </div>
 
@@ -130,15 +139,20 @@
                 </div>
               </div>
 
-              <div class="ccai-grid2" id="ccai-hourly-row" style="display:none">
+              <div class="ccai-worksite-grid" id="ccai-hourly-row" style="display:none">
                 <div class="ccai-field">
-                  <label for="ccai-hours">Heures estimées / passage</label>
-                  <input class="ccai-input" id="ccai-hours" type="number" min="1" step="0.5" value="4">
+                  <label for="ccai-agents">Agents / jour</label>
+                  <input class="ccai-input" id="ccai-agents" type="number" min="1" step="1" value="1">
                 </div>
                 <div class="ccai-field">
-                  <label>Base chantier</label>
-                  <input class="ccai-input" value="28 € HT / heure" disabled>
+                  <label for="ccai-hours">Heures / jour</label>
+                  <input class="ccai-input" id="ccai-hours" type="number" min="1" max="24" step="0.5" value="7">
                 </div>
+                <div class="ccai-field">
+                  <label for="ccai-workdays">Nombre de jours</label>
+                  <input class="ccai-input" id="ccai-workdays" type="number" min="1" step="1" value="1">
+                </div>
+                <div class="ccai-worksite-note">Base : <strong>28 € HT/h par agent</strong> · journée type 7 h = <strong>196 € HT / agent / jour</strong>.</div>
               </div>
 
               <div class="ccai-grid2" id="ccai-bins-row" style="display:none">
@@ -225,12 +239,134 @@
       });
       const data = await response.json();
       state.messages.pop();
-      state.messages.push({ role: "assistant", content: data.reply || data.message || "Je n'ai pas pu répondre pour le moment." });
+      const reply = data.reply || data.message || "Je n'ai pas pu répondre pour le moment.";
+      state.messages.push({ role: "assistant", content: reply });
+      renderMessages(root);
+      speakText(reply);
+      return;
     } catch (error) {
       state.messages.pop();
-      state.messages.push({ role: "assistant", content: "Impossible de joindre l'assistant pour le moment. Vous pouvez contacter Clean-Cité au 07 66 53 61 54." });
+      const reply = "Impossible de joindre l'assistant pour le moment. Vous pouvez contacter Clean-Cité au 07 66 53 61 54.";
+      state.messages.push({ role: "assistant", content: reply });
+      renderMessages(root);
+      speakText(reply);
+      return;
     }
-    renderMessages(root);
+  }
+
+  function speakText(text) {
+    if (!state.voiceReplies || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(String(text || "").replace(/[*#_`]/g, ""));
+      utterance.lang = "fr-FR";
+      utterance.rate = 0.98;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    } catch (_) {}
+  }
+
+  function setVoiceStatus(root, message, mode) {
+    const el = root.querySelector("#ccai-voice-status");
+    if (!el) return;
+    el.textContent = message;
+    el.classList.toggle("listening", mode === "listening");
+    el.classList.toggle("error", mode === "error");
+  }
+
+  function initVoice(root) {
+    const mic = root.querySelector("#ccai-mic");
+    const toggle = root.querySelector("#ccai-voice-toggle");
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!("speechSynthesis" in window) && toggle) {
+      toggle.disabled = true;
+      toggle.title = "Réponse vocale non prise en charge par ce navigateur";
+    }
+
+    if (toggle) {
+      toggle.addEventListener("click", () => {
+        state.voiceReplies = !state.voiceReplies;
+        toggle.classList.toggle("active", state.voiceReplies);
+        toggle.setAttribute("aria-pressed", String(state.voiceReplies));
+        toggle.setAttribute("aria-label", state.voiceReplies ? "Désactiver les réponses vocales" : "Activer les réponses vocales");
+        toggle.title = state.voiceReplies ? "Réponses vocales activées" : "Réponses vocales désactivées";
+        toggle.textContent = state.voiceReplies ? "🔊" : "🔇";
+        if (!state.voiceReplies && "speechSynthesis" in window) window.speechSynthesis.cancel();
+      });
+    }
+
+    if (!Recognition) {
+      if (mic) {
+        mic.disabled = true;
+        mic.title = "Micro vocal non pris en charge par ce navigateur";
+      }
+      setVoiceStatus(root, "Le micro vocal n'est pas disponible sur ce navigateur. Vous pouvez toujours écrire votre message.", "error");
+      return;
+    }
+
+    const recognition = new Recognition();
+    recognition.lang = "fr-FR";
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+    state.recognition = recognition;
+
+    recognition.onstart = () => {
+      state.listening = true;
+      state.pendingVoiceText = "";
+      mic.classList.add("listening");
+      mic.textContent = "⏹";
+      mic.setAttribute("aria-label", "Arrêter l'écoute");
+      setVoiceStatus(root, "Je vous écoute… Parlez normalement.", "listening");
+    };
+
+    recognition.onresult = (event) => {
+      let finalText = "";
+      let interimText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0] ? event.results[i][0].transcript : "";
+        if (event.results[i].isFinal) finalText += transcript;
+        else interimText += transcript;
+      }
+      const text = (finalText || interimText).trim();
+      const input = root.querySelector("#ccai-input");
+      if (input && text) input.value = text;
+      if (finalText.trim()) state.pendingVoiceText = finalText.trim();
+    };
+
+    recognition.onerror = (event) => {
+      state.pendingVoiceText = "";
+      const denied = event.error === "not-allowed" || event.error === "service-not-allowed";
+      setVoiceStatus(root, denied ? "Autorisation du micro refusée. Autorisez le micro dans les réglages du navigateur puis réessayez." : "Je n'ai pas bien entendu. Appuyez sur le micro pour réessayer.", "error");
+    };
+
+    recognition.onend = () => {
+      state.listening = false;
+      mic.classList.remove("listening");
+      mic.textContent = "🎙️";
+      mic.setAttribute("aria-label", "Parler à l'assistant");
+      const text = state.pendingVoiceText.trim();
+      state.pendingVoiceText = "";
+      if (text) {
+        setVoiceStatus(root, `Vous avez dit : « ${text} »`, "");
+        sendChat(root, text);
+      } else if (!root.querySelector("#ccai-voice-status")?.classList.contains("error")) {
+        setVoiceStatus(root, "🎙️ Appuyez sur le micro pour parler.", "");
+      }
+    };
+
+    mic.addEventListener("click", () => {
+      if (state.listening) {
+        recognition.stop();
+        return;
+      }
+      try {
+        recognition.start();
+      } catch (_) {
+        setVoiceStatus(root, "Le micro est déjà actif. Parlez ou appuyez de nouveau pour arrêter.", "listening");
+      }
+    });
   }
 
   function getConditionLabel(value) {
@@ -257,7 +393,9 @@
     const surface = Number(root.querySelector("#ccai-surface").value || 0);
     const conditionCode = root.querySelector("#ccai-condition").value;
     const frequencyCode = root.querySelector("#ccai-frequency").value;
+    const agents = Math.max(1, Number(root.querySelector("#ccai-agents").value || 1));
     const hours = Math.max(0, Number(root.querySelector("#ccai-hours").value || 0));
+    const workDays = Math.max(1, Number(root.querySelector("#ccai-workdays").value || 1));
     const bins = Math.max(0, Number(root.querySelector("#ccai-bins").value || 0));
     const binPasses = Math.max(0, Number(root.querySelector("#ccai-bin-passes").value || 0));
 
@@ -294,11 +432,11 @@
 
     if (selected.type === "hourly" && hours > 0) {
       rate = 28;
-      const raw = hours * rate;
-      total = frequencyCode === "once" ? Math.max(raw, 150) : raw;
-      billingUnit = frequencyCode === "once" ? "intervention" : "par passage";
-      estimateText = frequencyCode === "once" ? money(total) : `${money(total)} / passage`;
-      detail = `${hours} h × 28 € HT/h${frequencyCode === "once" ? ". Minimum ponctuel de 150 € si nécessaire." : " par passage. Contrat final sur devis."}`;
+      const raw = agents * hours * workDays * rate;
+      total = Math.max(raw, 150);
+      billingUnit = "intervention";
+      estimateText = money(total);
+      detail = `${agents} agent(s) × ${hours} h/jour × ${workDays} jour(s) × 28 € HT/h. Journée type 7 h = 196 € HT par agent. Minimum ponctuel de 150 € si nécessaire.`;
     }
 
     if (selected.type === "restoration" && surface > 0) {
@@ -367,7 +505,9 @@
       conditionCode,
       frequency: getFrequencyLabel(frequencyCode),
       frequencyCode,
+      agents,
       hours,
+      workDays,
       bins,
       binPasses,
       name: root.querySelector("#ccai-name").value.trim(),
@@ -394,7 +534,7 @@
 
     const needsSurface = ["office", "surface_state", "restoration", "glass", "terrace"].includes(selected.type);
     const needsCondition = ["surface_state", "restoration", "glass", "terrace"].includes(selected.type);
-    const needsFrequency = ["office", "hourly"].includes(selected.type);
+    const needsFrequency = ["office"].includes(selected.type);
 
     surfaceWrap.style.display = needsSurface ? "block" : "none";
     conditionWrap.style.display = needsCondition ? "block" : "none";
@@ -413,7 +553,11 @@
 
     const extras = [];
     if (payload.surface) extras.push(`Surface : ${payload.surface} m²`);
-    if (payload.hours && payload.service === "chantier") extras.push(`Durée estimée : ${payload.hours} h / passage`);
+    if (payload.service === "chantier") {
+      extras.push(`Agents : ${payload.agents}`);
+      extras.push(`Heures / jour : ${payload.hours}`);
+      extras.push(`Nombre de jours : ${payload.workDays}`);
+    }
     if (payload.bins && payload.service === "sortie_poubelles") extras.push(`Bacs : ${payload.bins}`);
     if (payload.binPasses && payload.service === "sortie_poubelles") extras.push(`Passages : ${payload.binPasses} / semaine`);
     if (payload.plan) extras.push(`Formule : ${payload.plan}`);
@@ -474,11 +618,12 @@
     root.querySelector(".ccai-close").addEventListener("click", () => root.classList.remove("open"));
     root.querySelectorAll(".ccai-tab").forEach((btn) => btn.addEventListener("click", () => switchView(root, btn.dataset.view)));
     root.querySelector("#ccai-send").addEventListener("click", () => sendChat(root));
+    initVoice(root);
     root.querySelector("#ccai-input").addEventListener("keydown", (e) => {
       if (e.key === "Enter") sendChat(root);
     });
     root.querySelectorAll(".ccai-chip").forEach((btn) => btn.addEventListener("click", () => sendChat(root, btn.dataset.q)));
-    root.querySelectorAll("#ccai-service,#ccai-surface,#ccai-city,#ccai-condition,#ccai-frequency,#ccai-hours,#ccai-bins,#ccai-bin-passes,#ccai-name,#ccai-phone,#ccai-email,#ccai-extra").forEach((field) => {
+    root.querySelectorAll("#ccai-service,#ccai-surface,#ccai-city,#ccai-condition,#ccai-frequency,#ccai-agents,#ccai-hours,#ccai-workdays,#ccai-bins,#ccai-bin-passes,#ccai-name,#ccai-phone,#ccai-email,#ccai-extra").forEach((field) => {
       field.addEventListener("input", () => updateEstimate(root));
       field.addEventListener("change", () => updateEstimate(root));
     });
@@ -493,7 +638,7 @@
       const details = [
         `Service : ${p.serviceLabel}`,
         p.surface ? `surface : ${p.surface} m²` : "",
-        p.hours && p.service === "chantier" ? `durée : ${p.hours} h/passage` : "",
+        p.service === "chantier" ? `agents : ${p.agents}, ${p.hours} h/jour, ${p.workDays} jour(s)` : "",
         p.bins && p.service === "sortie_poubelles" ? `bacs : ${p.bins}` : "",
         p.binPasses && p.service === "sortie_poubelles" ? `passages : ${p.binPasses}/semaine` : "",
         `ville : ${p.city || "non précisée"}`,

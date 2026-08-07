@@ -28,7 +28,13 @@ function displayValue(value, fallback = "Non renseigné") {
 function formatPayload(p) {
   const total = p.estimateText || (p.total && !Number.isNaN(Number(p.total)) ? `${Number(p.total).toFixed(2)} €` : "À confirmer");
   const extraLines = [];
-  if (p.hours) extraLines.push(`Durée estimée : ${p.hours} h / passage`);
+  if (p.service === "chantier" || p.agents || p.workDays) {
+    if (p.agents) extraLines.push(`Nombre d'agents : ${p.agents}`);
+    if (p.hours) extraLines.push(`Heures par jour : ${p.hours} h`);
+    if (p.workDays) extraLines.push(`Nombre de jours : ${p.workDays}`);
+  } else if (p.hours) {
+    extraLines.push(`Durée estimée : ${p.hours} h`);
+  }
   if (p.bins) extraLines.push(`Nombre de bacs : ${p.bins}`);
   if (p.binPasses) extraLines.push(`Passages poubelles : ${p.binPasses} / semaine`);
   if (p.plan) extraLines.push(`Formule poubelles : ${p.plan}`);

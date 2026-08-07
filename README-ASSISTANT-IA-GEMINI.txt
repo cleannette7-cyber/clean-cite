@@ -9,7 +9,7 @@ TARIFS CONNUS PAR L'IA ET LE DEVIS RAPIDE
 ==========================================
 - Bureaux ponctuels : dès 1,50 €/m² (minimum ponctuel 150 €).
 - Bureaux réguliers : dès 1 €/m² par passage.
-- Chantier en cours : 28 € HT/heure.
+- Chantier en cours : 28 € HT/heure/par agent. Journée type 7 h = 196 € HT par agent. Calcul : agents × heures/jour × jours × 28 €.
 - Fin de chantier : léger 4,50 €/m² ; standard 6 €/m² ; très sale 9 €/m².
 - Remise en état : dès 6,50 €/m² ; très encrassé dès 8,50 €/m².
 - Vitrerie : dès 4 €/m² ; très sale dès 6,50 €/m² ; hauteur/nacelle sur devis.
@@ -60,3 +60,24 @@ SÉCURITÉ
 - Le navigateur n'obtient jamais GEMINI_API_KEY.
 - Les tarifs affichés par l'IA restent indicatifs.
 - Le minimum de 150 € ne s'applique pas automatiquement aux contrats réguliers, parties communes ou abonnements poubelles.
+
+
+MODE VOCAL / MICRO
+==================
+Le chat IA inclut maintenant un bouton micro.
+- Au premier clic, le navigateur demande l'autorisation d'utiliser le microphone.
+- Le client parle en français ; le texte est transcrit puis envoyé automatiquement à l'assistant IA.
+- Les réponses de l'assistant sont lues à voix haute si le bouton haut-parleur 🔊 est activé.
+- Le bouton 🔊 / 🔇 permet d'activer ou de couper la lecture vocale.
+- Aucune clé API supplémentaire n'est nécessaire pour le micro : le site utilise les fonctions vocales du navigateur.
+- Le site doit être ouvert en HTTPS (Netlify le fournit automatiquement) pour que l'accès au microphone fonctionne correctement.
+- Si le navigateur ne prend pas en charge la reconnaissance vocale, le chat texte reste disponible.
+
+CHANTIER EN COURS — NOUVEAU CALCUL
+===================================
+Le devis rapide demande maintenant :
+- nombre d'agents par jour ;
+- nombre d'heures par jour (7 h par défaut) ;
+- nombre de jours.
+Formule indicative : agents × heures/jour × jours × 28 € HT.
+Exemple : 2 agents × 7 h × 3 jours × 28 € = 1 176 € HT.
