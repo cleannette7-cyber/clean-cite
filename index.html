@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Entreprise de nettoyage à Bobigny | Clean-Cité Île-de-France</title>
-<meta name="description" content="Clean-Cité est une entreprise de nettoyage professionnel à Bobigny, spécialisée dans l’entretien de bureaux, immeubles, copropriétés, vitres, fins de chantier et locaux professionnels en Île-de-France. Devis rapide et intervention soignée.">
-<link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
-<link rel="shortcut icon" type="image/png" href="/images/favicon-clean-cite.png?v=4">
-<link rel="apple-touch-icon" href="/images/favicon-clean-cite.png?v=4">
+<meta name="description" content="Clean-Cité, entreprise de nettoyage à Bobigny : bureaux, fins de chantier, remise en état, vitres, copropriétés et poubelles en Île-de-France. Devis rapide.">
+<link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=5">
+<link rel="shortcut icon" type="image/png" href="/images/favicon-clean-cite.png?v=5">
+<link rel="apple-touch-icon" href="/images/favicon-clean-cite.png?v=5">
 <link rel="canonical" href="https://clean-cite.org/">
 <meta name="google-site-verification" content="QZqrryu1OCXvxu2sTZcYXpJT9AyNn7h0r-N2ZJc1sxE" />
 <meta property="og:title" content="Clean-Cité | Entreprise de nettoyage à Bobigny">
@@ -16,7 +16,10 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://clean-cite.org/images/logo-clean-cite.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#211f1a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <script type="application/ld+json">
 {
@@ -26,7 +29,6 @@
   "url": "https://clean-cite.org/",
   "telephone": "+33766536154",
   "email": "cleannette7@gmail.com",
-  "priceRange": "€€",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "149 rue de Paris",
@@ -44,24 +46,30 @@
     "Seine-Saint-Denis",
     "Île-de-France"
   ],
+  "logo": "https://clean-cite.org/images/logo-clean-cite.png",
+  "image": "https://clean-cite.org/images/logo-clean-cite.png",
+  "priceRange": "€€",
   "serviceType": [
     "Nettoyage de bureaux",
     "Nettoyage d'immeubles",
     "Nettoyage de copropriétés",
     "Nettoyage de vitres",
-    "Nettoyage fin de chantier"
+    "Nettoyage fin de chantier",
+    "Remise en état",
+    "Sortie et rentrée de poubelles",
+    "Nettoyage de terrasses"
   ]
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #1a2f5e;
-  --orange: #f47920;
-  --blue: #2b6cb0;
-  --light: #f8f9fc;
-  --gray: #6b7280;
-  --light-gray: #e5e7eb;
+  --navy: #211f1a;
+  --orange: #9a681f;
+  --blue: #6e4a1b;
+  --light: #fcf7f0;
+  --gray: #6f675a;
+  --light-gray: #e8ded1;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -91,10 +99,10 @@ nav {
 .nav-cta {
   background:var(--orange); color:white !important; padding:10px 22px;
   border-radius:50px; font-weight:800 !important;
-  box-shadow:0 4px 16px rgba(244,121,32,0.4);
+  box-shadow:0 4px 16px rgba(154,104,31,0.4);
   transition:transform 0.2s, box-shadow 0.2s;
 }
-.nav-cta:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(244,121,32,0.5); }
+.nav-cta:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(154,104,31,0.5); }
 
 /* DROPDOWN */
 .dd-wrap { position:relative; }
@@ -160,7 +168,7 @@ nav {
 /* ===== HERO ===== */
 .hero {
   min-height:100vh;
-  background:linear-gradient(135deg, var(--navy) 0%, #0f1e3d 60%, #162848 100%);
+  background:linear-gradient(135deg, var(--navy) 0%, #15140f 60%, #2a251b 100%);
   display:flex; align-items:center; padding:120px 60px 80px;
   position:relative; overflow:hidden;
 }
@@ -171,8 +179,8 @@ nav {
 }
 .hero-content { max-width:600px; position:relative; z-index:2; }
 .hero-badge {
-  display:inline-block; background:rgba(244,121,32,0.2);
-  border:1px solid rgba(244,121,32,0.4); color:var(--orange);
+  display:inline-block; background:rgba(154,104,31,0.2);
+  border:1px solid rgba(154,104,31,0.4); color:var(--orange);
   font-size:0.78rem; font-weight:800; letter-spacing:2px;
   text-transform:uppercase; padding:6px 18px; border-radius:50px; margin-bottom:24px;
 }
@@ -186,9 +194,9 @@ nav {
 .btn-primary {
   background:var(--orange); color:white; padding:15px 34px; border-radius:50px;
   font-weight:800; font-size:1rem; text-decoration:none;
-  box-shadow:0 8px 28px rgba(244,121,32,0.5); transition:transform 0.2s,box-shadow 0.2s;
+  box-shadow:0 8px 28px rgba(154,104,31,0.5); transition:transform 0.2s,box-shadow 0.2s;
 }
-.btn-primary:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(244,121,32,0.6); }
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(154,104,31,0.6); }
 .btn-outline {
   border:2px solid rgba(255,255,255,0.3); color:white; padding:15px 34px;
   border-radius:50px; font-weight:700; font-size:1rem; text-decoration:none;
@@ -236,9 +244,9 @@ nav {
   background:var(--orange); color:white; font-family:'Bebas Neue',sans-serif;
   font-size:1.5rem; width:52px; height:52px; border-radius:12px;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  box-shadow:0 6px 18px rgba(244,121,32,0.3);
+  box-shadow:0 6px 18px rgba(154,104,31,0.3);
 }
-.cat-pill.p2 { background:var(--navy); box-shadow:0 6px 18px rgba(26,47,94,0.3); }
+.cat-pill.p2 { background:var(--navy); box-shadow:0 6px 18px rgba(33,31,26,0.3); }
 .cat-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; color:var(--navy); }
 .cat-desc { font-size:0.88rem; color:var(--gray); }
 
@@ -253,17 +261,17 @@ nav {
   position:relative; overflow:hidden;
 }
 .service-card:hover {
-  transform:translateY(-5px); box-shadow:0 18px 50px rgba(26,47,94,0.12);
+  transform:translateY(-5px); box-shadow:0 18px 50px rgba(33,31,26,0.12);
   border-color:var(--orange);
 }
-.service-card.blue-card { background:linear-gradient(135deg,#f0f5ff,#e8f0fe); }
-.service-card.blue-card:hover { border-color:var(--navy); box-shadow:0 18px 50px rgba(26,47,94,0.12); }
+.service-card.blue-card { background:linear-gradient(135deg,#f5eadb,#f2e6d5); }
+.service-card.blue-card:hover { border-color:var(--navy); box-shadow:0 18px 50px rgba(33,31,26,0.12); }
 .svc-icon {
-  width:52px; height:52px; background:linear-gradient(135deg,var(--orange),#f9a04a);
+  width:52px; height:52px; background:linear-gradient(135deg,var(--orange),#c9973f);
   border-radius:14px; display:flex; align-items:center; justify-content:center;
-  font-size:1.5rem; margin-bottom:16px; box-shadow:0 6px 18px rgba(244,121,32,0.25);
+  font-size:1.5rem; margin-bottom:16px; box-shadow:0 6px 18px rgba(154,104,31,0.25);
 }
-.svc-icon.blue { background:linear-gradient(135deg,var(--navy),var(--blue)); box-shadow:0 6px 18px rgba(26,47,94,0.25); }
+.svc-icon.blue { background:linear-gradient(135deg,var(--navy),var(--blue)); box-shadow:0 6px 18px rgba(33,31,26,0.25); }
 .service-card h3 { font-size:1.05rem; font-weight:800; color:var(--navy); margin-bottom:8px; }
 .service-card p { font-size:0.88rem; color:var(--gray); line-height:1.6; }
 .svc-hint {
@@ -274,9 +282,9 @@ nav {
 /* PRICE ELEMENTS */
 .price-badge {
   display:inline-block; margin-top:12px;
-  background:linear-gradient(135deg,var(--orange),#f9a04a); color:white;
+  background:linear-gradient(135deg,var(--orange),#c9973f); color:white;
   font-weight:800; font-size:0.95rem; padding:6px 16px; border-radius:50px;
-  box-shadow:0 4px 12px rgba(244,121,32,0.35);
+  box-shadow:0 4px 12px rgba(154,104,31,0.35);
 }
 .price-list { display:flex; flex-direction:column; gap:7px; margin-top:14px; }
 .price-row {
@@ -287,17 +295,17 @@ nav {
 .price-label { font-size:0.83rem; font-weight:700; color:var(--navy); }
 .price-amount {
   font-size:0.88rem; font-weight:800; color:var(--orange);
-  background:rgba(244,121,32,0.1); padding:3px 10px; border-radius:50px;
+  background:rgba(154,104,31,0.1); padding:3px 10px; border-radius:50px;
   white-space:nowrap;
 }
 .price-extras { margin-top:12px; border-top:2px dashed var(--light-gray); padding-top:10px; }
 .price-extras-title { font-size:0.7rem; font-weight:800; text-transform:uppercase;
   letter-spacing:1.5px; color:var(--gray); margin-bottom:7px; }
-.price-row-extra { background:#fff8f4; border-color:rgba(244,121,32,0.15); }
-.price-amount-extra { background:rgba(244,121,32,0.12); }
+.price-row-extra { background:#fff8f4; border-color:rgba(154,104,31,0.15); }
+.price-amount-extra { background:rgba(154,104,31,0.12); }
 .price-note { font-size:0.78rem; color:var(--gray); font-style:italic; margin-top:8px; }
 .price-quote {
-  margin-top:12px; background:linear-gradient(135deg,rgba(26,47,94,0.06),rgba(43,108,176,0.08));
+  margin-top:12px; background:linear-gradient(135deg,rgba(33,31,26,0.06),rgba(110,74,27,0.08));
   border-left:3px solid var(--navy); border-radius:0 10px 10px 0;
   padding:12px 14px; font-size:0.83rem; color:var(--navy); line-height:1.6;
 }
@@ -306,7 +314,7 @@ nav {
 /* ===== WHY ===== */
 .why {
   padding:90px 60px;
-  background:linear-gradient(135deg,var(--navy),#0f1e3d);
+  background:linear-gradient(135deg,var(--navy),#15140f);
 }
 .why .section-title { color:white; }
 .why .section-sub { color:rgba(255,255,255,0.6); }
@@ -337,21 +345,21 @@ nav {
   border:2px solid var(--light-gray); position:relative; display:flex;
   flex-direction:column; transition:transform 0.3s,box-shadow 0.3s;
 }
-.plan-card:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(26,47,94,0.1); }
+.plan-card:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(33,31,26,0.1); }
 .plan-card.featured {
   background:linear-gradient(145deg,var(--navy),#1e3a6e);
   border-color:var(--orange); transform:scale(1.03);
-  box-shadow:0 20px 55px rgba(26,47,94,0.28);
+  box-shadow:0 20px 55px rgba(33,31,26,0.28);
 }
 .plan-card.featured:hover { transform:scale(1.03) translateY(-5px); }
 .plan-popular {
   position:absolute; top:-14px; left:50%; transform:translateX(-50%);
   background:var(--orange); color:white; font-size:0.75rem; font-weight:800;
   padding:5px 18px; border-radius:50px; white-space:nowrap;
-  box-shadow:0 4px 14px rgba(244,121,32,0.4);
+  box-shadow:0 4px 14px rgba(154,104,31,0.4);
 }
 .plan-badge {
-  display:inline-block; background:rgba(244,121,32,0.1); color:var(--orange);
+  display:inline-block; background:rgba(154,104,31,0.1); color:var(--orange);
   font-size:0.7rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase;
   padding:4px 14px; border-radius:50px; margin-bottom:14px;
 }
@@ -371,9 +379,9 @@ nav {
 .plan-cta {
   display:block; background:var(--orange); color:white; padding:13px 26px;
   border-radius:50px; font-weight:800; font-size:0.92rem; text-decoration:none;
-  transition:transform 0.2s,box-shadow 0.2s; box-shadow:0 6px 18px rgba(244,121,32,0.35);
+  transition:transform 0.2s,box-shadow 0.2s; box-shadow:0 6px 18px rgba(154,104,31,0.35);
 }
-.plan-cta:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(244,121,32,0.5); }
+.plan-cta:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(154,104,31,0.5); }
 .plan-cta.w { background:white; color:var(--navy); box-shadow:0 6px 18px rgba(0,0,0,0.12); }
 .plan-cta.w:hover { box-shadow:0 10px 28px rgba(0,0,0,0.18); }
 .sub-note {
@@ -396,7 +404,7 @@ nav {
 .contact > div > p { color:var(--gray); line-height:1.7; margin-bottom:36px; }
 .cinfo { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
 .cicon {
-  width:46px; height:46px; background:linear-gradient(135deg,var(--orange),#f9a04a);
+  width:46px; height:46px; background:linear-gradient(135deg,var(--orange),#c9973f);
   border-radius:11px; display:flex; align-items:center; justify-content:center;
   font-size:1.1rem; flex-shrink:0;
 }
@@ -418,10 +426,10 @@ nav {
   width:100%; background:var(--orange); color:white; border:none;
   padding:15px; border-radius:50px; font-family:'Nunito',sans-serif;
   font-size:0.95rem; font-weight:800; cursor:pointer;
-  box-shadow:0 8px 26px rgba(244,121,32,0.4); letter-spacing:0.5px;
+  box-shadow:0 8px 26px rgba(154,104,31,0.4); letter-spacing:0.5px;
   transition:transform 0.2s,box-shadow 0.2s;
 }
-.btn-submit:hover { transform:translateY(-2px); box-shadow:0 14px 36px rgba(244,121,32,0.5); }
+.btn-submit:hover { transform:translateY(-2px); box-shadow:0 14px 36px rgba(154,104,31,0.5); }
 
 /* ===== FOOTER ===== */
 footer {
@@ -479,13 +487,13 @@ footer p { font-size:0.82rem; }
   padding:8px 0; border-bottom:1px solid var(--light-gray); gap:10px; }
 .devis-line:last-child { border:none; }
 .devis-total {
-  background:linear-gradient(135deg,var(--orange),#f9a04a); color:white;
+  background:linear-gradient(135deg,var(--orange),#c9973f); color:white;
   border-radius:12px; padding:15px 18px;
   display:flex; justify-content:space-between; align-items:center; margin-top:14px;
 }
 .devis-total strong { font-size:1.3rem; }
 .devis-remark {
-  background:#f0f9ff; border-left:3px solid var(--blue);
+  background:#f8f1e7; border-left:3px solid var(--blue);
   border-radius:0 10px 10px 0; padding:12px 14px; margin-top:14px;
   font-size:0.85rem; color:var(--navy); line-height:1.6;
 }
@@ -509,19 +517,19 @@ footer p { font-size:0.82rem; }
   box-shadow:0 34px 85px rgba(0,0,0,.28);overflow:hidden;
   border:1px solid rgba(255,255,255,.75);isolation:isolate;
 }
-.hero-card-visual:before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-100px;bottom:-85px;background:radial-gradient(circle,rgba(244,121,32,.34),rgba(244,121,32,.04) 68%);z-index:0;}
-.hero-card-visual:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;left:-90px;top:-80px;background:radial-gradient(circle,rgba(43,108,176,.25),rgba(43,108,176,.04) 70%);z-index:0;}
-.hero-agent-img{position:absolute;right:12px;bottom:10px;max-width:390px;width:88%;height:auto;object-fit:contain;z-index:2;filter:drop-shadow(0 24px 28px rgba(26,47,94,.28));}
+.hero-card-visual:before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-100px;bottom:-85px;background:radial-gradient(circle,rgba(154,104,31,.34),rgba(154,104,31,.04) 68%);z-index:0;}
+.hero-card-visual:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;left:-90px;top:-80px;background:radial-gradient(circle,rgba(110,74,27,.25),rgba(110,74,27,.04) 70%);z-index:0;}
+.hero-agent-img{position:absolute;right:12px;bottom:10px;max-width:390px;width:88%;height:auto;object-fit:contain;z-index:2;filter:drop-shadow(0 24px 28px rgba(33,31,26,.28));}
 .hero-logo-img{display:none;}
-.hero-mini-card{position:absolute;z-index:3;background:white;border-radius:18px;padding:14px 16px;box-shadow:0 14px 35px rgba(26,47,94,.16);border:1px solid rgba(26,47,94,.08);}
+.hero-mini-card{position:absolute;z-index:3;background:white;border-radius:18px;padding:14px 16px;box-shadow:0 14px 35px rgba(33,31,26,.16);border:1px solid rgba(33,31,26,.08);}
 .hero-mini-card strong{display:block;font-size:.84rem;font-weight:900;color:var(--navy);}
 .hero-mini-card span{display:block;font-size:.72rem;color:var(--gray);margin-top:2px;}
 .hero-mini-card.card-a{left:24px;top:34px;}
 .hero-mini-card.card-b{left:26px;bottom:54px;}
 .hero-mini-card.card-c{right:26px;top:160px;}
-.hero-shape-line{position:absolute;z-index:1;left:48px;right:48px;bottom:92px;height:14px;border-radius:99px;background:linear-gradient(90deg,var(--orange),rgba(244,121,32,.16));transform:rotate(-6deg);}
-.hero-spark{position:absolute;z-index:1;width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 8px rgba(244,121,32,.12);}
-.hero-spark.s1{top:118px;right:58px}.hero-spark.s2{bottom:160px;left:80px;background:var(--blue);box-shadow:0 0 0 8px rgba(43,108,176,.10)}
+.hero-shape-line{position:absolute;z-index:1;left:48px;right:48px;bottom:92px;height:14px;border-radius:99px;background:linear-gradient(90deg,var(--orange),rgba(154,104,31,.16));transform:rotate(-6deg);}
+.hero-spark{position:absolute;z-index:1;width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 8px rgba(154,104,31,.12);}
+.hero-spark.s1{top:118px;right:58px}.hero-spark.s2{bottom:160px;left:80px;background:var(--blue);box-shadow:0 0 0 8px rgba(110,74,27,.10)}
 @media(max-width:980px){.hero{flex-direction:column;align-items:flex-start}.hero-visual{width:100%;min-height:430px}.hero-card-visual{min-height:430px;width:min(420px,100%)}.nav-city-logo{height:42px}.nav-worker{height:46px}.hero-agent-img{max-width:340px}.hero-mini-card.card-c{display:none}}
 @media(max-width:520px){.nav-worker{display:none}.hero-visual{min-height:380px}.hero-card-visual{min-height:380px;border-radius:30px}.hero-agent-img{max-width:295px;right:-2px}.hero-mini-card{padding:11px 12px}.hero-mini-card.card-a{left:14px;top:18px}.hero-mini-card.card-b{left:14px;bottom:34px}.hero-shape-line{left:25px;right:25px;bottom:72px}}
 
@@ -530,8 +538,8 @@ footer p { font-size:0.82rem; }
 .proof-section{padding:72px 60px;background:white;}
 .proof-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:30px;}
 .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.proof-card{background:var(--light);border-radius:22px;overflow:hidden;border:1px solid rgba(26,47,94,.08);box-shadow:0 14px 40px rgba(26,47,94,.08);}
-.proof-photo{height:190px;background:linear-gradient(135deg,rgba(26,47,94,.12),rgba(244,121,32,.13));display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--navy);text-align:center;padding:18px;}
+.proof-card{background:var(--light);border-radius:22px;overflow:hidden;border:1px solid rgba(33,31,26,.08);box-shadow:0 14px 40px rgba(33,31,26,.08);}
+.proof-photo{height:190px;background:linear-gradient(135deg,rgba(33,31,26,.12),rgba(154,104,31,.13));display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--navy);text-align:center;padding:18px;}
 .proof-body{padding:20px;}
 .proof-body h3{font-size:1.05rem;font-weight:900;margin-bottom:8px;color:var(--navy);}
 .proof-body p{font-size:.9rem;line-height:1.6;color:var(--gray);}
@@ -551,11 +559,11 @@ footer p { font-size:0.82rem; }
   margin:0 auto;
   background:white;
   border-radius:22px;
-  box-shadow:0 18px 55px rgba(26,47,94,0.12);
+  box-shadow:0 18px 55px rgba(33,31,26,0.12);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   overflow:hidden;
-  border:1px solid rgba(26,47,94,0.08);
+  border:1px solid rgba(33,31,26,0.08);
 }
 .trust-item {
   padding:22px 18px;
@@ -569,7 +577,7 @@ footer p { font-size:0.82rem; }
   width:42px;
   height:42px;
   border-radius:12px;
-  background:rgba(244,121,32,0.12);
+  background:rgba(154,104,31,0.12);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -589,7 +597,7 @@ footer p { font-size:0.82rem; }
   line-height:1.35;
 }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline:3px solid rgba(244,121,32,0.35);
+  outline:3px solid rgba(154,104,31,0.35);
   outline-offset:3px;
 }
 @media(max-width:900px){
@@ -664,26 +672,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   display:block!important;
   padding:0!important;
 }
-.hero-card-visual:before{content:""!important;position:absolute!important;width:360px!important;height:360px!important;border-radius:50%!important;right:-100px!important;bottom:-85px!important;background:radial-gradient(circle,rgba(244,121,32,.34),rgba(244,121,32,.04) 68%)!important;z-index:0!important;}
-.hero-card-visual:after{content:""!important;position:absolute!important;width:260px!important;height:260px!important;border-radius:50%!important;left:-90px!important;top:-80px!important;background:radial-gradient(circle,rgba(43,108,176,.25),rgba(43,108,176,.04) 70%)!important;z-index:0!important;}
+.hero-card-visual:before{content:""!important;position:absolute!important;width:360px!important;height:360px!important;border-radius:50%!important;right:-100px!important;bottom:-85px!important;background:radial-gradient(circle,rgba(154,104,31,.34),rgba(154,104,31,.04) 68%)!important;z-index:0!important;}
+.hero-card-visual:after{content:""!important;position:absolute!important;width:260px!important;height:260px!important;border-radius:50%!important;left:-90px!important;top:-80px!important;background:radial-gradient(circle,rgba(110,74,27,.25),rgba(110,74,27,.04) 70%)!important;z-index:0!important;}
 .hero-card-visual .hero-logo-img{display:none!important;}
-.hero-card-visual .hero-agent-img{position:absolute!important;right:12px!important;bottom:10px!important;max-width:390px!important;width:88%!important;height:auto!important;object-fit:contain!important;z-index:2!important;filter:drop-shadow(0 24px 28px rgba(26,47,94,.28))!important;}
-.hero-mini-card{position:absolute!important;z-index:3!important;background:white!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 14px 35px rgba(26,47,94,.16)!important;border:1px solid rgba(26,47,94,.08)!important;}
-.hero-mini-card strong{display:block!important;font-size:.84rem!important;font-weight:900!important;color:var(--navy,#1a2f5e)!important;}
-.hero-mini-card span{display:block!important;font-size:.72rem!important;color:var(--gray,#6b7280)!important;margin-top:2px!important;}
+.hero-card-visual .hero-agent-img{position:absolute!important;right:12px!important;bottom:10px!important;max-width:390px!important;width:88%!important;height:auto!important;object-fit:contain!important;z-index:2!important;filter:drop-shadow(0 24px 28px rgba(33,31,26,.28))!important;}
+.hero-mini-card{position:absolute!important;z-index:3!important;background:white!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 14px 35px rgba(33,31,26,.16)!important;border:1px solid rgba(33,31,26,.08)!important;}
+.hero-mini-card strong{display:block!important;font-size:.84rem!important;font-weight:900!important;color:var(--navy,#211f1a)!important;}
+.hero-mini-card span{display:block!important;font-size:.72rem!important;color:var(--gray,#6f675a)!important;margin-top:2px!important;}
 .hero-mini-card.card-a{left:24px!important;top:34px!important;}
 .hero-mini-card.card-b{left:26px!important;bottom:54px!important;}
 .hero-mini-card.card-c{right:26px!important;top:160px!important;}
-.hero-shape-line{position:absolute!important;z-index:1!important;left:48px!important;right:48px!important;bottom:92px!important;height:14px!important;border-radius:99px!important;background:linear-gradient(90deg,var(--orange,#f47920),rgba(244,121,32,.16))!important;transform:rotate(-6deg)!important;}
-.hero-spark{position:absolute!important;z-index:1!important;width:10px!important;height:10px!important;border-radius:50%!important;background:var(--orange,#f47920)!important;box-shadow:0 0 0 8px rgba(244,121,32,.12)!important;}
-.hero-spark.s1{top:118px!important;right:58px!important}.hero-spark.s2{bottom:160px!important;left:80px!important;background:var(--blue,#2b6cb0)!important;box-shadow:0 0 0 8px rgba(43,108,176,.10)!important}
+.hero-shape-line{position:absolute!important;z-index:1!important;left:48px!important;right:48px!important;bottom:92px!important;height:14px!important;border-radius:99px!important;background:linear-gradient(90deg,var(--orange,#9a681f),rgba(154,104,31,.16))!important;transform:rotate(-6deg)!important;}
+.hero-spark{position:absolute!important;z-index:1!important;width:10px!important;height:10px!important;border-radius:50%!important;background:var(--orange,#9a681f)!important;box-shadow:0 0 0 8px rgba(154,104,31,.12)!important;}
+.hero-spark.s1{top:118px!important;right:58px!important}.hero-spark.s2{bottom:160px!important;left:80px!important;background:var(--blue,#6e4a1b)!important;box-shadow:0 0 0 8px rgba(110,74,27,.10)!important}
 @media(max-width:980px){.hero-card-visual{min-height:430px!important;width:min(420px,100%)!important}.hero-card-visual .hero-agent-img{max-width:340px!important}.hero-mini-card.card-c{display:none!important}}
 @media(max-width:520px){.hero-card-visual{min-height:380px!important;border-radius:30px!important}.hero-card-visual .hero-agent-img{max-width:295px!important;right:-2px!important}.hero-mini-card{padding:11px 12px!important}.hero-mini-card.card-a{left:14px!important;top:18px!important}.hero-mini-card.card-b{left:14px!important;bottom:34px!important}.hero-shape-line{left:25px!important;right:25px!important;bottom:72px!important}}
 
 
 
 /* ===== PATCH AVANT/APRÈS : PHOTOS QUI DÉFILENT DANS LES CARTES ===== */
-.proof-photo{position:relative;height:220px;overflow:hidden;background:#eaf0f7;display:block;padding:0;}
+.proof-photo{position:relative;height:220px;overflow:hidden;background:#f2e8da;display:block;padding:0;}
 .proof-slide{position:absolute;inset:0;opacity:0;animation:proofFade 9s infinite;background-size:cover;background-position:center;}
 .proof-slide:nth-child(2){animation-delay:3s;}
 .proof-slide:nth-child(3){animation-delay:6s;}
@@ -697,13 +705,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 <!-- Assistant IA Clean-Cité Gemini -->
 <link rel="stylesheet" href="/assets/assistant-gemini.css">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Quel est le prix d’un nettoyage de bureaux à Bobigny ?","acceptedAnswer":{"@type":"Answer","text":"Clean-Cité affiche une base indicative dès 1,50 € par m² pour une intervention ponctuelle et dès 1 € par m² et par passage pour un entretien régulier. Le minimum d’intervention ponctuelle est de 150 €."}},
+    {"@type":"Question","name":"Quel est le tarif d’un nettoyage de fin de chantier ?","acceptedAnswer":{"@type":"Answer","text":"Les bases indicatives sont de 4,50 € par m² pour un chantier léger, 6 € par m² en standard et 9 € par m² pour un chantier très sale, sous réserve d’un devis selon l’accès et l’état réel."}},
+    {"@type":"Question","name":"Proposez-vous la sortie et la rentrée des poubelles ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Les forfaits mensuels commencent à 79 € pour jusqu’à 4 bacs et 1 passage par semaine, puis 159 € et 249 € selon le nombre de bacs et la fréquence."}},
+    {"@type":"Question","name":"Où intervient Clean-Cité ?","acceptedAnswer":{"@type":"Answer","text":"Clean-Cité est basée à Bobigny et intervient en Seine-Saint-Denis, à Paris et plus largement en Île-de-France selon la prestation."}}
+  ]
+}
+</script>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-brand">
-    <img src="images/logo-clean-cite.png" class="nav-city-logo" alt="Logo Clean-Cité">
+    <img src="images/logo-clean-cite.png?v=5" class="nav-city-logo" alt="Logo Clean-Cité">
     <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
   </a>
   <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
@@ -718,6 +739,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
           <a href="nettoyage-chantier-en-cours.html" onclick="closeDd();closeMobile()">Chantier en cours</a>
           <a href="nettoyage-fin-de-chantier.html" onclick="closeDd();closeMobile()">Fin de chantier</a>
           <a href="nettoyage-bureaux.html" onclick="closeDd();closeMobile()">Nettoyage de bureaux</a>
+          <a href="remise-en-etat.html" onclick="closeDd();closeMobile()">Remise en état</a>
+          <a href="nettoyage-parties-communes.html" onclick="closeDd();closeMobile()">Parties communes</a>
           <a href="sortie-de-poubelles.html" onclick="closeDd();closeMobile()">Sortie de poubelles</a>
           <a href="nettoyage-tapis-canapes.html" onclick="closeDd();closeMobile()">Tapis & canapés</a>
           <a href="nettoyage-terrasses.html" onclick="closeDd();closeMobile()">Terrasse</a>
@@ -757,7 +780,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <a href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20obtenir%20un%20devis%20pour%20une%20prestation%20de%20nettoyage." class="btn-whatsapp" target="_blank" rel="noopener"><span class="wa-dot">✓</span> WhatsApp</a>
     </div>
     <div class="hero-stats">
-      <div><span class="stat-num">9</span><span class="stat-label">Services</span></div>
+      <div><span class="stat-num">11</span><span class="stat-label">Services</span></div>
       <div><span class="stat-num">100%</span><span class="stat-label">Satisfaction</span></div>
       <div><span class="stat-num">Pro</span><span class="stat-label">Équipement</span></div>
     </div>
@@ -770,7 +793,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <span class="hero-spark s1"></span>
       <span class="hero-spark s2"></span>
       <span class="hero-shape-line"></span>
-      <img src="images/agent-nettoyage.png" class="hero-agent-img" alt="Agent Clean-Cité avec matériel professionnel" width="420" height="420">
+      <img src="images/agent-nettoyage.png?v=5" class="hero-agent-img" alt="Agent Clean-Cité avec matériel professionnel" width="420" height="420">
     </div>
   </div>
 </section>
@@ -839,7 +862,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="svc-icon">🏗️</div>
       <h3>Nettoyage de chantier en cours à Bobigny</h3>
       <p>Nettoyage pendant travaux : déblaiement, dépoussiérage, évacuation des déchets et maintien d’un chantier propre et sécurisé.</p>
-      <div class="price-badge">25 € / heure</div>
+      <div class="price-badge">28 € HT / heure</div>
       <span class="svc-hint">🔍 Voir le détail</span>
     </a>
     <a class="service-card fade-in" href="nettoyage-fin-de-chantier.html" style="text-decoration:none;display:block;">
@@ -847,10 +870,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <h3>Nettoyage de fin de chantier après travaux</h3>
       <p>Remise en état complète après travaux : sols, vitres, poussières de chantier, surfaces et évacuation des déchets.</p>
       <div class="price-list">
-        <div class="price-row"><span class="price-label">⬜ Léger</span><span class="price-amount">6 € / m²</span></div>
-        <div class="price-row"><span class="price-label">🟧 Standard</span><span class="price-amount">8 € / m²</span></div>
-        <div class="price-row"><span class="price-label">🟥 Très sale</span><span class="price-amount">12 € / m²</span></div>
-        <div class="price-row"><span class="price-label">🟦 global</span><span class="price-amount">150 € / Jour</span></div>
+        <div class="price-row"><span class="price-label">⬜ Léger</span><span class="price-amount">4,50 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🟧 Standard</span><span class="price-amount">6 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🟥 Très sale</span><span class="price-amount">9 € / m²</span></div>
+        <div class="price-row"><span class="price-label">💶 Minimum ponctuel</span><span class="price-amount">150 €</span></div>
       </div>
       <span class="svc-hint">🔍 Voir le détail</span>
     </a>
@@ -859,10 +882,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <h3>Nettoyage de bureaux et locaux professionnels</h3>
       <p>Entretien régulier de bureaux, commerces et locaux professionnels à Bobigny, Seine-Saint-Denis et Île-de-France.</p>
       <div class="price-list">
-        <div class="price-row"><span class="price-label">🟦 Standards</span><span class="price-amount">3 € / m²</span></div>
-        <div class="price-row"><span class="price-label">🟥 Très sales</span><span class="price-amount">5 € / m²</span></div>
+        <div class="price-row"><span class="price-label">✨ Ponctuel</span><span class="price-amount">1,50 € / m²</span></div>
+        <div class="price-row"><span class="price-label">📅 Régulier</span><span class="price-amount">1 € / m² / passage</span></div>
         <div class="price-row"><span class="price-label">🧪 Désinfection</span><span class="price-amount">+ 20 %</span></div>
-        <div class="price-row"><span class="price-label">🪟 Vitres</span><span class="price-amount">+ 2 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🪟 Vitres</span><span class="price-amount">dès 4 € / m²</span></div>
+      </div>
+      <span class="svc-hint">🔍 Voir le détail</span>
+    </a>
+    <a class="service-card fade-in" href="remise-en-etat.html" style="text-decoration:none;display:block;">
+      <div class="svc-icon">🧽</div>
+      <h3>Remise en état de locaux</h3>
+      <p>Après travaux, déménagement ou fort encrassement : nettoyage approfondi des sols, surfaces, sanitaires et finitions.</p>
+      <div class="price-list">
+        <div class="price-row"><span class="price-label">✨ Standard</span><span class="price-amount">dès 6,50 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🟥 Très encrassé</span><span class="price-amount">dès 8,50 € / m²</span></div>
+        <div class="price-row"><span class="price-label">💶 Minimum ponctuel</span><span class="price-amount">150 €</span></div>
+      </div>
+      <span class="svc-hint">🔍 Voir le détail</span>
+    </a>
+    <a class="service-card fade-in" href="nettoyage-parties-communes.html" style="text-decoration:none;display:block;">
+      <div class="svc-icon">🏘️</div>
+      <h3>Nettoyage de parties communes</h3>
+      <p>Halls, cages d’escalier, ascenseurs, couloirs et locaux poubelles pour syndics, bailleurs et copropriétés.</p>
+      <div class="price-list">
+        <div class="price-row"><span class="price-label">📅 Contrat</span><span class="price-amount">dès 199 € / mois</span></div>
+        <div class="price-row"><span class="price-label">🏢 Grande résidence</span><span class="price-amount">sur devis</span></div>
       </div>
       <span class="svc-hint">🔍 Voir le détail</span>
     </a>
@@ -871,10 +915,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <h3>Sortie et rentrée de poubelles pour immeubles</h3>
       <p>Service de sortie de bacs pour syndics, résidences et copropriétés selon les jours de collecte.</p>
       <div class="price-list">
-        <div class="price-row"><span class="price-label">🗑️ 1 bac</span><span class="price-amount">10 €</span></div>
-        <div class="price-row"><span class="price-label">🗑️ 2 – 4 bacs</span><span class="price-amount">25 €</span></div>
-        <div class="price-row"><span class="price-label">🗑️ 5 – 10 bacs</span><span class="price-amount">50 €</span></div>
-        <div class="price-row"><span class="price-label">🧹 Nettoyage bacs</span><span class="price-amount">+ 30 €</span></div>
+        <div class="price-row"><span class="price-label">🏠 Starter</span><span class="price-amount">79 € / mois</span></div>
+        <div class="price-row"><span class="price-label">🏢 Confort</span><span class="price-amount">159 € / mois</span></div>
+        <div class="price-row"><span class="price-label">🏙️ Premium</span><span class="price-amount">dès 249 € / mois</span></div>
+        <div class="price-row"><span class="price-label">📋 Au-delà</span><span class="price-amount">sur devis</span></div>
       </div>
       <span class="svc-hint">🔍 Voir le détail</span>
     </a>
@@ -897,9 +941,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <h3>Nettoyage de terrasses et extérieurs</h3>
       <p>Démoussage, nettoyage haute pression et entretien des terrasses, cours, balcons et espaces extérieurs.</p>
       <div class="price-list">
-        <div class="price-row"><span class="price-label">🟦 Petite</span><span class="price-amount">99 €</span></div>
-        <div class="price-row"><span class="price-label">🟧 Moyenne</span><span class="price-amount">199 €</span></div>
-        <div class="price-row"><span class="price-label">🟥 Grande</span><span class="price-amount">350 €+</span></div>
+        <div class="price-row"><span class="price-label">🌿 Entretien</span><span class="price-amount">dès 4,90 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🧽 Encrassée</span><span class="price-amount">dès 6,50 € / m²</span></div>
+        <div class="price-row"><span class="price-label">📋 Cas complexe</span><span class="price-amount">sur devis</span></div>
       </div>
       <span class="svc-hint">🔍 Voir le détail</span>
     </a>
@@ -908,8 +952,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <h3>Nettoyage de vitrines et vitres</h3>
       <p>Nettoyage intérieur et extérieur des vitrines, vitres et surfaces vitrées pour commerces, bureaux et locaux professionnels.</p>
       <div class="price-list">
-        <div class="price-row"><span class="price-label">✨ Classique</span><span class="price-amount">2 – 5 € / m²</span></div>
-        <div class="price-row"><span class="price-label">🟥 Très sale</span><span class="price-amount">5 – 8 € / m²</span></div>
+        <div class="price-row"><span class="price-label">✨ Classique</span><span class="price-amount">dès 4 € / m²</span></div>
+        <div class="price-row"><span class="price-label">🟥 Très sale</span><span class="price-amount">dès 6,50 € / m²</span></div>
         <div class="price-row"><span class="price-label">📅 Abonnement</span><span class="price-amount">dès 60 € / mois</span></div>
       </div>
       <span class="svc-hint">🔍 Voir le détail</span>
@@ -955,7 +999,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="plan-badge">Petite résidence</div>
       <div class="plan-icon">🏠</div>
       <h3 class="plan-name">STARTER</h3>
-      <div class="plan-price"><span class="plan-amount">59</span><span class="plan-curr">€<span>/mois</span></span></div>
+      <div class="plan-price"><span class="plan-amount">79</span><span class="plan-curr">€<span>/mois</span></span></div>
       <ul class="plan-features">
         <li>✅ Jusqu'à 4 bacs</li>
         <li>✅ 1 passage / semaine</li>
@@ -971,7 +1015,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="plan-badge w">Résidence moyenne</div>
       <div class="plan-icon">🏢</div>
       <h3 class="plan-name">CONFORT</h3>
-      <div class="plan-price"><span class="plan-amount">119</span><span class="plan-curr">€<span>/mois</span></span></div>
+      <div class="plan-price"><span class="plan-amount">159</span><span class="plan-curr">€<span>/mois</span></span></div>
       <ul class="plan-features">
         <li>✅ Jusqu'à 10 bacs</li>
         <li>✅ 2 passages / semaine</li>
@@ -986,14 +1030,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
       <div class="plan-badge">Grande résidence</div>
       <div class="plan-icon">🏙️</div>
       <h3 class="plan-name">PREMIUM</h3>
-      <div class="plan-price"><span class="plan-amount">199</span><span class="plan-curr">€<span>/mois</span></span></div>
+      <div class="plan-price"><span class="plan-amount">Dès 249</span><span class="plan-curr">€<span>/mois</span></span></div>
       <ul class="plan-features">
-        <li>✅ Bacs illimités</li>
-        <li>✅ Passages illimités</li>
+        <li>✅ Jusqu'à 15 bacs</li>
+        <li>✅ 3 passages / semaine</li>
         <li>✅ Sortie &amp; rentrée des bacs</li>
         <li>✅ Nettoyage des bacs 2×/mois</li>
         <li>✅ Rapport mensuel détaillé</li>
-        <li>✅ Urgence sous 24h</li>
+        <li>✅ 4 passages/semaine ou plus : sur devis</li>
       </ul>
       <a href="#contact" class="plan-cta">Souscrire</a>
     </div>
@@ -1211,7 +1255,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   <p class="devis-sep">5. Sortie de poubelles — si applicable</p>
   <div id="bloc-poubelles"style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;">
     <input id="d-bacs" type="number" min="0" placeholder="Nombre de bacs" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
-    <input id="d-passages-poubelles" type="number" min="1" value="1" placeholder="Nombre de passages poubelles" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
+    <input id="d-passages-poubelles" type="number" min="1" value="1" placeholder="Passages / semaine" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
   </div>
 
   <p class="devis-sep">6. État du lieu</p>
@@ -1261,13 +1305,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
   
   const SVC = {
-  'chantier-cours':{icon:'🏗️',title:'Chantier en cours',desc:"Entretien et nettoyage pendant la durée du chantier : déblaiement, dépoussiérage, évacuation des déchets au fil de l'avancement.",tarifs:[{l:'Tarif horaire',v:'25 € / heure'}],extras:[],note:'Tarif dégressif à partir de 40h/mois. Devis mensuel sur demande.'},
-  'chantier-fin':{icon:'✅',title:'Fin de chantier',desc:'Remise en propreté complète après travaux : nettoyage des sols, vitres, surfaces et évacuation des déchets avant livraison.',tarifs:[{l:'Léger',v:'5 € / m²'},{l:'Standard',v:'8 € / m²'},{l:'Très sale',v:'12 € / m²'}],extras:[],note:''},
-  'bureaux':{icon:'🏢',title:'Nettoyage de bureaux',desc:'Entretien régulier de vos espaces de travail pour un environnement sain, propre et agréable.',tarifs:[{l:'Standards',v:'3 € / m²'},{l:'Très sales',v:'5 € / m²'}],extras:[{l:'Désinfection',v:'+ 20 %'},{l:'Vitres',v:'+ 2 € / m²'}],note:''},
-  'poubelles':{icon:'🗑️',title:'Sortie de poubelles',desc:'Prise en charge de la collecte et sortie de vos conteneurs aux jours de ramassage.',tarifs:[{l:'1 bac',v:'10 €'},{l:'2 – 4 bacs',v:'25 €'},{l:'5 – 10 bacs',v:'50 €'}],extras:[{l:'Nettoyage des bacs',v:'+ 30 €'}],note:'Abonnement mensuel disponible pour les syndics.'},
+  'chantier-cours':{icon:'🏗️',title:'Chantier en cours',desc:"Entretien et nettoyage pendant la durée du chantier : déblaiement, dépoussiérage, évacuation des déchets au fil de l'avancement.",tarifs:[{l:'Tarif horaire',v:'28 € HT / heure'}],extras:[],note:'Minimum d’intervention ponctuelle : 150 €. Contrat récurrent sur devis.'},
+  'chantier-fin':{icon:'✅',title:'Fin de chantier',desc:'Remise en propreté complète après travaux : nettoyage des sols, vitres, surfaces et évacuation des déchets avant livraison.',tarifs:[{l:'Léger',v:'4,50 € / m²'},{l:'Standard',v:'6 € / m²'},{l:'Très sale',v:'9 € / m²'}],extras:[],note:'Minimum d’intervention ponctuelle : 150 €.'},
+  'bureaux':{icon:'🏢',title:'Nettoyage de bureaux',desc:'Entretien ponctuel ou régulier de vos espaces de travail pour un environnement sain, propre et agréable.',tarifs:[{l:'Ponctuel',v:'1,50 € / m²'},{l:'Régulier',v:'1 € / m² / passage'}],extras:[{l:'Désinfection',v:'+ 20 %'},{l:'Vitres',v:'dès 4 € / m²'}],note:'Minimum de 150 € pour une intervention ponctuelle.'},
+  'poubelles':{icon:'🗑️',title:'Sortie de poubelles',desc:'Sortie et rentrée des conteneurs pour syndics, copropriétés et résidences selon un planning défini.',tarifs:[{l:'Starter',v:'79 € / mois'},{l:'Confort',v:'159 € / mois'},{l:'Premium',v:'dès 249 € / mois'}],extras:[],note:'Jusqu’à 4 bacs / 1 passage par semaine en Starter. Au-delà des formules : sur devis.'},
   'tapis':{icon:'🧹',title:'Tapis & canapés',desc:'Nettoyage en profondeur de vos textiles avec équipements professionnels.',tarifs:[{l:'Petit tapis',v:'30–60 €'},{l:'Grand tapis',v:'80–150 €'},{l:'Canapé 2 places',v:'70–120 €'},{l:'Canapé 3 places',v:'120–180 €'},{l:"Canapé d'angle",v:'180–350 €'},{l:'Matelas',v:'50–120 €'}],extras:[{l:'Taches difficiles',v:'+ 20 €'},{l:"Poils d'animaux",v:'+ 30 €'},{l:'Désinfection vapeur',v:'+ 40 €'},{l:'Déplacement',v:'+ 20 à 50 €'}],note:''},
-  'terrasse':{icon:'🌿',title:'Nettoyage de terrasse',desc:'Démoussage, nettoyage haute pression et entretien de vos terrasses et espaces extérieurs.',tarifs:[{l:'Petite terrasse',v:'99 €'},{l:'Terrasse moyenne',v:'199 €'},{l:'Grande terrasse',v:'350 €+'}],extras:[{l:'Mousse importante',v:'+ 50 €'},{l:'Mobilier à déplacer',v:'+ 30 €'},{l:'Escaliers extérieurs',v:'+ 40 €'}],note:''},
-  'vitrines':{icon:'🪟',title:'Nettoyage de vitrines',desc:'Nettoyage intérieur et extérieur de vos vitrines et baies vitrées.',tarifs:[{l:'Classique',v:'2–5 € / m²'},{l:'Très sale / 1ère interv.',v:'5–8 € / m²'},{l:'Accès difficile / hauteur',v:'Sur devis'}],extras:[{l:'Abonnement mensuel',v:'dès 60 € / mois'}],note:'Nettoyage vitrine intérieur + extérieur à partir de 30 €. Devis personnalisé sur demande.'},
+  'terrasse':{icon:'🌿',title:'Nettoyage de terrasse',desc:'Démoussage, nettoyage haute pression et entretien de vos terrasses et espaces extérieurs.',tarifs:[{l:'Entretien',v:'dès 4,90 € / m²'},{l:'Encrassée',v:'dès 6,50 € / m²'},{l:'Cas complexe',v:'Sur devis'}],extras:[{l:'Démoussage important',v:'Sur devis'}],note:'Minimum d’intervention ponctuelle : 150 €.'},
+  'vitrines':{icon:'🪟',title:'Nettoyage de vitrines',desc:'Nettoyage intérieur et extérieur de vos vitrines et baies vitrées.',tarifs:[{l:'Classique',v:'dès 4 € / m²'},{l:'Très sale / 1ère interv.',v:'dès 6,50 € / m²'},{l:'Accès difficile / hauteur',v:'Sur devis'}],extras:[{l:'Contrat régulier',v:'Sur devis'}],note:'Minimum d’intervention ponctuelle : 150 €.'},
   'cles':{icon:'🗝️',title:'Gestion des clés',desc:"Prise en charge complète de l'accès et coordination de votre chantier au quotidien.",tarifs:[{l:'Ouverture & fermeture',v:'Inclus'},{l:'Réception des matériaux',v:'Inclus'},{l:'Remise & récupération clés',v:'Inclus'},{l:'Coordination intervenants',v:'Inclus'}],extras:[],note:'Tarif sur devis selon durée et fréquence.'}
 };
 let lastEstimateMessage = '';
@@ -1283,13 +1327,13 @@ function closeAll(){ ['modal-overlay','svc-modal','devis-modal'].forEach(id=>{ c
 function svcClick(id){ if(window.event) window.event.preventDefault(); closeDd(); closeMobile(); openService(id); return false; }
 function openService(id){
   const s = SVC[id]; if(!s) return;
-  let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;"><div style="width:52px;height:52px;background:linear-gradient(135deg,#f47920,#f9a04a);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.icon}</div><h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:2px;color:#1a2f5e;line-height:1;">${s.title}</h2></div><p style="color:#6b7280;line-height:1.7;margin-bottom:20px;">${s.desc}</p>`;
-  html += `<p style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#f47920;margin-bottom:10px;">Tarifs indicatifs</p><div class="devis-result-card">`;
+  let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;"><div style="width:52px;height:52px;background:linear-gradient(135deg,#9a681f,#c9973f);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.icon}</div><h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:2px;color:#211f1a;line-height:1;">${s.title}</h2></div><p style="color:#6f675a;line-height:1.7;margin-bottom:20px;">${s.desc}</p>`;
+  html += `<p style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#9a681f;margin-bottom:10px;">Tarifs indicatifs</p><div class="devis-result-card">`;
   s.tarifs.forEach(t=>{ html += `<div class="devis-line"><span>${t.l}</span><strong style="color:var(--orange);">${t.v}</strong></div>`; });
   html += `</div>`;
-  if(s.extras.length){ html += `<p style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6b7280;margin:16px 0 10px;">Suppléments</p><div class="devis-result-card">`; s.extras.forEach(t=>{ html += `<div class="devis-line"><span>${t.l}</span><strong style="color:var(--orange);">${t.v}</strong></div>`; }); html += `</div>`; }
+  if(s.extras.length){ html += `<p style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6f675a;margin:16px 0 10px;">Suppléments</p><div class="devis-result-card">`; s.extras.forEach(t=>{ html += `<div class="devis-line"><span>${t.l}</span><strong style="color:var(--orange);">${t.v}</strong></div>`; }); html += `</div>`; }
   if(s.note) html += `<div class="devis-remark">💡 ${s.note}</div>`;
-  html += `<button onclick="closeAll();openDevis();" style="width:100%;background:linear-gradient(135deg,#1a2f5e,#2b6cb0);color:white;border:none;padding:14px;border-radius:50px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;margin-top:10px;">Obtenir un pré-devis</button>`;
+  html += `<button onclick="closeAll();openDevis();" style="width:100%;background:linear-gradient(135deg,#211f1a,#6e4a1b);color:white;border:none;padding:14px;border-radius:50px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;margin-top:10px;">Obtenir un pré-devis</button>`;
   const body=$('svc-modal-body'); if(body) body.innerHTML = html;
   showOverlay(); const modal=$('svc-modal'); if(modal) modal.style.display='block';
 }
@@ -1429,12 +1473,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  const hourlyTotal = agents * heures * passages * 25;
+  const hourlyTotal = agents * heures * passages * 28;
 
   if(services.includes('Chantier en cours')){
     addLine(
       'Chantier en cours',
-      `${agents} agent(s) x ${heures}h x ${passages} passage(s) à 25€/h`,
+      `${agents} agent(s) x ${heures}h x ${passages} passage(s) à 28€/h`,
       hourlyTotal
     );
   }
@@ -1444,11 +1488,12 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Pour le nettoyage de bureaux et locaux, indique une superficie en m².');
       return;
     }
-    const tarif = etat === 'très sale' ? 5 : 3;
+    const tarif = freq === 'unique' ? 1.5 : 1;
+    const nbPassages = freq === 'unique' ? 1 : passages;
     addLine(
       'Bureaux & locaux',
-      `${surface} m² x ${tarif}€/m² x ${passages} passage(s)`,
-      Math.max(surface * tarif * passages, 90)
+      `${surface} m² x ${String(tarif).replace('.',',')}€/m² x ${nbPassages} passage(s)`,
+      freq === 'unique' ? Math.max(surface * tarif, 150) : surface * tarif * nbPassages
     );
   }
 
@@ -1457,8 +1502,8 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Pour une fin de chantier, indique une superficie en m².');
       return;
     }
-    const tarif = etat === 'léger' ? 5 : etat === 'très sale' ? 12 : 8;
-    addLine('Fin de chantier', `${surface} m² x ${tarif}€/m²`, Math.max(surface * tarif, 180));
+    const tarif = etat === 'léger' ? 4.5 : etat === 'très sale' ? 9 : 6;
+    addLine('Fin de chantier', `${surface} m² x ${String(tarif).replace('.',',')}€/m²`, Math.max(surface * tarif, 150));
   }
 
   if(services.includes('Remise en état')){
@@ -1466,15 +1511,15 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Pour une remise en état, indique une superficie en m².');
       return;
     }
-    const tarif = etat === 'léger' ? 8 : etat === 'très sale' ? 15 : 11;
-    addLine('Remise en état', `${surface} m² x ${tarif}€/m²`, Math.max(surface * tarif, 180));
+    const tarif = etat === 'très sale' ? 8.5 : 6.5;
+    addLine('Remise en état', `${surface} m² x ${String(tarif).replace('.',',')}€/m²`, Math.max(surface * tarif, 150));
   }
 
   if(services.includes('Parties communes')){
     if(!surface){
       addLine('Parties communes', 'Forfait mensuel à confirmer selon l’immeuble', 'Sur devis');
     } else {
-      addLine('Parties communes', `${surface} m² x 3,5€/m² x ${passages} passage(s)`, Math.max(surface * 3.5 * passages, 120));
+      addLine('Parties communes', 'Contrat mensuel à partir de 199 €', 199);
     }
   }
 
@@ -1483,8 +1528,8 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Pour la vitrerie, indique la superficie en m².');
       return;
     }
-    const tarif = etat === 'léger' ? 2.5 : etat === 'très sale' ? 8 : 5;
-    addLine('Vitrerie', `${surface} m² x ${tarif}€/m²`, Math.max(surface * tarif, 60));
+    const tarif = etat === 'très sale' ? 6.5 : 4;
+    addLine('Vitrerie', `${surface} m² x ${String(tarif).replace('.',',')}€/m²`, Math.max(surface * tarif, 150));
   }
 
   if(services.includes('Sortie poubelles')){
@@ -1493,17 +1538,12 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    let prixParPassage = 0;
-    if(bacs === 1) prixParPassage = 10;
-    else if(bacs >= 2 && bacs <= 4) prixParPassage = 25;
-    else if(bacs >= 5 && bacs <= 10) prixParPassage = 50;
-    else prixParPassage = 50 + ((bacs - 10) * 5);
-
-    addLine(
-      'Sortie poubelles',
-      `${bacs} bac(s) x ${passagesPoubelles} passage(s)`,
-      prixParPassage * passagesPoubelles
-    );
+    let montantPoubelles; let formule;
+    if(bacs <= 4 && passagesPoubelles <= 1){ montantPoubelles=79; formule='Starter — jusqu’à 4 bacs · 1 passage/semaine'; }
+    else if(bacs <= 10 && passagesPoubelles <= 2){ montantPoubelles=159; formule='Confort — jusqu’à 10 bacs · 2 passages/semaine'; }
+    else if(bacs <= 15 && passagesPoubelles <= 3){ montantPoubelles=249; formule='Premium — jusqu’à 15 bacs · 3 passages/semaine'; }
+    else { montantPoubelles='Sur devis'; formule='Besoin supérieur aux forfaits (plus de 15 bacs ou plus de 3 passages/semaine)'; }
+    addLine('Sortie poubelles', formule, montantPoubelles);
   }
 
   if(services.includes('Tapis')){
@@ -1538,9 +1578,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if(services.includes('Terrasse')){
-    if(surface && surface <= 30) addLine('Terrasse', 'Petite terrasse', 99);
-    else if(surface && surface <= 80) addLine('Terrasse', 'Terrasse moyenne', 199);
-    else addLine('Terrasse', 'Grande terrasse', 350);
+    if(!surface){ alert('Pour la terrasse, indique une superficie en m².'); return; }
+    const tarifTerrasse = etat === 'très sale' ? 8.5 : etat === 'standard' ? 6.5 : 4.9;
+    addLine('Terrasse', `${surface} m² x ${String(tarifTerrasse).replace('.',',')}€/m²`, Math.max(surface * tarifTerrasse, 150));
   }
 
   if(services.includes('Gestion des clés')){
@@ -1591,7 +1631,7 @@ document.addEventListener('DOMContentLoaded', function () {
           ${l.service}<br>
           <small style="color:#9ca3af;font-weight:400;">${l.detail}</small>
         </span>
-        <span style="font-weight:800;color:#f47920;">${montantAffiche}</span>
+        <span style="font-weight:800;color:#9a681f;">${montantAffiche}</span>
       </div>
     `;
   });
@@ -1633,7 +1673,7 @@ Nombre de passages : ${passages}
 État du lieu : ${etat}
 Fréquence : ${freq}
 Nombre de bacs : ${bacs || 'non concerné'}
-Passages poubelles : ${passagesPoubelles}
+Passages poubelles / semaine : ${passagesPoubelles}
 Canapé : ${canapePlaces || 'non concerné'} place(s)
 Tapis : ${tapisPetit || 0} petit(s), ${tapisGrand || 0} grand(s)
 Options : ${supps.join(', ') || 'aucune'}

@@ -1,65 +1,62 @@
+ASSISTANT IA CLEAN-CITÉ — GEMINI — VERSION TARIFS 2026
+======================================================
 
-MISE À JOUR DEMANDÉE
-- Bouton WhatsApp ajouté dans le hero, à côté du numéro de téléphone.
-- Le message technique « Ajoutez GEMINI_API_KEY… » n’est plus affiché aux visiteurs.
-- Tant que GEMINI_API_KEY n’est pas ajoutée dans Netlify, l’assistant affiche un message professionnel d’attente.
+L'assistant IA est déjà intégré dans le code du site et chargé sur les pages HTML.
+Le code frontend est dans : assets/assistant-gemini.js
+La fonction Netlify sécurisée est dans : netlify/functions/assistant-gemini.js
 
-IMPORTANT POUR ACTIVER LA VRAIE IA
-Dans Netlify > Project configuration > Environment variables, ajoutez :
-GEMINI_API_KEY = votre clé API Google AI Studio
-Puis relancez un déploiement : Deploys > Trigger deploy > Clear cache and deploy site.
+TARIFS CONNUS PAR L'IA ET LE DEVIS RAPIDE
+==========================================
+- Bureaux ponctuels : dès 1,50 €/m² (minimum ponctuel 150 €).
+- Bureaux réguliers : dès 1 €/m² par passage.
+- Chantier en cours : 28 € HT/heure.
+- Fin de chantier : léger 4,50 €/m² ; standard 6 €/m² ; très sale 9 €/m².
+- Remise en état : dès 6,50 €/m² ; très encrassé dès 8,50 €/m².
+- Vitrerie : dès 4 €/m² ; très sale dès 6,50 €/m² ; hauteur/nacelle sur devis.
+- Terrasse : dès 4,90 €/m² ; très encrassée dès 6,50 €/m².
+- Parties communes : dès 199 €/mois.
+- Poubelles Starter : 79 €/mois — jusqu'à 4 bacs — 1 passage/semaine.
+- Poubelles Confort : 159 €/mois — jusqu'à 10 bacs — 2 passages/semaine.
+- Poubelles Premium : dès 249 €/mois — jusqu'à 15 bacs — 3 passages/semaine.
+- Au-delà : sur devis.
+- Aucune formule poubelles illimitée.
 
-ASSISTANT IA CLEAN-CITÉ - GEMINI
-================================
-
-Cette version du site contient :
-
-1. Un assistant IA Gemini visible sur toutes les pages du site.
-2. Une fonction Netlify sécurisée : netlify/functions/assistant-gemini.js
-3. Un formulaire de devis rapide avec calcul indicatif.
-4. Une fonction d'envoi de demande : netlify/functions/send-devis.js
-5. Un bouton WhatsApp automatique avec le message pré-rempli.
-6. Un fallback mailto si l'API Brevo n'est pas encore configurée.
-7. Un sitemap.xml corrigé.
-8. Une redirection SEO pour l'ancienne URL : /sortie-de-poubelles.htm -> /sortie-de-poubelles.html
-9. Une redirection SEO pour l'ancienne URL : /ile-de-france.html -> /nettoyage-ile-de-france.html
-
-VARIABLES NETLIFY À AJOUTER
-===========================
+IMPORTANT : ACTIVATION DE GEMINI SUR NETLIFY
+=============================================
+Le code de Gemini est dans le ZIP, MAIS la clé secrète GEMINI_API_KEY n'est jamais incluse automatiquement dans GitHub ou dans le ZIP.
+Elle doit être enregistrée une seule fois dans les variables d'environnement Netlify.
 
 Dans Netlify :
-Site configuration -> Environment variables -> Add variable
+1. Ouvrir le projet Clean-Cité.
+2. Aller dans Project configuration / Site configuration.
+3. Ouvrir Environment variables.
+4. Ajouter une variable :
+   Key : GEMINI_API_KEY
+   Value : votre clé API Google Gemini / Google AI Studio
+5. Facultatif : ajouter GEMINI_MODEL = gemini-2.5-flash
+6. Sauvegarder.
+7. Relancer un déploiement du site pour que la fonction récupère la nouvelle variable.
 
-OBLIGATOIRE POUR GEMINI :
-GEMINI_API_KEY = votre clé API Google Gemini
+IMPORTANT : ne jamais mettre GEMINI_API_KEY directement dans index.html, assets/assistant-gemini.js ou GitHub.
+La clé doit rester uniquement côté Netlify dans les variables d'environnement.
 
-OPTIONNEL POUR LE MODÈLE :
-GEMINI_MODEL = gemini-2.5-flash
+SI GEMINI_API_KEY EST DÉJÀ DANS NETLIFY
+=======================================
+Vous n'avez rien à la recréer lors de la mise à jour GitHub. Netlify conserve normalement les variables d'environnement du même site/projet.
+Après le nouveau déploiement, l'assistant utilise automatiquement la clé déjà enregistrée.
 
-OPTIONNEL POUR L'EMAIL AUTOMATIQUE BREVO :
+EMAIL AUTOMATIQUE (OPTIONNEL)
+=============================
 BREVO_API_KEY = votre clé API Brevo
 BREVO_SENDER_EMAIL = email expéditeur validé dans Brevo
 BREVO_SENDER_NAME = Clean-Cité
 CLEAN_CITE_EMAIL = email qui reçoit les demandes
 
-Si BREVO_API_KEY n'est pas ajouté, le bouton “Envoyer la demande par email” ouvrira simplement un email prêt à envoyer.
+Sans BREVO_API_KEY, le formulaire ouvre un email manuel prêt à envoyer.
 
-FICHIERS AJOUTÉS
-================
-
-assets/assistant-gemini.css
-assets/assistant-gemini.js
-netlify/functions/assistant-gemini.js
-netlify/functions/send-devis.js
-_redirects
-README-ASSISTANT-IA-GEMINI.txt
-
-FICHIERS MODIFIÉS
-=================
-
-Toutes les pages HTML racine ont reçu :
-- le CSS de l'assistant dans le head
-- le script JS de l'assistant avant la fermeture body
-
-Le sitemap.xml a été corrigé pour utiliser les bonnes URL du site.
-Le netlify.toml a été mis à jour pour déclarer le dossier des fonctions Netlify.
+SÉCURITÉ
+========
+- La clé Gemini reste côté serveur dans la fonction Netlify.
+- Le navigateur n'obtient jamais GEMINI_API_KEY.
+- Les tarifs affichés par l'IA restent indicatifs.
+- Le minimum de 150 € ne s'applique pas automatiquement aux contrats réguliers, parties communes ou abonnements poubelles.

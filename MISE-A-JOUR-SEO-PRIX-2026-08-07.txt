@@ -1,0 +1,44 @@
+CLEAN-CITÉ — MISE À JOUR DU 07/08/2026
+
+1. Nouvelle identité visuelle
+- Nouveau logo or / noir / ivoire intégré.
+- Personnage du nouveau logo extrait et utilisé à la place de l'ancien agent.
+- Palette du site harmonisée avec le nouveau logo.
+
+2. Tarifs principaux
+- Bureaux ponctuels : dès 1,50 €/m².
+- Bureaux réguliers : dès 1 €/m²/passage.
+- Chantier en cours : 28 € HT/heure.
+- Fin de chantier : 4,50 / 6 / 9 €/m².
+- Remise en état : dès 6,50 €/m² ; très encrassé 8,50 €/m² dans le pré-devis.
+- Vitrerie : dès 4 €/m² ; très sale dès 6,50 €/m².
+- Terrasse : dès 4,90 €/m².
+- Parties communes : dès 199 €/mois.
+- Minimum d'intervention ponctuelle : 150 €.
+
+3. Sortie / rentrée de poubelles
+- Starter : 79 €/mois, jusqu'à 4 bacs, 1 passage/semaine.
+- Confort : 159 €/mois, jusqu'à 10 bacs, 2 passages/semaine, nettoyage des bacs 1x/mois.
+- Premium : dès 249 €/mois, jusqu'à 15 bacs, 3 passages/semaine, nettoyage des bacs 2x/mois.
+- Au-delà : sur devis. Suppression du principe illimité.
+
+4. SEO / performance
+- Données structurées enrichies sur l'accueil.
+- FAQ structurée orientée recherches locales et tarifs.
+- Meta robots / theme-color harmonisés.
+- Sitemap actualisé au 07/08/2026.
+- Chargement différé ajouté aux images non critiques quand applicable.
+- Palette et assets logo optimisés.
+
+5. Déploiement
+- Le dossier reste compatible avec la structure Netlify/GitHub existante.
+- Remplacer le contenu du dépôt par cette version ou fusionner les fichiers modifiés.
+
+CORRECTION ASSISTANT IA — VERSION FINALE
+-----------------------------------------
+- Mémoire tarifaire Gemini synchronisée avec la nouvelle grille Clean-Cité.
+- Devis rapide IA synchronisé : bureaux ponctuels/réguliers, chantier à l'heure, fin de chantier selon état, remise en état, vitrerie, terrasses, parties communes et 3 forfaits poubelles.
+- Minimum de 150 € appliqué uniquement lorsqu'il s'agit d'une intervention ponctuelle concernée.
+- Ajout des champs heures pour chantier et nombre de bacs/passages pour les poubelles.
+- WhatsApp et email reprennent désormais la nouvelle estimation et les détails utiles.
+- Suppression de toute référence IA aux anciens prix bureaux 3 €/m², remise en état 8 €/m² et vitrerie 2,50 €/m².

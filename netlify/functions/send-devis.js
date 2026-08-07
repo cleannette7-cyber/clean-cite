@@ -21,24 +21,41 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function displayValue(value, fallback = "Non renseigné") {
+  return value === 0 || value ? String(value) : fallback;
+}
+
 function formatPayload(p) {
-  const total = p.total && !Number.isNaN(Number(p.total)) ? `${Number(p.total).toFixed(2)} €` : "À confirmer";
+  const total = p.estimateText || (p.total && !Number.isNaN(Number(p.total)) ? `${Number(p.total).toFixed(2)} €` : "À confirmer");
+  const extraLines = [];
+  if (p.hours) extraLines.push(`Durée estimée : ${p.hours} h / passage`);
+  if (p.bins) extraLines.push(`Nombre de bacs : ${p.bins}`);
+  if (p.binPasses) extraLines.push(`Passages poubelles : ${p.binPasses} / semaine`);
+  if (p.plan) extraLines.push(`Formule poubelles : ${p.plan}`);
+  if (p.estimateDetail) extraLines.push(`Détail estimation : ${p.estimateDetail}`);
+
+  const extraText = extraLines.length ? `\n${extraLines.join("\n")}` : "";
+  const extraHtml = extraLines.length
+    ? extraLines.map((line) => `<p><strong>${escapeHtml(line.split(":")[0])} :</strong>${escapeHtml(line.includes(":") ? line.slice(line.indexOf(":") + 1) : "")}</p>`).join("")
+    : "";
+
   return {
     subject: `Nouvelle demande de devis Clean-Cité - ${p.serviceLabel || "Nettoyage"}`,
-    text: `Nouvelle demande de devis Clean-Cité\n\nNom / Société : ${p.name || "Non renseigné"}\nTéléphone : ${p.phone || "Non renseigné"}\nEmail : ${p.email || "Non renseigné"}\nVille / adresse : ${p.city || "Non renseigné"}\nService : ${p.serviceLabel || p.service || "Non renseigné"}\nSurface : ${p.surface || "Non renseigné"} m²\nÉtat du lieu : ${p.condition || "Non renseigné"}\nFréquence : ${p.frequency || "Non renseigné"}\nEstimation indicative : ${total}\n\nMessage :\n${p.message || "Aucun message complémentaire"}\n\nImportant : cette estimation reste indicative et doit être confirmée par Clean-Cité.`,
+    text: `Nouvelle demande de devis Clean-Cité\n\nNom / Société : ${p.name || "Non renseigné"}\nTéléphone : ${p.phone || "Non renseigné"}\nEmail : ${p.email || "Non renseigné"}\nVille / adresse : ${p.city || "Non renseigné"}\nService : ${p.serviceLabel || p.service || "Non renseigné"}\nSurface : ${p.surface ? `${p.surface} m²` : "Non applicable / non renseignée"}\nÉtat du lieu : ${p.condition || "Non renseigné"}\nFréquence : ${p.frequency || "Non renseignée"}\nEstimation indicative : ${total}${extraText}\n\nMessage :\n${p.message || "Aucun message complémentaire"}\n\nImportant : cette estimation reste indicative et doit être confirmée par Clean-Cité.`,
     html: `
       <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2933">
-        <h2 style="color:#083F70">Nouvelle demande de devis Clean-Cité</h2>
+        <h2 style="color:#8A6914">Nouvelle demande de devis Clean-Cité</h2>
         <p><strong>Nom / Société :</strong> ${escapeHtml(p.name || "Non renseigné")}</p>
         <p><strong>Téléphone :</strong> ${escapeHtml(p.phone || "Non renseigné")}</p>
         <p><strong>Email :</strong> ${escapeHtml(p.email || "Non renseigné")}</p>
         <p><strong>Ville / adresse :</strong> ${escapeHtml(p.city || "Non renseigné")}</p>
         <p><strong>Service :</strong> ${escapeHtml(p.serviceLabel || p.service || "Non renseigné")}</p>
-        <p><strong>Surface :</strong> ${escapeHtml(p.surface || "Non renseigné")} m²</p>
+        <p><strong>Surface :</strong> ${escapeHtml(p.surface ? `${p.surface} m²` : "Non applicable / non renseignée")}</p>
         <p><strong>État du lieu :</strong> ${escapeHtml(p.condition || "Non renseigné")}</p>
-        <p><strong>Fréquence :</strong> ${escapeHtml(p.frequency || "Non renseigné")}</p>
+        <p><strong>Fréquence :</strong> ${escapeHtml(p.frequency || "Non renseignée")}</p>
         <p><strong>Estimation indicative :</strong> ${escapeHtml(total)}</p>
-        <h3 style="color:#083F70">Message</h3>
+        ${extraHtml}
+        <h3 style="color:#8A6914">Message</h3>
         <p>${escapeHtml(p.message || "Aucun message complémentaire").replace(/\n/g, "<br>")}</p>
         <p style="font-size:13px;color:#6b7280">Cette estimation reste indicative et doit être confirmée par Clean-Cité.</p>
       </div>
@@ -97,8 +114,9 @@ exports.handler = async function handler(event) {
     return json(405, { error: "Méthode non autorisée." });
   }
 
+  let payload = {};
   try {
-    const payload = JSON.parse(event.body || "{}");
+    payload = JSON.parse(event.body || "{}");
 
     if (!payload.name && !payload.phone && !payload.email) {
       return json(400, { error: "Merci d'indiquer au moins un nom, un téléphone ou un email." });
@@ -129,7 +147,7 @@ exports.handler = async function handler(event) {
       error: "Erreur lors de l'envoi.",
       message: error.message,
       details: error.details || null,
-      mailto: buildMailto(JSON.parse(event.body || "{}"))
+      mailto: buildMailto(payload)
     });
   }
 };
