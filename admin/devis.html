@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fr" translate="no" class="notranslate">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="google" content="notranslate">
+  <title>Créer un devis | Administration Clean-Cité</title>
+  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    :root{--navy:#0B2447;--navy2:#123a69;--gold:#b88a3b;--cream:#f7f2e9;--white:#fff;--text:#172033;--muted:#667085;--line:#dfe5ee;--danger:#b42318;--success:#067647;--shadow:0 14px 44px rgba(11,36,71,.11)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fa;color:var(--text)}
+    button,input,select,textarea{font:inherit}.hidden{display:none!important}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(11,36,71,.98);color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+    .topbar-inner{max-width:1240px;margin:auto;min-height:70px;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900}.brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:12px;padding:4px}
+    .top-actions{display:flex;gap:9px;flex-wrap:wrap}.top-actions a,.top-actions button{border:1px solid rgba(255,255,255,.28);background:transparent;color:#fff;border-radius:999px;padding:9px 14px;text-decoration:none;font-weight:800;cursor:pointer}
+    .wrap{max-width:1240px;margin:26px auto 70px;padding:0 22px}.hero{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:20px}.hero h1{font-size:clamp(28px,4vw,44px);margin:0;color:var(--navy);letter-spacing:-.035em}.hero p{color:var(--muted);max-width:700px;margin:8px 0 0;line-height:1.55}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.span2{grid-column:1/-1}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}.card h2{margin:0 0 18px;color:var(--navy);font-size:20px}.card h3{font-size:16px;color:var(--navy)}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field.full{grid-column:1/-1}.field label{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.055em;color:#4a5568;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--text);min-height:44px}.field textarea{min-height:92px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{outline:3px solid rgba(184,138,59,.14);border-color:var(--gold)}
+    .preset-box{background:var(--cream);border:1px solid #eadbc3;border-radius:15px;padding:16px;margin-top:14px}.conditional{display:none}.conditional.show{display:block}
+    .btn{border:0;border-radius:999px;padding:11px 18px;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn-primary{background:var(--navy);color:#fff}.btn-gold{background:var(--gold);color:#fff}.btn-light{background:#eef2f7;color:var(--navy)}.btn-danger{background:#fff1f1;color:var(--danger)}.btn-success{background:var(--success);color:#fff}.btn:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}.quote-table{width:100%;border-collapse:collapse;min-width:810px}.quote-table th{background:#f7f9fc;color:#475467;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:11px}.quote-table td{padding:9px;border-top:1px solid var(--line);vertical-align:middle}.quote-table input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}.quote-table .num{width:100px}.quote-table .unit{width:105px}.quote-table .price{width:120px}.quote-table .total{white-space:nowrap;font-weight:900;color:var(--navy)}
+    .empty{padding:24px;text-align:center;color:var(--muted)}
+    .totals{margin-left:auto;width:min(420px,100%);display:grid;gap:8px;margin-top:16px}.total-row{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-bottom:1px solid var(--line)}.total-row.grand{border:0;background:var(--navy);color:#fff;border-radius:12px;padding:14px 16px;font-size:18px;font-weight:900}.total-row.grand strong{color:#f0c97c}
+    .notice{border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;margin-top:13px}.notice.info{background:#eef5ff;color:#184c7a}.notice.ok{background:#ecfdf3;color:#067647}.notice.error{background:#fff1f1;color:#b42318}
+    .gate{min-height:70vh;display:grid;place-items:center;text-align:center}.gate-box{background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:30px;max-width:580px}.gate-box img{width:90px}.gate-box h1{color:var(--navy)}
+    .history{display:grid;gap:9px}.history-item{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:14px}.history-item small{color:var(--muted);display:block}.history-item strong{color:var(--navy)}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.span2{grid-column:auto}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.hero{display:block}.topbar-inner{align-items:flex-start}.brand span{font-size:14px}}
+  </style>
+</head>
+<body class="notranslate">
+  <div id="authGate" class="gate">
+    <div class="gate-box">
+      <img src="/images/logo-clean-cite.png" alt="Clean-Cité">
+      <h1>Création de devis</h1>
+      <p id="gateMessage">Vérification de votre accès administrateur…</p>
+      <div class="actions" style="justify-content:center" id="gateActions"></div>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand"><img src="/images/logo-clean-cite.png" alt="Logo"><span>ADMIN CLEAN-CITÉ · DEVIS</span></div>
+        <div class="top-actions"><a href="/admin/">Gérer le site</a><a href="/">Voir le site</a><button type="button" id="logoutBtn">Déconnexion</button></div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="hero"><div><h1>Créer et envoyer un devis</h1><p>Renseigne le client, ajoute une ou plusieurs prestations, vérifie le total puis envoie le devis directement par e-mail ou WhatsApp.</p></div></div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1. Client</h2>
+          <div class="fields">
+            <div class="field"><label for="clientName">Nom / Société *</label><input id="clientName" autocomplete="organization"></div>
+            <div class="field"><label for="clientEmail">E-mail *</label><input id="clientEmail" type="email" autocomplete="email"></div>
+            <div class="field"><label for="clientPhone">Téléphone</label><input id="clientPhone" type="tel" autocomplete="tel"></div>
+            <div class="field"><label for="clientCity">Ville</label><input id="clientCity" placeholder="Ex. Bobigny"></div>
+            <div class="field full"><label for="clientAddress">Adresse de facturation / chantier</label><input id="clientAddress" autocomplete="street-address"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>2. Informations du devis</h2>
+          <div class="fields">
+            <div class="field"><label for="quoteNumber">N° de devis</label><input id="quoteNumber"></div>
+            <div class="field"><label for="quoteDate">Date</label><input id="quoteDate" type="date"></div>
+            <div class="field"><label for="validDays">Validité</label><select id="validDays"><option value="15">15 jours</option><option value="30" selected>30 jours</option><option value="45">45 jours</option><option value="60">60 jours</option></select></div>
+            <div class="field"><label for="vatRate">TVA</label><select id="vatRate"><option value="0" selected>0 %</option><option value="5.5">5,5 %</option><option value="10">10 %</option><option value="20">20 %</option></select></div>
+            <div class="field"><label for="discount">Remise globale</label><input id="discount" type="number" min="0" max="100" step="0.1" value="0"><small>%</small></div>
+            <div class="field"><label for="deposit">Acompte demandé</label><input id="deposit" type="number" min="0" max="100" step="1" value="0"><small>%</small></div>
+          </div>
+          <div class="notice info">La TVA est volontairement à sélectionner dans l’admin afin de ne pas appliquer automatiquement un régime fiscal qui ne correspondrait pas à l’entreprise.</div>
+        </section>
+
+        <section class="card span2">
+          <h2>3. Ajouter une prestation</h2>
+          <div class="fields">
+            <div class="field full"><label for="servicePreset">Prestation</label>
+              <select id="servicePreset">
+                <option value="office_once">Bureaux ponctuels — 1,50 €/m²</option>
+                <option value="office_regular">Bureaux réguliers — 1 €/m² / passage</option>
+                <option value="worksite">Chantier en cours — 28 €/h / agent</option>
+                <option value="end_worksite">Fin de chantier — 4,50 / 6 / 9 €/m²</option>
+                <option value="restoration">Remise en état — 6,50 / 8,50 €/m²</option>
+                <option value="glass">Vitrerie — 4 / 6,50 €/m²</option>
+                <option value="terrace">Terrasse — 4,90 / 6,50 €/m²</option>
+                <option value="common">Parties communes — dès 199 €/mois</option>
+                <option value="bins_starter">Poubelles Starter — 79 €/mois</option>
+                <option value="bins_comfort">Poubelles Confort — 159 €/mois</option>
+                <option value="bins_premium">Poubelles Premium — dès 249 €/mois</option>
+                <option value="custom">Ligne personnalisée</option>
+              </select>
+            </div>
+          </div>
+          <div class="preset-box">
+            <div class="fields">
+              <div class="field conditional areaField show"><label for="presetArea">Surface (m²)</label><input id="presetArea" type="number" min="0" step="1" placeholder="Ex. 120"></div>
+              <div class="field conditional conditionField"><label for="presetCondition">État</label><select id="presetCondition"><option value="light">Léger</option><option value="standard" selected>Standard</option><option value="dirty">Très sale</option></select></div>
+              <div class="field conditional passesField"><label for="presetPasses">Passages / mois</label><input id="presetPasses" type="number" min="1" value="4"></div>
+              <div class="field conditional agentsField"><label for="presetAgents">Nombre d’agents</label><input id="presetAgents" type="number" min="1" value="1"></div>
+              <div class="field conditional hoursField"><label for="presetHours">Heures / jour</label><input id="presetHours" type="number" min="1" step="0.5" value="7"></div>
+              <div class="field conditional daysField"><label for="presetDays">Nombre de jours</label><input id="presetDays" type="number" min="1" value="1"></div>
+              <div class="field conditional customDescField"><label for="customDesc">Description</label><input id="customDesc" placeholder="Prestation personnalisée"></div>
+              <div class="field conditional customQtyField"><label for="customQty">Quantité</label><input id="customQty" type="number" min="0" step="0.01" value="1"></div>
+              <div class="field conditional customUnitField"><label for="customUnit">Unité</label><input id="customUnit" value="forfait"></div>
+              <div class="field conditional customPriceField"><label for="customPrice">Prix unitaire HT (€)</label><input id="customPrice" type="number" min="0" step="0.01" value="0"></div>
+            </div>
+            <div class="actions"><button class="btn btn-gold" type="button" id="addPresetBtn">+ Ajouter au devis</button></div>
+          </div>
+        </section>
+
+        <section class="card span2">
+          <h2>4. Détail du devis</h2>
+          <div class="table-wrap">
+            <table class="quote-table">
+              <thead><tr><th>Désignation</th><th>Qté</th><th>Unité</th><th>Prix unitaire HT</th><th>Total HT</th><th></th></tr></thead>
+              <tbody id="linesBody"><tr><td colspan="6" class="empty">Aucune prestation ajoutée.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="actions"><button class="btn btn-light" type="button" id="addFreeLineBtn">+ Ajouter une ligne libre</button></div>
+          <div class="totals">
+            <div class="total-row"><span>Sous-total HT</span><strong id="subtotalText">0,00 €</strong></div>
+            <div class="total-row"><span>Remise</span><strong id="discountText">0,00 €</strong></div>
+            <div class="total-row"><span>Total HT</span><strong id="totalHtText">0,00 €</strong></div>
+            <div class="total-row"><span id="vatLabel">TVA 0 %</span><strong id="vatText">0,00 €</strong></div>
+            <div class="total-row grand"><span>Total TTC</span><strong id="totalTtcText">0,00 €</strong></div>
+            <div class="total-row"><span>Acompte</span><strong id="depositText">0,00 €</strong></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>5. Conditions & message</h2>
+          <div class="fields">
+            <div class="field full"><label for="quoteNotes">Détail / observations</label><textarea id="quoteNotes" placeholder="Accès, horaires, état des lieux, matériel particulier, informations vues sur les photos IA…"></textarea></div>
+            <div class="field full"><label for="paymentTerms">Conditions de règlement</label><textarea id="paymentTerms">Règlement selon les conditions convenues avec Clean-Cité. Toute prestation supplémentaire non prévue au présent devis fera l’objet d’un accord préalable.</textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>6. Envoyer au client</h2>
+          <p style="color:var(--muted);line-height:1.55">L’e-mail contient le devis complet, le détail des prestations et les totaux. Une copie est conservée chez Clean-Cité. Tu peux aussi l’ouvrir dans WhatsApp ou l’imprimer en PDF depuis ton navigateur.</p>
+          <div class="actions"><button class="btn btn-success" type="button" id="emailBtn">✉️ Envoyer par e-mail</button><button class="btn btn-gold" type="button" id="whatsappBtn">💬 WhatsApp</button><button class="btn btn-primary" type="button" id="printBtn">🖨️ Imprimer / PDF</button></div>
+          <div id="sendStatus"></div>
+        </section>
+
+        <section class="card span2">
+          <h2>Derniers devis créés sur cet appareil</h2>
+          <div id="history" class="history"><div class="empty">Aucun devis enregistré localement.</div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+<script>
+const ADMIN_EMAIL='cleannette7@gmail.com';
+let currentUser=null;
+let lines=[];
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(Number(n)||0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+function normalizeEmail(v){return String(v||'').trim().toLowerCase()}
+function isAdmin(u){return !!u&&normalizeEmail(u.email)===ADMIN_EMAIL}
+function defaultQuoteNumber(){const d=new Date();const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `CC-${y}${m}${day}-${String(Math.floor(Math.random()*900)+100)}`}
+function isoToday(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function showApp(u){currentUser=u;$('authGate').classList.add('hidden');$('app').classList.remove('hidden');$('quoteDate').value=isoToday();$('quoteNumber').value=defaultQuoteNumber();updatePresetFields();renderLines();renderHistory()}
+function gate(msg,buttons=''){$('gateMessage').innerHTML=msg;$('gateActions').innerHTML=buttons}
+async function logout(){if(window.netlifyIdentity)await window.netlifyIdentity.logout();location.href='/espace-client.html'}
+function initIdentity(){
+ if(!window.netlifyIdentity){gate('Netlify Identity est indisponible.','<a class="btn btn-light" href="/">Retour au site</a>');return}
+ window.netlifyIdentity.on('init',u=>{if(isAdmin(u))showApp(u);else if(u)gate('Accès refusé : ce compte n’est pas l’administrateur Clean-Cité.','<button class="btn btn-primary" onclick="logout()">Déconnexion</button>');else gate('Connecte-toi avec le compte administrateur Clean-Cité.','<button class="btn btn-primary" onclick="netlifyIdentity.open(\'login\')">Se connecter</button>')});
+ window.netlifyIdentity.on('login',u=>{window.netlifyIdentity.close();if(isAdmin(u))showApp(u);else gate('Accès refusé.','<button class="btn btn-primary" onclick="logout()">Déconnexion</button>')});
+ window.netlifyIdentity.on('logout',()=>location.href='/espace-client.html');window.netlifyIdentity.init();
+}
+
+const groups={area:['office_once','office_regular','end_worksite','restoration','glass','terrace'],condition:['end_worksite','restoration','glass','terrace'],passes:['office_regular'],agents:['worksite'],hours:['worksite'],days:['worksite'],custom:['custom']};
+function updatePresetFields(){const s=$('servicePreset').value;document.querySelectorAll('.conditional').forEach(el=>el.classList.remove('show'));if(groups.area.includes(s))document.querySelector('.areaField').classList.add('show');if(groups.condition.includes(s))document.querySelector('.conditionField').classList.add('show');if(groups.passes.includes(s))document.querySelector('.passesField').classList.add('show');if(groups.agents.includes(s))document.querySelector('.agentsField').classList.add('show');if(groups.hours.includes(s))document.querySelector('.hoursField').classList.add('show');if(groups.days.includes(s))document.querySelector('.daysField').classList.add('show');if(s==='custom'){['customDescField','customQtyField','customUnitField','customPriceField'].forEach(c=>document.querySelector('.'+c).classList.add('show'))}}
+function addLine(description,quantity,unit,unitPrice,meta={}){lines.push({id:uid(),description,quantity:Number(quantity)||0,unit,unitPrice:Number(unitPrice)||0,...meta});renderLines()}
+function addPreset(){
+ const s=$('servicePreset').value,area=Number($('presetArea').value||0),condition=$('presetCondition').value,passes=Math.max(1,Number($('presetPasses').value||1)),agents=Math.max(1,Number($('presetAgents').value||1)),hours=Math.max(1,Number($('presetHours').value||7)),days=Math.max(1,Number($('presetDays').value||1));
+ let desc='',qty=0,unit='',rate=0,min=false;
+ if(s==='office_once'){if(!area)return alert('Indique la surface.');desc='Nettoyage ponctuel de bureaux / locaux';qty=area;unit='m²';rate=1.5;min=true}
+ if(s==='office_regular'){if(!area)return alert('Indique la surface.');desc=`Entretien régulier bureaux — ${passes} passage(s)/mois`;qty=area*passes;unit='m²/passage';rate=1}
+ if(s==='worksite'){desc=`Nettoyage chantier en cours — ${agents} agent(s), ${hours} h/jour, ${days} jour(s)`;qty=agents*hours*days;unit='heure-agent';rate=28;min=true}
+ if(s==='end_worksite'){if(!area)return alert('Indique la surface.');rate=condition==='light'?4.5:condition==='dirty'?9:6;desc=`Nettoyage fin de chantier — ${condition==='light'?'léger':condition==='dirty'?'très sale':'standard'}`;qty=area;unit='m²';min=true}
+ if(s==='restoration'){if(!area)return alert('Indique la surface.');rate=condition==='dirty'?8.5:6.5;desc=`Remise en état — ${condition==='dirty'?'très encrassé':'standard'}`;qty=area;unit='m²';min=true}
+ if(s==='glass'){if(!area)return alert('Indique la surface.');rate=condition==='dirty'?6.5:4;desc=`Vitrerie — ${condition==='dirty'?'très sale':'accessible'}`;qty=area;unit='m²';min=true}
+ if(s==='terrace'){if(!area)return alert('Indique la surface.');rate=condition==='dirty'?6.5:4.9;desc=`Nettoyage terrasse — ${condition==='dirty'?'très sale':'standard'}`;qty=area;unit='m²';min=true}
+ if(s==='common'){desc='Entretien des parties communes';qty=1;unit='mois';rate=199}
+ if(s==='bins_starter'){desc='Sortie & rentrée poubelles — Starter (jusqu’à 4 bacs, 1 passage/semaine)';qty=1;unit='mois';rate=79}
+ if(s==='bins_comfort'){desc='Sortie & rentrée poubelles — Confort (jusqu’à 10 bacs, 2 passages/semaine)';qty=1;unit='mois';rate=159}
+ if(s==='bins_premium'){desc='Sortie & rentrée poubelles — Premium (jusqu’à 15 bacs, 3 passages/semaine)';qty=1;unit='mois';rate=249}
+ if(s==='custom'){const d=$('customDesc').value.trim(),q=Number($('customQty').value||0),u=$('customUnit').value.trim()||'forfait',p=Number($('customPrice').value||0);if(!d||q<=0)return alert('Renseigne la description et la quantité.');addLine(d,q,u,p);return}
+ addLine(desc,qty,unit,rate,{preset:s});
+ const base=qty*rate;if(min&&base>0&&base<150)addLine('Ajustement minimum intervention ponctuelle',1,'forfait',150-base,{minimumAdjustment:true});
+}
+function addFreeLine(){addLine('Prestation complémentaire',1,'forfait',0,{custom:true})}
+function updateLine(id,key,value){const l=lines.find(x=>x.id===id);if(!l)return;l[key]=['quantity','unitPrice'].includes(key)?Number(value)||0:value;renderTotals()}
+function removeLine(id){lines=lines.filter(x=>x.id!==id);renderLines()}
+function renderLines(){const body=$('linesBody');if(!lines.length){body.innerHTML='<tr><td colspan="6" class="empty">Aucune prestation ajoutée.</td></tr>';renderTotals();return}body.innerHTML=lines.map(l=>`<tr><td><input value="${esc(l.description)}" oninput="updateLine('${l.id}','description',this.value)"></td><td><input class="num" type="number" min="0" step="0.01" value="${l.quantity}" oninput="updateLine('${l.id}','quantity',this.value)"></td><td><input class="unit" value="${esc(l.unit)}" oninput="updateLine('${l.id}','unit',this.value)"></td><td><input class="price" type="number" min="0" step="0.01" value="${l.unitPrice}" oninput="updateLine('${l.id}','unitPrice',this.value)"></td><td class="total">${money(l.quantity*l.unitPrice)}</td><td><button type="button" class="btn btn-danger" onclick="removeLine('${l.id}')">×</button></td></tr>`).join('');renderTotals()}
+function calcTotals(){const subtotal=lines.reduce((s,l)=>s+(Number(l.quantity)||0)*(Number(l.unitPrice)||0),0);const discPct=Math.min(100,Math.max(0,Number($('discount').value)||0));const discount=subtotal*discPct/100;const ht=subtotal-discount;const vatRate=Math.max(0,Number($('vatRate').value)||0);const vat=ht*vatRate/100;const ttc=ht+vat;const depPct=Math.min(100,Math.max(0,Number($('deposit').value)||0));const deposit=ttc*depPct/100;return{subtotal,discPct,discount,ht,vatRate,vat,ttc,depPct,deposit}}
+function renderTotals(){const t=calcTotals();$('subtotalText').textContent=money(t.subtotal);$('discountText').textContent=`-${money(t.discount)}`;$('totalHtText').textContent=money(t.ht);$('vatLabel').textContent=`TVA ${String(t.vatRate).replace('.',',')} %`;$('vatText').textContent=money(t.vat);$('totalTtcText').textContent=money(t.ttc);$('depositText').textContent=t.depPct?`${money(t.deposit)} (${t.depPct} %)`:'0,00 €'}
+function buildPayload(){const t=calcTotals();const d=$('quoteDate').value?new Date($('quoteDate').value+'T12:00:00'):new Date();const valid=new Date(d);valid.setDate(valid.getDate()+Number($('validDays').value||30));return{quoteNumber:$('quoteNumber').value.trim(),quoteDate:$('quoteDate').value,validUntil:valid.toISOString().slice(0,10),client:{name:$('clientName').value.trim(),email:$('clientEmail').value.trim(),phone:$('clientPhone').value.trim(),city:$('clientCity').value.trim(),address:$('clientAddress').value.trim()},lines:lines.map(l=>({description:l.description,quantity:Number(l.quantity),unit:l.unit,unitPrice:Number(l.unitPrice),total:Number(l.quantity)*Number(l.unitPrice)})),totals:t,notes:$('quoteNotes').value.trim(),paymentTerms:$('paymentTerms').value.trim()}}
+function validatePayload(p){if(!p.client.name)return 'Renseigne le nom ou la société du client.';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.client.email))return 'Renseigne une adresse e-mail client valide.';if(!p.quoteNumber)return 'Le numéro de devis est obligatoire.';if(!p.lines.length)return 'Ajoute au moins une prestation.';if(p.lines.some(l=>!l.description||l.quantity<=0||l.unitPrice<0))return 'Vérifie les lignes du devis.';return ''}
+function status(msg,type='info'){$('sendStatus').innerHTML=`<div class="notice ${type}">${esc(msg)}</div>`}
+async function getJwt(){const u=window.netlifyIdentity&&window.netlifyIdentity.currentUser();if(!u||!u.jwt)throw new Error('Session administrateur expirée.');return await u.jwt()}
+async function sendEmail(){const p=buildPayload(),err=validatePayload(p);if(err){status(err,'error');return}const btn=$('emailBtn');btn.disabled=true;status('Envoi du devis en cours…','info');try{const token=await getJwt();const r=await fetch('/.netlify/functions/admin-send-devis',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify(p)});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||data.message||'Erreur d’envoi');if(data.sent){status(`Devis ${p.quoteNumber} envoyé à ${p.client.email}.`,'ok');saveHistory(p)}else if(data.mailto){status('Brevo n’est pas configuré : ouverture de l’e-mail manuel.','info');location.href=data.mailto}else throw new Error(data.message||'Envoi non confirmé')}catch(e){status(e.message,'error')}finally{btn.disabled=false}}
+function whatsapp(){const p=buildPayload();if(!p.client.phone)return status('Ajoute le numéro de téléphone du client pour WhatsApp.','error');const digits=p.client.phone.replace(/\D/g,'').replace(/^0/,'33');const msg=`Bonjour ${p.client.name},\n\nClean-Cité vous transmet le devis ${p.quoteNumber}.\nMontant total TTC : ${money(p.totals.ttc)}.\nValidité : jusqu’au ${new Date(p.validUntil+'T12:00:00').toLocaleDateString('fr-FR')}.\n\n${p.lines.map(l=>`• ${l.description} : ${money(l.total)}`).join('\n')}\n\nNous restons disponibles pour toute question.\nClean-Cité — 07 66 53 61 54`;window.open(`https://wa.me/${digits}?text=${encodeURIComponent(msg)}`,'_blank','noopener')}
+function quoteHtml(p){const date=v=>v?new Date(v+'T12:00:00').toLocaleDateString('fr-FR'):'';return `<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Devis ${esc(p.quoteNumber)}</title><style>@page{size:A4;margin:16mm}body{font-family:Arial,sans-serif;color:#172033;margin:0}header{display:flex;justify-content:space-between;border-bottom:3px solid #0B2447;padding-bottom:18px}.logo{width:130px}.right{text-align:right}.tag{color:#b88a3b;font-weight:900}.cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:24px 0}.box{border:1px solid #dfe5ee;border-radius:10px;padding:14px}table{width:100%;border-collapse:collapse;margin-top:18px}th{background:#0B2447;color:white;text-align:left;padding:10px;font-size:12px}td{padding:10px;border-bottom:1px solid #dfe5ee;font-size:13px}.num{text-align:right}.totals{margin:18px 0 0 auto;width:330px}.tr{display:flex;justify-content:space-between;padding:7px}.grand{background:#0B2447;color:#fff;font-size:18px;font-weight:900;border-radius:8px}.notes{margin-top:24px;font-size:12px;line-height:1.55}.legal{margin-top:32px;border-top:1px solid #dfe5ee;padding-top:12px;color:#667085;font-size:10px;line-height:1.5}</style></head><body><header><div><img class="logo" src="${location.origin}/images/logo-clean-cite.png"><div><b>Clean-Cité</b><br>149 rue de Paris, 93000 Bobigny<br>07 66 53 61 54<br>cleannette7@gmail.com</div></div><div class="right"><div class="tag">DEVIS</div><h2>${esc(p.quoteNumber)}</h2><div>Date : ${date(p.quoteDate)}<br>Valable jusqu’au : ${date(p.validUntil)}</div></div></header><div class="cols"><div class="box"><b>Client</b><br>${esc(p.client.name)}<br>${esc(p.client.address)}<br>${esc(p.client.city)}<br>${esc(p.client.email)}<br>${esc(p.client.phone)}</div><div class="box"><b>Entreprise</b><br>Clean-Cité<br>Responsable : TRAORE FOUSSEYNI<br>SIRET : 989 248 554 00010<br>Zone : Île-de-France</div></div><table><thead><tr><th>Désignation</th><th>Qté</th><th>Unité</th><th>PU HT</th><th>Total HT</th></tr></thead><tbody>${p.lines.map(l=>`<tr><td>${esc(l.description)}</td><td>${l.quantity}</td><td>${esc(l.unit)}</td><td class="num">${money(l.unitPrice)}</td><td class="num">${money(l.total)}</td></tr>`).join('')}</tbody></table><div class="totals"><div class="tr"><span>Sous-total HT</span><b>${money(p.totals.subtotal)}</b></div><div class="tr"><span>Remise</span><b>-${money(p.totals.discount)}</b></div><div class="tr"><span>Total HT</span><b>${money(p.totals.ht)}</b></div><div class="tr"><span>TVA ${p.totals.vatRate}%</span><b>${money(p.totals.vat)}</b></div><div class="tr grand"><span>Total TTC</span><b>${money(p.totals.ttc)}</b></div>${p.totals.depPct?`<div class="tr"><span>Acompte ${p.totals.depPct}%</span><b>${money(p.totals.deposit)}</b></div>`:''}</div><div class="notes"><h3>Observations</h3><p>${esc(p.notes||'Aucune observation particulière.').replace(/\n/g,'<br>')}</p><h3>Conditions</h3><p>${esc(p.paymentTerms).replace(/\n/g,'<br>')}</p></div><div class="legal">Ce devis est établi selon les informations communiquées au moment de la demande. Toute prestation supplémentaire ou modification du périmètre pourra faire l’objet d’un ajustement accepté préalablement. Clean-Cité — SIRET 989 248 554 00010.</div><script>window.onload=()=>setTimeout(()=>window.print(),350)<\/script></body></html>`}
+function printQuote(){const p=buildPayload(),err=validatePayload(p);if(err){status(err,'error');return}const w=window.open('','_blank');if(!w)return status('Le navigateur a bloqué la fenêtre d’impression. Autorise les pop-ups pour cette page.','error');w.document.open();w.document.write(quoteHtml(p));w.document.close();saveHistory(p)}
+function saveHistory(p){try{const key='cleanCiteAdminQuotesV1';const list=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x.quoteNumber!==p.quoteNumber);list.unshift({...p,savedAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(list.slice(0,20)));renderHistory()}catch(e){}}
+function renderHistory(){const box=$('history');let list=[];try{list=JSON.parse(localStorage.getItem('cleanCiteAdminQuotesV1')||'[]')}catch(e){}if(!list.length){box.innerHTML='<div class="empty">Aucun devis enregistré localement.</div>';return}box.innerHTML=list.slice(0,10).map((p,i)=>`<div class="history-item"><div><strong>${esc(p.quoteNumber)}</strong> — ${esc(p.client?.name||'Client')}<small>${new Date(p.savedAt).toLocaleString('fr-FR')} · ${money(p.totals?.ttc||0)}</small></div><button class="btn btn-light" type="button" onclick="loadHistory(${i})">Recharger</button></div>`).join('')}
+function loadHistory(i){let list=[];try{list=JSON.parse(localStorage.getItem('cleanCiteAdminQuotesV1')||'[]')}catch(e){}const p=list[i];if(!p)return;$('quoteNumber').value=p.quoteNumber;$('quoteDate').value=p.quoteDate;$('clientName').value=p.client?.name||'';$('clientEmail').value=p.client?.email||'';$('clientPhone').value=p.client?.phone||'';$('clientCity').value=p.client?.city||'';$('clientAddress').value=p.client?.address||'';$('vatRate').value=p.totals?.vatRate??0;$('discount').value=p.totals?.discPct??0;$('deposit').value=p.totals?.depPct??0;$('quoteNotes').value=p.notes||'';$('paymentTerms').value=p.paymentTerms||'';lines=(p.lines||[]).map(l=>({...l,id:uid()}));renderLines();scrollTo({top:0,behavior:'smooth'})}
+
+$('servicePreset').addEventListener('change',updatePresetFields);$('addPresetBtn').addEventListener('click',addPreset);$('addFreeLineBtn').addEventListener('click',addFreeLine);['vatRate','discount','deposit'].forEach(id=>$(id).addEventListener('input',renderTotals));$('emailBtn').addEventListener('click',sendEmail);$('whatsappBtn').addEventListener('click',whatsapp);$('printBtn').addEventListener('click',printQuote);$('logoutBtn').addEventListener('click',logout);initIdentity();
+</script>
+</body>
+</html>
