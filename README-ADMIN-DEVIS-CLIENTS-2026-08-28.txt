@@ -25,3 +25,11 @@ Le module réutilise les variables déjà prévues par Clean-Cité :
 
 Si BREVO_API_KEY existe déjà sur Netlify, aucune nouvelle clé n'est nécessaire.
 Sans Brevo, le module propose un email manuel en secours.
+
+
+MISE À JOUR 28/08/2026 — PDF SANS E-MAIL
+- Le téléphone client est obligatoire pour créer un devis.
+- L'e-mail client est facultatif.
+- Le devis peut être enregistré/imprimé en PDF sans e-mail.
+- L'e-mail n'est requis que lorsque l'administrateur clique sur « Envoyer par e-mail ».
+- WhatsApp utilise uniquement le numéro de téléphone du client.

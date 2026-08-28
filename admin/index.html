@@ -1,136 +1,93 @@
 <!doctype html>
 <html lang="fr" translate="no" class="notranslate">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="google" content="notranslate" />
-  <title>Administration Clean-Cité</title>
-  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=7">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="google" content="notranslate">
+  <title>Tableau de bord administrateur | Clean-Cité</title>
+  <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
-    html, body { translate: no; }
-    body{font-family:Arial,sans-serif;background:#fcf7f0;color:#0B2447;margin:0}
-    .admin-loading{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px}
-    .admin-loading div{background:#fff;border-radius:24px;box-shadow:0 16px 50px rgba(11,36,71,.12);padding:34px;max-width:620px}
-    .admin-loading img{height:74px;object-fit:contain;margin-bottom:14px}
-    .admin-loading h1{margin:0 0 10px;font-size:28px}
-    .admin-loading p{color:#6f675a;line-height:1.6;margin:0 0 16px}
-    .admin-error{background:#fff1f2;color:#991b1b;border:1px solid #fecdd3;border-radius:14px;padding:14px;margin-top:16px;font-weight:700}
-    .admin-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
-    .btn{display:inline-block;border:0;border-radius:999px;padding:12px 20px;font-weight:800;text-decoration:none;cursor:pointer}
-    .btn-primary{background:#9a681f;color:white}
-    .btn-secondary{background:#9a681f;color:white}
-    .quote-shortcut{display:none;position:fixed;right:18px;top:14px;z-index:999999;background:#0B2447;color:#fff;text-decoration:none;padding:11px 16px;border-radius:999px;font-weight:900;box-shadow:0 8px 26px rgba(11,36,71,.28);border:2px solid #d3aa61}
-    .quote-shortcut.show{display:inline-flex;align-items:center;gap:7px}
+    :root{--navy:#0B2447;--navy2:#163f70;--gold:#b88a3b;--cream:#f8f4ec;--white:#fff;--text:#172033;--muted:#667085;--line:#dfe5ee;--shadow:0 16px 48px rgba(11,36,71,.12);--success:#067647}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#eef3f8 0,#f8fafc 100%)}
+    button,a{font:inherit}.hidden{display:none!important}
+    .gate{min-height:100vh;display:grid;place-items:center;padding:24px}.gate-box{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:34px;text-align:center}.gate-box img{width:105px;height:105px;object-fit:contain}.gate-box h1{margin:10px 0;color:var(--navy);font-size:30px}.gate-box p{color:var(--muted);line-height:1.55}.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 18px;font-weight:900;text-decoration:none;cursor:pointer}.btn-primary{background:var(--navy);color:#fff}.btn-gold{background:var(--gold);color:#fff}.btn-light{background:#eef2f7;color:var(--navy)}
+    .app{min-height:100vh}.topbar{background:var(--navy);color:#fff;box-shadow:0 6px 24px rgba(11,36,71,.18)}.topbar-inner{max-width:1180px;margin:auto;min-height:76px;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px;font-weight:950}.brand img{width:54px;height:54px;object-fit:contain;background:#fff;border-radius:13px;padding:4px}.top-actions{display:flex;gap:9px;flex-wrap:wrap}.top-actions a,.top-actions button{border:1px solid rgba(255,255,255,.24);background:transparent;color:#fff;border-radius:999px;padding:9px 14px;text-decoration:none;font-weight:850;cursor:pointer}
+    .wrap{max-width:1180px;margin:0 auto;padding:44px 22px 72px}.eyebrow{color:var(--gold);font-weight:950;text-transform:uppercase;letter-spacing:.11em;font-size:12px}.hero{margin-bottom:28px}.hero h1{margin:8px 0 10px;font-size:clamp(32px,5vw,52px);letter-spacing:-.045em;color:var(--navy)}.hero p{margin:0;max-width:760px;color:var(--muted);font-size:17px;line-height:1.6}.user-pill{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:#e9f7ef;color:var(--success);border:1px solid #b7e4c7;border-radius:999px;padding:8px 12px;font-weight:800;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:270px;position:relative;overflow:hidden}.card:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-55px;bottom:-60px;background:rgba(184,138,59,.09)}.icon{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;background:var(--cream);font-size:28px;margin-bottom:18px}.card h2{margin:0 0 9px;color:var(--navy);font-size:24px}.card p{color:var(--muted);line-height:1.55;margin:0 0 20px;flex:1;max-width:520px}.card .btn{align-self:flex-start;position:relative;z-index:2}.card.primary{border:2px solid var(--gold);background:linear-gradient(145deg,#fff 55%,#fbf5e9)}.card.primary .badge{position:absolute;right:18px;top:18px;background:var(--gold);color:#fff;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+    .quick{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 8px 30px rgba(11,36,71,.06)}.quick p{margin:0;color:var(--muted);font-size:14px}.quick strong{color:var(--navy)}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.topbar-inner{align-items:flex-start}.brand span{font-size:14px}.top-actions{justify-content:flex-end}.wrap{padding-top:30px}.card{min-height:230px}.quick{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body class="notranslate">
-  <a id="quote-shortcut" class="quote-shortcut" href="/admin/devis.html">🧾 Créer un devis client</a>
-  <div class="admin-loading notranslate" id="admin-gate">
-    <div>
-      <img src="/images/logo-clean-cite.png" alt="Logo Clean-Cité">
-      <h1>Espace admin Clean-Cité</h1>
-      <p id="admin-message">Vérification de l'accès administrateur...</p>
-      <div class="admin-actions" id="admin-actions"></div>
+  <div id="authGate" class="gate">
+    <div class="gate-box">
+      <img src="/images/logo-clean-cite.png" alt="Clean-Cité">
+      <h1>Administration Clean-Cité</h1>
+      <p id="gateMessage">Vérification de votre accès administrateur…</p>
+      <div class="actions" id="gateActions"></div>
     </div>
   </div>
 
-  <script>
-    window.CLEAN_CITE_ADMIN_EMAIL = "cleannette7@gmail.com";
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand"><img src="/images/logo-clean-cite.png" alt="Logo Clean-Cité"><span>ADMINISTRATION CLEAN-CITÉ</span></div>
+        <div class="top-actions"><a href="/">Voir le site</a><button id="logoutBtn" type="button">Déconnexion</button></div>
+      </div>
+    </header>
 
-    function normalizeEmail(value) {
-      return String(value || "").trim().toLowerCase();
-    }
+    <main class="wrap">
+      <section class="hero">
+        <div class="eyebrow">Tableau de bord</div>
+        <h1>Que veux-tu faire ?</h1>
+        <p>La création de devis est maintenant séparée de la gestion du contenu du site pour que l’accès reste toujours visible, même quand le CMS se charge.</p>
+        <div class="user-pill" id="userPill">✓ Administrateur connecté</div>
+      </section>
 
-    function isCleanCiteAdmin(user) {
-      return !!user && normalizeEmail(user.email) === window.CLEAN_CITE_ADMIN_EMAIL;
-    }
+      <section class="grid">
+        <article class="card primary">
+          <span class="badge">Nouveau</span>
+          <div class="icon">🧾</div>
+          <h2>Créer et envoyer un devis</h2>
+          <p>Renseigne le client, ajoute les prestations Clean-Cité, calcule automatiquement le montant puis envoie le devis par e-mail, WhatsApp ou imprime-le en PDF.</p>
+          <a class="btn btn-gold" href="/admin/devis.html">Ouvrir le module devis</a>
+        </article>
 
-    function setAdminMessage(html, error) {
-      const message = document.getElementById("admin-message");
-      if (!message) return;
-      message.innerHTML = html;
-      message.className = error ? "admin-error" : "";
-    }
+        <article class="card">
+          <div class="icon">🛠️</div>
+          <h2>Gérer le site</h2>
+          <p>Accède au CMS pour gérer les photos Avant/Après et le planning des interventions sans masquer le module de devis.</p>
+          <a class="btn btn-primary" href="/admin/cms.html">Ouvrir la gestion du site</a>
+        </article>
+      </section>
 
-    function setAdminActions(html) {
-      const actions = document.getElementById("admin-actions");
-      if (actions) actions.innerHTML = html;
-    }
+      <div class="quick">
+        <p><strong>Accès direct :</strong> si besoin, le module devis est toujours accessible à l’adresse <b>/admin/devis.html</b>.</p>
+        <a class="btn btn-light" href="/espace-client.html">Espace client</a>
+      </div>
+    </main>
+  </div>
 
-    function hideGate() {
-      const gate = document.getElementById("admin-gate");
-      if (gate) gate.style.display = "none";
-    }
-
-    let decapAlreadyLoaded = false;
-    function loadDecapCms() {
-      const shortcut = document.getElementById("quote-shortcut");
-      if (shortcut) shortcut.classList.add("show");
-      if (decapAlreadyLoaded) return;
-      decapAlreadyLoaded = true;
-      setAdminMessage("Accès confirmé pour " + window.CLEAN_CITE_ADMIN_EMAIL + ". Chargement de l'administration...");
-      setAdminActions("");
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js";
-      script.onload = function () {
-        setTimeout(hideGate, 800);
-      };
-      script.onerror = function () {
-        setAdminMessage("Erreur : l'administration n'a pas pu se charger. Réessayez dans quelques instants.", true);
-        decapAlreadyLoaded = false;
-      };
-      document.body.appendChild(script);
-    }
-
-    function denyAccess(user) {
-      const email = user && user.email ? user.email : "ce compte";
-      setAdminMessage("Accès refusé : " + email + " n'est pas autorisé comme administrateur Clean-Cité. Seul " + window.CLEAN_CITE_ADMIN_EMAIL + " peut accéder à cette zone.", true);
-      setAdminActions('<a class="btn btn-secondary" href="/espace-client.html">Retour à l’espace client</a><button class="btn btn-primary" id="admin-logout-btn">Déconnexion</button>');
-      setTimeout(function () {
-        const btn = document.getElementById("admin-logout-btn");
-        if (btn) btn.onclick = logoutAdmin;
-      }, 0);
-    }
-
-    function logoutAdmin() {
-      if (window.netlifyIdentity) window.netlifyIdentity.logout();
-      window.location.href = "/espace-client.html";
-    }
-
-    function openAdminLogin() {
-      setAdminMessage("Connectez-vous avec le compte administrateur Clean-Cité : " + window.CLEAN_CITE_ADMIN_EMAIL + ".");
-      setAdminActions('<button class="btn btn-primary" id="admin-login-btn">Se connecter</button><a class="btn btn-secondary" href="/">Retour au site</a>');
-      setTimeout(function () {
-        const btn = document.getElementById("admin-login-btn");
-        if (btn) btn.onclick = function () { window.netlifyIdentity.open("login"); };
-      }, 0);
-    }
-
-    // Décap/React peut planter si Chrome traduit automatiquement la page.
-    // Cette page est donc marquée notranslate. Il faut aussi désactiver la traduction auto dans Chrome si besoin.
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", function (user) {
-        if (isCleanCiteAdmin(user)) loadDecapCms();
-        else if (user) denyAccess(user);
-        else openAdminLogin();
-      });
-
-      window.netlifyIdentity.on("login", function (user) {
-        window.netlifyIdentity.close();
-        if (isCleanCiteAdmin(user)) loadDecapCms();
-        else denyAccess(user);
-      });
-
-      window.netlifyIdentity.on("logout", function () {
-        window.location.href = "/espace-client.html";
-      });
-
-      window.netlifyIdentity.init();
-    } else {
-      setAdminMessage("Erreur : Netlify Identity n'est pas disponible sur ce site.", true);
-    }
-  </script>
+<script>
+const ADMIN_EMAIL='cleannette7@gmail.com';
+const $=id=>document.getElementById(id);
+function normalizeEmail(v){return String(v||'').trim().toLowerCase()}
+function isAdmin(u){return !!u&&normalizeEmail(u.email)===ADMIN_EMAIL}
+function gate(msg,buttons=''){$('gateMessage').innerHTML=msg;$('gateActions').innerHTML=buttons}
+function showDashboard(u){$('authGate').classList.add('hidden');$('app').classList.remove('hidden');$('userPill').textContent='✓ Administrateur connecté · '+u.email}
+async function logout(){if(window.netlifyIdentity)await window.netlifyIdentity.logout();location.href='/espace-client.html'}
+function initIdentity(){
+  if(!window.netlifyIdentity){gate('Netlify Identity est indisponible.','<a class="btn btn-light" href="/">Retour au site</a>');return}
+  window.netlifyIdentity.on('init',u=>{if(isAdmin(u))showDashboard(u);else if(u)gate('Accès refusé : ce compte n’est pas l’administrateur Clean-Cité.','<button class="btn btn-primary" onclick="logout()">Déconnexion</button>');else gate('Connecte-toi avec le compte administrateur Clean-Cité.','<button class="btn btn-primary" onclick="netlifyIdentity.open(\'login\')">Se connecter</button>')});
+  window.netlifyIdentity.on('login',u=>{window.netlifyIdentity.close();if(isAdmin(u))showDashboard(u);else gate('Accès refusé.','<button class="btn btn-primary" onclick="logout()">Déconnexion</button>')});
+  window.netlifyIdentity.on('logout',()=>location.href='/espace-client.html');
+  window.netlifyIdentity.init();
+}
+$('logoutBtn').addEventListener('click',logout);
+initIdentity();
+</script>
 </body>
 </html>
