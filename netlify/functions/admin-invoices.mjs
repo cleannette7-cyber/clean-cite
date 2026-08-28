@@ -82,6 +82,12 @@ function normalize(i) {
     lines,
     notes: clean(i.notes, 5000),
     paymentTerms: clean(i.paymentTerms, 5000),
+    companyBank: {
+      holder: clean(i.companyBank?.holder, 160),
+      bank: clean(i.companyBank?.bank, 160),
+      iban: clean(i.companyBank?.iban, 80),
+      bic: clean(i.companyBank?.bic, 40),
+    },
     totals: {
       subtotal,
       discount,
@@ -124,7 +130,7 @@ async function nextNumber(store, year) {
 function emailContent(p) {
   const rows = p.lines.map((l) => `<tr><td style="padding:9px;border-bottom:1px solid #e5e7eb">${esc(l.description)}</td><td style="padding:9px;text-align:right;border-bottom:1px solid #e5e7eb">${l.quantity}</td><td style="padding:9px;border-bottom:1px solid #e5e7eb">${esc(l.unit)}</td><td style="padding:9px;text-align:right;border-bottom:1px solid #e5e7eb">${euro(l.unitPrice)}</td><td style="padding:9px;text-align:right;border-bottom:1px solid #e5e7eb;font-weight:700">${euro(l.quantity * l.unitPrice)}</td></tr>`).join("");
   const subject = `Facture Clean-Cité ${p.invoiceNumber} — ${p.client.name}`;
-  const html = `<div style="font-family:Arial,sans-serif;max-width:780px;margin:auto;color:#172033"><div style="background:#0B2447;color:white;padding:22px;border-radius:16px 16px 0 0"><div style="color:#e8c780;font-weight:800">CLEAN-CITÉ</div><h1 style="margin:5px 0">Facture ${esc(p.invoiceNumber)}</h1></div><div style="border:1px solid #dfe5ee;padding:24px"><p>Bonjour <strong>${esc(p.client.name)}</strong>,</p><p>Veuillez trouver votre facture Clean-Cité.</p><p><b>Date :</b> ${esc(p.invoiceDate)} · <b>Échéance :</b> ${esc(p.dueDate)}${p.sourceQuoteNumber ? ` · <b>Devis d’origine :</b> ${esc(p.sourceQuoteNumber)}` : ""}</p><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#0B2447;color:white"><th style="padding:9px;text-align:left">Désignation</th><th>Qté</th><th>Unité</th><th>PU HT</th><th>Total HT</th></tr></thead><tbody>${rows}</tbody></table><div style="margin:20px 0 0 auto;max-width:360px"><p><b>Sous-total HT :</b> ${euro(p.totals.subtotal ?? p.totals.ht)}</p>${p.discountPercent ? `<p><b>Remise ${p.discountPercent}% :</b> -${euro(p.totals.discount || 0)}</p>` : ""}<p><b>Total HT :</b> ${euro(p.totals.ht)}</p><p><b>TVA ${p.vatRate}% :</b> ${euro(p.totals.vat)}</p><p style="background:#0B2447;color:white;padding:12px"><b>Total TTC : ${euro(p.totals.ttc)}</b></p><p><b>Reste à payer :</b> ${euro(p.totals.balance)}</p></div>${p.vatRate === 0 ? `<p><b>${esc(p.vatExemption)}</b></p>` : ""}<p>${esc(p.paymentTerms).replace(/\n/g, "<br>")}</p><p style="font-size:12px;color:#667085">${COMPANY.name} · ${COMPANY.address} · SIRET ${COMPANY.siret} · ${COMPANY.email}</p></div></div>`;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:780px;margin:auto;color:#172033"><div style="background:#0B2447;color:white;padding:22px;border-radius:16px 16px 0 0"><div style="color:#e8c780;font-weight:800">CLEAN-CITÉ</div><h1 style="margin:5px 0">Facture ${esc(p.invoiceNumber)}</h1></div><div style="border:1px solid #dfe5ee;padding:24px"><p>Bonjour <strong>${esc(p.client.name)}</strong>,</p><p>Veuillez trouver votre facture Clean-Cité.</p><p><b>Date :</b> ${esc(p.invoiceDate)} · <b>Échéance :</b> ${esc(p.dueDate)}${p.sourceQuoteNumber ? ` · <b>Devis d’origine :</b> ${esc(p.sourceQuoteNumber)}` : ""}</p><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#0B2447;color:white"><th style="padding:9px;text-align:left">Désignation</th><th>Qté</th><th>Unité</th><th>PU HT</th><th>Total HT</th></tr></thead><tbody>${rows}</tbody></table><div style="margin:20px 0 0 auto;max-width:360px"><p><b>Sous-total HT :</b> ${euro(p.totals.subtotal ?? p.totals.ht)}</p>${p.discountPercent ? `<p><b>Remise ${p.discountPercent}% :</b> -${euro(p.totals.discount || 0)}</p>` : ""}<p><b>Total HT :</b> ${euro(p.totals.ht)}</p><p><b>TVA ${p.vatRate}% :</b> ${euro(p.totals.vat)}</p><p style="background:#0B2447;color:white;padding:12px"><b>Total TTC : ${euro(p.totals.ttc)}</b></p><p><b>Reste à payer :</b> ${euro(p.totals.balance)}</p></div>${p.vatRate === 0 ? `<p><b>${esc(p.vatExemption)}</b></p>` : ""}${p.companyBank?.iban ? `<div style="margin-top:16px;padding:12px;background:#f7f9fc;border-radius:10px"><b>Coordonnées bancaires</b><br>${esc(p.companyBank.holder || COMPANY.name)}${p.companyBank.bank ? ` · ${esc(p.companyBank.bank)}` : ""}<br>IBAN : ${esc(p.companyBank.iban)}${p.companyBank.bic ? `<br>BIC : ${esc(p.companyBank.bic)}` : ""}</div>` : ""}<p>${esc(p.paymentTerms).replace(/\n/g, "<br>")}</p><p style="font-size:12px;color:#667085">${COMPANY.name} · ${COMPANY.address} · SIRET ${COMPANY.siret} · ${COMPANY.email}</p></div></div>`;
   const text = `Facture ${p.invoiceNumber}\nClient : ${p.client.name}\nTotal TTC : ${euro(p.totals.ttc)}\nReste à payer : ${euro(p.totals.balance)}\nÉchéance : ${p.dueDate}\n\n${COMPANY.name} - ${COMPANY.phone}`;
   return { subject, html, text };
 }
@@ -189,6 +195,32 @@ export default async function handler(req) {
       return json(200, { invoice: p });
     }
 
+    if (b.action === "update") {
+      const requested = normalize(b.invoice || {});
+      const n = clean(requested.invoiceNumber, 80);
+      if (!n) return json(400, { error: "Numéro de facture manquant." });
+      const key = `invoices/${n}`;
+      const current = await store.getWithMetadata(key, { type: "json", consistency: "strong" });
+      if (!current?.data) return json(404, { error: "Facture introuvable." });
+      const err = validate(requested);
+      if (err) return json(400, { error: err });
+      if (current.data.invoiceNumber !== n) return json(409, { error: "Numéro de facture incohérent." });
+      const now = new Date().toISOString();
+      const snapshotKey = `invoice-history/${n}/${now.replace(/[:.]/g, "-")}`;
+      await store.setJSON(snapshotKey, current.data);
+      requested.invoiceNumber = n;
+      requested.createdAt = current.data.createdAt || now;
+      requested.createdBy = current.data.createdBy || ADMIN_EMAIL;
+      requested.updatedAt = now;
+      requested.updatedBy = ADMIN_EMAIL;
+      requested.revision = (Number(current.data.revision) || 0) + 1;
+      requested.lastSentAt = current.data.lastSentAt || null;
+      requested.sentCount = Number(current.data.sentCount) || 0;
+      const wr = await store.setJSON(key, requested, { onlyIfMatch: current.etag });
+      if (!wr.modified) return json(409, { error: "La facture a été modifiée ailleurs. Recharge-la puis réessaie." });
+      return json(200, { invoice: requested });
+    }
+
     if (b.action === "get") {
       const n = clean(b.invoiceNumber, 80);
       const p = await store.get(`invoices/${n}`, { type: "json", consistency: "strong" });
@@ -210,6 +242,7 @@ export default async function handler(req) {
           totalTtc: p.totals?.ttc,
           balance: p.totals?.balance,
           status: p.status || "due",
+          revision: Number(p.revision) || 0,
         });
       }
       invoices.sort((a, b) => String(b.invoiceNumber).localeCompare(String(a.invoiceNumber)));
@@ -218,9 +251,13 @@ export default async function handler(req) {
 
     if (b.action === "send") {
       const n = clean(b.invoiceNumber, 80);
-      const p = await store.get(`invoices/${n}`, { type: "json", consistency: "strong" });
+      const key = `invoices/${n}`;
+      const current = await store.getWithMetadata(key, { type: "json", consistency: "strong" });
+      const p = current?.data;
       if (!p) return json(404, { error: "Facture introuvable." });
       await sendBrevo(p);
+      const marked = { ...p, lastSentAt: new Date().toISOString(), sentCount: (Number(p.sentCount) || 0) + 1 };
+      try { await store.setJSON(key, marked, { onlyIfMatch: current.etag }); } catch {}
       return json(200, { message: `Facture ${n} envoyée à ${p.client.email}.` });
     }
 
