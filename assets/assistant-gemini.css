@@ -74,3 +74,25 @@
   .ccai-send { min-width:64px; padding:0 10px; }
   .ccai-mic { flex-basis:44px; width:44px; }
 }
+
+/* Photos pour pré-devis IA */
+.ccai-photo-tools { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin:10px 0 7px; }
+.ccai-photo-btn { border:1px solid rgba(11,36,71,.16); background:#fff; color:#0B2447; border-radius:12px; padding:8px 10px; cursor:pointer; font-size:12px; font-weight:900; }
+.ccai-photo-btn:hover { border-color:#9a681f; color:#7a5319; }
+.ccai-photo-count { margin-left:auto; font-size:11.5px; font-weight:900; color:#526172; }
+.ccai-photo-previews { display:flex; gap:7px; overflow-x:auto; padding:2px 0; scrollbar-width:thin; }
+.ccai-photo-preview { width:62px; height:62px; border-radius:12px; overflow:hidden; position:relative; flex:0 0 auto; border:1px solid rgba(11,36,71,.13); background:#fff; }
+.ccai-photo-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+.ccai-photo-preview button { position:absolute; top:3px; right:3px; width:21px; height:21px; padding:0; border:0; border-radius:999px; background:rgba(11,36,71,.88); color:#fff; cursor:pointer; font-size:16px; line-height:19px; box-shadow:0 2px 8px rgba(0,0,0,.2); }
+.ccai-photo-status { margin:5px 0 7px; font-size:11px; line-height:1.4; color:#667085; }
+.ccai-photo-status.error { color:#b42318; font-weight:800; }
+.ccai-photo-box { background:#f7f9fc; border:1px dashed rgba(11,36,71,.22); border-radius:15px; padding:11px; }
+.ccai-photo-box-title { display:flex; justify-content:space-between; gap:10px; align-items:center; color:#0B2447; font-size:12px; }
+.ccai-photo-box-title span { font-weight:900; color:#9a681f; }
+.ccai-photo-box > p { font-size:11.3px; color:#667085; margin:5px 0 0; line-height:1.4; }
+.ccai-msg-photo-badge { display:block; width:max-content; max-width:100%; margin:0 0 6px; padding:4px 7px; border-radius:999px; background:rgba(255,255,255,.16); font-size:11px; font-weight:900; }
+.ccai-msg.assistant .ccai-msg-photo-badge { background:#eef4fb; color:#0B2447; }
+@media (max-width:520px) {
+  .ccai-photo-count { margin-left:0; }
+  .ccai-photo-btn { flex:1 1 auto; }
+}

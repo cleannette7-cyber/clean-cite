@@ -39,6 +39,11 @@ function formatPayload(p) {
   if (p.binPasses) extraLines.push(`Passages poubelles : ${p.binPasses} / semaine`);
   if (p.plan) extraLines.push(`Formule poubelles : ${p.plan}`);
   if (p.estimateDetail) extraLines.push(`Détail estimation : ${p.estimateDetail}`);
+  if (p.photoCount) extraLines.push(`Photos analysées par l'IA : ${p.photoCount}`);
+
+  const aiAnalysis = String(p.aiAnalysis || "").trim().slice(0, 4500);
+  const aiText = aiAnalysis ? `\n\nAnalyse IA des photos :\n${aiAnalysis}` : "";
+  const aiHtml = aiAnalysis ? `<h3 style="color:#8A6914">Analyse IA des photos</h3><p>${escapeHtml(aiAnalysis).replace(/\n/g, "<br>")}</p><p style="font-size:12px;color:#6b7280">Les photos ont été utilisées pour l'analyse IA dans l'assistant. Elles ne sont pas jointes automatiquement à cet email.</p>` : "";
 
   const extraText = extraLines.length ? `\n${extraLines.join("\n")}` : "";
   const extraHtml = extraLines.length
@@ -47,7 +52,7 @@ function formatPayload(p) {
 
   return {
     subject: `Nouvelle demande de devis Clean-Cité - ${p.serviceLabel || "Nettoyage"}`,
-    text: `Nouvelle demande de devis Clean-Cité\n\nNom / Société : ${p.name || "Non renseigné"}\nTéléphone : ${p.phone || "Non renseigné"}\nEmail : ${p.email || "Non renseigné"}\nVille / adresse : ${p.city || "Non renseigné"}\nService : ${p.serviceLabel || p.service || "Non renseigné"}\nSurface : ${p.surface ? `${p.surface} m²` : "Non applicable / non renseignée"}\nÉtat du lieu : ${p.condition || "Non renseigné"}\nFréquence : ${p.frequency || "Non renseignée"}\nEstimation indicative : ${total}${extraText}\n\nMessage :\n${p.message || "Aucun message complémentaire"}\n\nImportant : cette estimation reste indicative et doit être confirmée par Clean-Cité.`,
+    text: `Nouvelle demande de devis Clean-Cité\n\nNom / Société : ${p.name || "Non renseigné"}\nTéléphone : ${p.phone || "Non renseigné"}\nEmail : ${p.email || "Non renseigné"}\nVille / adresse : ${p.city || "Non renseigné"}\nService : ${p.serviceLabel || p.service || "Non renseigné"}\nSurface : ${p.surface ? `${p.surface} m²` : "Non applicable / non renseignée"}\nÉtat du lieu : ${p.condition || "Non renseigné"}\nFréquence : ${p.frequency || "Non renseignée"}\nEstimation indicative : ${total}${extraText}${aiText}\n\nMessage :\n${p.message || "Aucun message complémentaire"}\n\nImportant : cette estimation reste indicative et doit être confirmée par Clean-Cité.`,
     html: `
       <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2933">
         <h2 style="color:#8A6914">Nouvelle demande de devis Clean-Cité</h2>
@@ -61,6 +66,7 @@ function formatPayload(p) {
         <p><strong>Fréquence :</strong> ${escapeHtml(p.frequency || "Non renseignée")}</p>
         <p><strong>Estimation indicative :</strong> ${escapeHtml(total)}</p>
         ${extraHtml}
+        ${aiHtml}
         <h3 style="color:#8A6914">Message</h3>
         <p>${escapeHtml(p.message || "Aucun message complémentaire").replace(/\n/g, "<br>")}</p>
         <p style="font-size:13px;color:#6b7280">Cette estimation reste indicative et doit être confirmée par Clean-Cité.</p>

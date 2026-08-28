@@ -1,4 +1,8 @@
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MAX_IMAGES = 4;
+const MAX_IMAGE_BYTES = 650 * 1024;
+const MAX_TOTAL_IMAGE_BYTES = 2400 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 
 const COMPANY_CONTEXT = `
 Tu es l'assistant IA officiel de Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny.
@@ -52,6 +56,24 @@ Règles de calcul et de formulation :
 - Pour les parties communes, indique « dès 199 €/mois » et demande le nombre d'étages, halls, passages/semaine et présence d'un local poubelles.
 - Ne présente jamais une estimation comme un prix ferme.
 
+RÈGLES SPÉCIALES POUR LES PHOTOS :
+- Quand une ou plusieurs photos sont jointes, analyse uniquement ce qui est réellement visible et utile pour une prestation de nettoyage : niveau apparent de salissure, poussière, traces, déchets visibles, état apparent des sols et vitrages, encombrement visible et difficulté visuelle évidente.
+- N'invente jamais une surface en m² à partir d'une photo. Si la surface n'est pas donnée, demande-la avant de calculer un prix au m².
+- N'invente jamais la hauteur, l'accessibilité réelle, la présence d'une nacelle, le nombre d'étages, l'absence ou présence d'ascenseur, ni ce qui est caché hors champ.
+- Une photo ne permet pas de diagnostiquer de façon certaine moisissures, amiante, produits chimiques, risques biologiques ou autres matières dangereuses. Si un risque semble possible, indique qu'une vérification humaine est nécessaire.
+- Ne cherche pas à identifier les personnes éventuellement visibles sur les photos. Ignore leur identité et concentre-toi sur le lieu à nettoyer.
+- Si les photos semblent contredire l'état déclaré par le client, signale-le comme une observation visuelle, sans modifier silencieusement les données fournies.
+- Pour un chantier en cours, les photos peuvent aider à juger la charge de travail apparente, mais le tarif reste calculé sur agents × heures × jours × 28 € HT.
+- Si les éléments sont suffisants, structure la réponse avec :
+  1. « PRÉ-DEVIS IA ESTIMATIF »
+  2. Prestation envisagée
+  3. Observations visibles
+  4. Données fournies par le client
+  5. Calcul ou fourchette indicative selon la grille Clean-Cité
+  6. Niveau de confiance : faible, moyen ou élevé
+  7. Points à confirmer avant devis définitif
+- Si une donnée essentielle manque, ne fabrique pas de prix. Donne l'analyse visuelle possible puis pose au maximum 3 questions prioritaires.
+
 Ton rôle :
 - Accueillir les clients avec un ton professionnel, clair et rassurant.
 - Répondre aux questions sur les services et les zones d'intervention.
@@ -79,22 +101,77 @@ function json(statusCode, body) {
   };
 }
 
-function normalizeMessages(messages, fallbackMessage) {
+function sanitizeImages(images) {
+  if (!Array.isArray(images)) return [];
+  const clean = [];
+  let totalBytes = 0;
+
+  for (const image of images.slice(0, MAX_IMAGES)) {
+    const mimeType = String(image?.mimeType || "").toLowerCase();
+    if (!ALLOWED_IMAGE_TYPES.has(mimeType)) continue;
+
+    let data = String(image?.data || "").trim();
+    data = data.replace(/^data:image\/[a-zA-Z0-9.+-]+;base64,/, "");
+    if (!data || !/^[A-Za-z0-9+/=\r\n]+$/.test(data)) continue;
+
+    let bytes;
+    try {
+      bytes = Buffer.from(data, "base64");
+    } catch (_) {
+      continue;
+    }
+    if (!bytes.length || bytes.length > MAX_IMAGE_BYTES) continue;
+    if (totalBytes + bytes.length > MAX_TOTAL_IMAGE_BYTES) break;
+
+    totalBytes += bytes.length;
+    clean.push({
+      mimeType: mimeType === "image/jpg" ? "image/jpeg" : mimeType,
+      data: bytes.toString("base64")
+    });
+  }
+  return clean;
+}
+
+function normalizeMessages(messages, fallbackMessage, images) {
   const inputMessages = Array.isArray(messages) && messages.length
     ? messages
-    : [{ role: "user", content: fallbackMessage || "Bonjour" }];
+    : [{ role: "user", content: fallbackMessage || (images.length ? "Analyse ces photos pour préparer un pré-devis." : "Bonjour") }];
 
-  return inputMessages
+  const normalized = inputMessages
     .slice(-12)
     .map((msg) => {
       const role = msg.role === "assistant" || msg.role === "model" ? "model" : "user";
-      const text = String(msg.content || "").slice(0, 2000);
+      const text = String(msg.content || "").slice(0, 3000).trim();
       return {
         role,
-        parts: [{ text }]
+        parts: text ? [{ text }] : []
       };
     })
-    .filter((msg) => msg.parts[0].text.trim().length > 0);
+    .filter((msg) => msg.parts.length > 0);
+
+  if (images.length) {
+    let targetIndex = -1;
+    for (let i = normalized.length - 1; i >= 0; i -= 1) {
+      if (normalized[i].role === "user") {
+        targetIndex = i;
+        break;
+      }
+    }
+    if (targetIndex < 0) {
+      normalized.push({ role: "user", parts: [{ text: fallbackMessage || "Analyse ces photos pour préparer un pré-devis." }] });
+      targetIndex = normalized.length - 1;
+    }
+    images.forEach((image) => {
+      normalized[targetIndex].parts.push({
+        inlineData: {
+          mimeType: image.mimeType,
+          data: image.data
+        }
+      });
+    });
+  }
+
+  return normalized;
 }
 
 exports.handler = async function handler(event) {
@@ -115,10 +192,11 @@ exports.handler = async function handler(event) {
   try {
     const payload = JSON.parse(event.body || "{}");
     const message = String(payload.message || "").trim();
-    const messages = normalizeMessages(payload.messages, message);
+    const images = sanitizeImages(payload.images);
+    const messages = normalizeMessages(payload.messages, message, images);
 
     if (!messages.length) {
-      return json(400, { error: "Message manquant." });
+      return json(400, { error: "Message ou photo manquante." });
     }
 
     const response = await fetch(
@@ -134,8 +212,8 @@ exports.handler = async function handler(event) {
           },
           contents: messages,
           generationConfig: {
-            temperature: 0.25,
-            maxOutputTokens: 700
+            temperature: 0.2,
+            maxOutputTokens: 1100
           }
         })
       }
@@ -157,7 +235,7 @@ exports.handler = async function handler(event) {
         .trim() ||
       "Je n'ai pas pu générer de réponse pour le moment. Vous pouvez contacter Clean-Cité au 07 66 53 61 54.";
 
-    return json(200, { reply });
+    return json(200, { reply, imagesProcessed: images.length });
   } catch (error) {
     return json(500, {
       error: "Erreur serveur.",

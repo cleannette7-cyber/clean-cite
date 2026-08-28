@@ -3,3 +3,10 @@
 /ile-de-france.html /nettoyage-ile-de-france.html 301!
 https://www.clean-cite.org/* https://clean-cite.org/:splat 301!
 http://clean-cite.org/* https://clean-cite.org/:splat 301!
+
+# Anciennes URL conservées pour le référencement
+/chantier-en-cours.html /nettoyage-chantier-en-cours.html 301!
+/fin-de-chantier.html /nettoyage-fin-de-chantier.html 301!
+/nettoyage-terrasse.html /nettoyage-terrasses.html 301!
+/sortie-poubelles.html /sortie-de-poubelles.html 301!
+/tapis-canapes.html /nettoyage-tapis-canapes.html 301!

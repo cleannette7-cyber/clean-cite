@@ -1,5 +1,8 @@
 (function () {
   const WA_PHONE = "33766536154";
+  const MAX_PHOTOS = 4;
+  const MAX_PHOTO_BASE64_CHARS = 650000;
+  const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 
   const services = {
     bureaux: { label: "Nettoyage de bureaux", type: "office" },
@@ -17,13 +20,16 @@
     messages: [
       {
         role: "assistant",
-        content: "Bonjour, je suis l'assistant IA Clean-Cité. Je peux vous aider à choisir une prestation, estimer un tarif indicatif ou préparer une demande de devis. Vous pouvez aussi me parler avec le micro."
+        content: "Bonjour, je suis l'assistant IA Clean-Cité. Je peux vous aider à choisir une prestation, estimer un tarif indicatif ou préparer une demande de devis. Vous pouvez me parler avec le micro et m'envoyer des photos du lieu pour affiner l'analyse."
       }
     ],
     voiceReplies: true,
     recognition: null,
     listening: false,
-    pendingVoiceText: ""
+    pendingVoiceText: "",
+    photos: [],
+    lastPhotoAnalysis: "",
+    lastPhotoCount: 0
   };
 
   function escapeHtml(value) {
@@ -81,13 +87,22 @@
               <button class="ccai-chip" type="button" data-q="Quels sont vos forfaits de sortie et rentrée de poubelles ?">Poubelles</button>
               <button class="ccai-chip" type="button" data-q="Intervenez-vous en Île-de-France ?">Zone intervention</button>
             </div>
+            <div class="ccai-photo-tools">
+              <input class="ccai-photo-input" id="ccai-photo-gallery-chat" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+              <input class="ccai-photo-input" id="ccai-photo-camera-chat" type="file" accept="image/*" capture="environment" hidden>
+              <button class="ccai-photo-btn" type="button" data-photo-open="ccai-photo-gallery-chat">📷 Ajouter des photos</button>
+              <button class="ccai-photo-btn" type="button" data-photo-open="ccai-photo-camera-chat">📸 Prendre une photo</button>
+              <span class="ccai-photo-count" data-photo-count>0/${MAX_PHOTOS}</span>
+            </div>
+            <div class="ccai-photo-previews" data-photo-previews></div>
+            <p class="ccai-photo-status" data-photo-status>Ajoutez jusqu'à ${MAX_PHOTOS} photos. Elles sont redimensionnées avant l'analyse.</p>
             <div class="ccai-chatbar">
-              <input class="ccai-input" id="ccai-input" type="text" placeholder="Écrivez ou dictez votre demande...">
+              <input class="ccai-input" id="ccai-input" type="text" placeholder="Écrivez, dictez ou ajoutez des photos...">
               <button class="ccai-mic" type="button" id="ccai-mic" aria-label="Parler à l'assistant" title="Parler à l'assistant">🎙️</button>
               <button class="ccai-send" type="button" id="ccai-send">Envoyer</button>
             </div>
             <p class="ccai-voice-status" id="ccai-voice-status">🎙️ Appuyez sur le micro pour parler. Votre navigateur demandera l'autorisation la première fois.</p>
-            <p class="ccai-note">L'assistant donne des estimations indicatives. Le devis final est confirmé par l'équipe Clean-Cité.</p>
+            <p class="ccai-note">Les photos servent à mieux évaluer l'état visible du lieu. L'IA ne déduit pas une surface exacte à partir d'une image et le devis final reste confirmé par Clean-Cité.</p>
           </div>
 
           <div class="ccai-view" data-panel="devis">
@@ -166,6 +181,19 @@
                 </div>
               </div>
 
+              <div class="ccai-photo-box">
+                <div class="ccai-photo-box-title"><strong>Photos pour l'analyse IA</strong><span data-photo-count>0/${MAX_PHOTOS}</span></div>
+                <p>Ajoutez des vues générales et, si utile, des gros plans des sols, vitres, poussières, déchets ou traces.</p>
+                <div class="ccai-photo-tools">
+                  <input class="ccai-photo-input" id="ccai-photo-gallery-devis" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+                  <input class="ccai-photo-input" id="ccai-photo-camera-devis" type="file" accept="image/*" capture="environment" hidden>
+                  <button class="ccai-photo-btn" type="button" data-photo-open="ccai-photo-gallery-devis">📷 Galerie</button>
+                  <button class="ccai-photo-btn" type="button" data-photo-open="ccai-photo-camera-devis">📸 Appareil photo</button>
+                </div>
+                <div class="ccai-photo-previews" data-photo-previews></div>
+                <p class="ccai-photo-status" data-photo-status>Formats : JPG, PNG ou WebP · ${MAX_PHOTOS} photos maximum.</p>
+              </div>
+
               <div class="ccai-estimate" id="ccai-estimate">
                 Estimation indicative : <strong>à calculer</strong><br>
                 <small>Les tarifs sont confirmés par Clean-Cité selon les contraintes réelles du site.</small>
@@ -197,7 +225,7 @@
               <div class="ccai-actions">
                 <button class="ccai-btn orange" type="submit">Envoyer la demande par email</button>
                 <a class="ccai-btn blue" id="ccai-whatsapp" href="#" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>
-                <button class="ccai-btn light" type="button" id="ccai-ask-ai">Demander conseil à l'IA</button>
+                <button class="ccai-btn light" type="button" id="ccai-ask-ai">📷 Analyser la demande avec l'IA</button>
               </div>
             </form>
             <p class="ccai-note">L'envoi email automatique fonctionne dès que les variables Brevo sont ajoutées dans Netlify. Sans Brevo, le site ouvre un email manuel prêt à envoyer.</p>
@@ -213,20 +241,157 @@
     const box = root.querySelector("#ccai-messages");
     if (!box) return;
     box.innerHTML = state.messages
-      .map((m) => `<div class="ccai-msg ${m.role === "user" ? "user" : "assistant"}"><div>${nl2br(m.content)}</div></div>`)
+      .map((m) => {
+        const photoBadge = m.imageCount ? `<span class="ccai-msg-photo-badge">📷 ${m.imageCount} photo${m.imageCount > 1 ? "s" : ""}</span>` : "";
+        return `<div class="ccai-msg ${m.role === "user" ? "user" : "assistant"}"><div>${photoBadge}${nl2br(m.content)}</div></div>`;
+      })
       .join("");
     box.scrollTop = box.scrollHeight;
   }
 
+  function photoStatus(root, message, isError) {
+    root.querySelectorAll("[data-photo-status]").forEach((el) => {
+      el.textContent = message;
+      el.classList.toggle("error", Boolean(isError));
+    });
+  }
+
+  function renderPhotoPreviews(root) {
+    const count = state.photos.length;
+    root.querySelectorAll("[data-photo-count]").forEach((el) => { el.textContent = `${count}/${MAX_PHOTOS}`; });
+    const html = state.photos.map((photo) => `
+      <div class="ccai-photo-preview">
+        <img src="${photo.preview}" alt="Photo sélectionnée pour le pré-devis">
+        <button type="button" data-remove-photo="${photo.id}" aria-label="Supprimer cette photo">×</button>
+      </div>`).join("");
+    root.querySelectorAll("[data-photo-previews]").forEach((el) => { el.innerHTML = html; });
+  }
+
+  function dataUrlToBase64(dataUrl) {
+    const idx = String(dataUrl || "").indexOf(",");
+    return idx >= 0 ? dataUrl.slice(idx + 1) : "";
+  }
+
+  function loadImageFromFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Lecture de l'image impossible."));
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("Format d'image non lisible par ce navigateur."));
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function compressPhoto(file) {
+    if (!file || !String(file.type || "").startsWith("image/")) throw new Error("Le fichier sélectionné n'est pas une image.");
+    if (file.type && !ALLOWED_IMAGE_TYPES.has(file.type.toLowerCase())) throw new Error("Utilisez une photo JPG, PNG ou WebP.");
+    if (file.size > 12 * 1024 * 1024) throw new Error("Cette photo est trop lourde (12 Mo maximum avant compression).");
+
+    const img = await loadImageFromFile(file);
+    let width = img.naturalWidth || img.width;
+    let height = img.naturalHeight || img.height;
+    const maxDimension = 1280;
+    const ratio = Math.min(1, maxDimension / Math.max(width, height));
+    width = Math.max(1, Math.round(width * ratio));
+    height = Math.max(1, Math.round(height * ratio));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
+
+    let quality = 0.78;
+    let preview = canvas.toDataURL("image/jpeg", quality);
+    while (dataUrlToBase64(preview).length > MAX_PHOTO_BASE64_CHARS && quality > 0.42) {
+      quality -= 0.08;
+      preview = canvas.toDataURL("image/jpeg", quality);
+    }
+    const data = dataUrlToBase64(preview);
+    if (!data || data.length > MAX_PHOTO_BASE64_CHARS * 1.15) throw new Error("Impossible de réduire suffisamment cette photo. Essayez une image plus légère.");
+
+    return {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name: String(file.name || "photo.jpg").slice(0, 80),
+      mimeType: "image/jpeg",
+      data,
+      preview,
+      width,
+      height
+    };
+  }
+
+  async function addPhotoFiles(root, fileList) {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    const room = MAX_PHOTOS - state.photos.length;
+    if (room <= 0) {
+      photoStatus(root, `Vous avez déjà sélectionné ${MAX_PHOTOS} photos. Supprimez-en une pour en ajouter une autre.`, true);
+      return;
+    }
+    photoStatus(root, "Préparation des photos…", false);
+    let added = 0;
+    for (const file of files.slice(0, room)) {
+      try {
+        const photo = await compressPhoto(file);
+        state.photos.push(photo);
+        added += 1;
+      } catch (error) {
+        photoStatus(root, error.message || "Une photo n'a pas pu être ajoutée.", true);
+      }
+    }
+    renderPhotoPreviews(root);
+    if (added) photoStatus(root, `${state.photos.length} photo${state.photos.length > 1 ? "s" : ""} prête${state.photos.length > 1 ? "s" : ""} pour l'analyse IA.`, false);
+  }
+
+  function clearPhotos(root) {
+    state.photos = [];
+    renderPhotoPreviews(root);
+    photoStatus(root, `Ajoutez jusqu'à ${MAX_PHOTOS} photos pour affiner le pré-devis.`, false);
+  }
+
+  function bindPhotoInputs(root) {
+    root.querySelectorAll("[data-photo-open]").forEach((btn) => {
+      btn.addEventListener("click", () => root.querySelector(`#${btn.dataset.photoOpen}`)?.click());
+    });
+    root.querySelectorAll(".ccai-photo-input").forEach((input) => {
+      input.addEventListener("change", async () => {
+        await addPhotoFiles(root, input.files);
+        input.value = "";
+      });
+    });
+    root.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-remove-photo]");
+      if (!btn) return;
+      state.photos = state.photos.filter((photo) => photo.id !== btn.dataset.removePhoto);
+      renderPhotoPreviews(root);
+      photoStatus(root, state.photos.length ? `${state.photos.length} photo${state.photos.length > 1 ? "s" : ""} prête${state.photos.length > 1 ? "s" : ""} pour l'analyse IA.` : `Ajoutez jusqu'à ${MAX_PHOTOS} photos pour affiner le pré-devis.`, false);
+    });
+    renderPhotoPreviews(root);
+  }
+
   async function sendChat(root, forcedText) {
     const input = root.querySelector("#ccai-input");
-    const text = String(forcedText || input.value || "").trim();
+    const images = state.photos.map((photo) => ({
+      name: photo.name,
+      mimeType: photo.mimeType,
+      data: photo.data
+    }));
+    const rawText = String(forcedText || input.value || "").trim();
+    const text = rawText || (images.length ? "Analyse ces photos pour m'aider à préparer un pré-devis Clean-Cité. Si une information essentielle manque, pose-moi les questions nécessaires sans inventer de surface ni de contrainte invisible." : "");
     if (!text) return;
     if (input) input.value = "";
 
-    state.messages.push({ role: "user", content: text });
-    state.messages.push({ role: "assistant", content: "Je prépare ma réponse..." });
+    state.messages.push({ role: "user", content: text, imageCount: images.length });
+    state.messages.push({ role: "assistant", content: images.length ? "J'analyse les photos et les informations…" : "Je prépare ma réponse..." });
     renderMessages(root);
+    if (images.length) clearPhotos(root);
 
     try {
       const response = await fetch("/.netlify/functions/assistant-gemini", {
@@ -234,12 +399,20 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text,
-          messages: state.messages.filter((m) => m.content !== "Je prépare ma réponse...").slice(-10)
+          messages: state.messages
+            .filter((m) => m.content !== "Je prépare ma réponse..." && m.content !== "J'analyse les photos et les informations…")
+            .slice(-10)
+            .map((m) => ({ role: m.role, content: m.content })),
+          images
         })
       });
       const data = await response.json();
       state.messages.pop();
       const reply = data.reply || data.message || "Je n'ai pas pu répondre pour le moment.";
+      if (images.length) {
+        state.lastPhotoAnalysis = String(reply).slice(0, 4500);
+        state.lastPhotoCount = images.length;
+      }
       state.messages.push({ role: "assistant", content: reply });
       renderMessages(root);
       speakText(reply);
@@ -514,6 +687,8 @@
       phone: root.querySelector("#ccai-phone").value.trim(),
       email: root.querySelector("#ccai-email").value.trim(),
       message: root.querySelector("#ccai-extra").value.trim(),
+      photoCount: state.lastPhotoAnalysis ? state.lastPhotoCount : state.photos.length,
+      aiAnalysis: state.lastPhotoAnalysis ? state.lastPhotoAnalysis.slice(0, 4500) : "",
       rate,
       billingUnit,
       plan,
@@ -562,7 +737,9 @@
     if (payload.binPasses && payload.service === "sortie_poubelles") extras.push(`Passages : ${payload.binPasses} / semaine`);
     if (payload.plan) extras.push(`Formule : ${payload.plan}`);
 
-    const waMessage = `Bonjour Clean-Cité, je souhaite recevoir un devis.\n\nService : ${payload.serviceLabel}\n${extras.length ? extras.join("\n") + "\n" : ""}Ville : ${payload.city || "non précisée"}\nÉtat du lieu : ${payload.condition || "non précisé"}\nFréquence : ${payload.frequency || "non précisée"}\nEstimation indicative : ${payload.estimateText}\nDétail : ${payload.estimateDetail}\nNom : ${payload.name || "non renseigné"}\nTéléphone : ${payload.phone || "non renseigné"}\nEmail : ${payload.email || "non renseigné"}\nMessage : ${payload.message || "aucun"}`;
+    if (state.lastPhotoAnalysis) extras.push("Photos analysées par l'IA : oui");
+    const analysisForWa = state.lastPhotoAnalysis ? `\nSynthèse IA photos : ${state.lastPhotoAnalysis.replace(/\s+/g, " ").slice(0, 900)}` : "";
+    const waMessage = `Bonjour Clean-Cité, je souhaite recevoir un devis.\n\nService : ${payload.serviceLabel}\n${extras.length ? extras.join("\n") + "\n" : ""}Ville : ${payload.city || "non précisée"}\nÉtat du lieu : ${payload.condition || "non précisé"}\nFréquence : ${payload.frequency || "non précisée"}\nEstimation indicative : ${payload.estimateText}\nDétail : ${payload.estimateDetail}${analysisForWa}\nNom : ${payload.name || "non renseigné"}\nTéléphone : ${payload.phone || "non renseigné"}\nEmail : ${payload.email || "non renseigné"}\nMessage : ${payload.message || "aucun"}`;
     whatsapp.href = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(waMessage)}`;
   }
 
@@ -573,6 +750,10 @@
   }
 
   async function submitLead(root) {
+    if (state.photos.length) {
+      showStatus(root, "err", "Vous avez ajouté des photos. Cliquez d’abord sur « Analyser la demande avec l’IA » afin de les intégrer au pré-devis avant l’envoi.");
+      return;
+    }
     const payload = getEstimatePayload(root);
     if (!payload.name && !payload.phone && !payload.email) {
       showStatus(root, "err", "Merci d'indiquer au moins un nom, un téléphone ou un email.");
@@ -613,6 +794,7 @@
     renderMessages(root);
     updateDynamicFields(root);
     updateEstimate(root);
+    bindPhotoInputs(root);
 
     root.querySelector(".ccai-bubble").addEventListener("click", () => root.classList.toggle("open"));
     root.querySelector(".ccai-close").addEventListener("click", () => root.classList.remove("open"));
@@ -634,20 +816,25 @@
     });
     root.querySelector("#ccai-ask-ai").addEventListener("click", () => {
       const p = getEstimatePayload(root);
+      const photoCount = state.photos.length;
       switchView(root, "chat");
       const details = [
         `Service : ${p.serviceLabel}`,
-        p.surface ? `surface : ${p.surface} m²` : "",
+        p.surface ? `surface déclarée : ${p.surface} m²` : "surface non précisée",
         p.service === "chantier" ? `agents : ${p.agents}, ${p.hours} h/jour, ${p.workDays} jour(s)` : "",
         p.bins && p.service === "sortie_poubelles" ? `bacs : ${p.bins}` : "",
         p.binPasses && p.service === "sortie_poubelles" ? `passages : ${p.binPasses}/semaine` : "",
         `ville : ${p.city || "non précisée"}`,
-        `état : ${p.condition || "non précisé"}`,
+        `état déclaré : ${p.condition || "non précisé"}`,
         `fréquence : ${p.frequency || "non précisée"}`,
-        `estimation : ${p.estimateText}`,
+        `estimation calculateur : ${p.estimateText}`,
+        photoCount ? `${photoCount} photo(s) jointe(s)` : "aucune photo jointe",
         p.message || ""
       ].filter(Boolean).join(", ");
-      sendChat(root, `Peux-tu me conseiller pour cette demande ? ${details}`);
+      const instruction = photoCount
+        ? "Analyse les photos jointes en te concentrant uniquement sur l'état visible du lieu, puis prépare un PRÉ-DEVIS IA ESTIMATIF. Compare les observations visibles avec les informations saisies et la grille Clean-Cité. N'invente jamais la surface, la hauteur, l'accès ou des travaux non visibles. Donne le niveau de confiance et les points à confirmer."
+        : "Conseilles-moi sur cette demande et indique les informations manquantes pour rendre le pré-devis plus précis.";
+      sendChat(root, `${instruction} Données : ${details}`);
     });
   }
 

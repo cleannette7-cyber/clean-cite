@@ -26,16 +26,6 @@
       "description": "Nettoyage et évacuation des matériaux non exploitables.",
       "photo_avant": "/images/uploads/20260723_093309.jpg",
       "photo_apres": "/images/uploads/20260723_100404.jpg"
-    },
-    {
-      "publier": true,
-      "ville": "AULNAY-SOUS-BOIS ",
-      "type_prestation": "Chantier en cours",
-      "date": "2026-06-11",
-      "description": "NETTOYAGE PONCTUEL DU CHANTIER ",
-      "photo_avant": "/images/uploads/20260611_100741.jpg",
-      "photo_apres": "/images/uploads/20260611_101345.jpg",
-      "titre": "NETTOYAGE  A  AULNAY-SOUS-BOIS "
     }
   ]
 }
