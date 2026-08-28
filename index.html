@@ -761,13 +761,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* ===== PATCH AVANT/APRÈS : PHOTOS QUI DÉFILENT DANS LES CARTES ===== */
 .proof-photo{position:relative;height:220px;overflow:hidden;background:#f2e8da;display:block;padding:0;}
-.proof-slide{position:absolute;inset:0;opacity:0;animation:proofFade 9s infinite;background-size:cover;background-position:center;}
+.proof-slide{position:absolute;inset:0;opacity:0;animation:proofFadePair 6s infinite;background-size:cover;background-position:center;will-change:opacity,transform;}
 .proof-slide:nth-child(2){animation-delay:3s;}
-.proof-slide:nth-child(3){animation-delay:6s;}
+.proof-slide.only{opacity:1;animation:none;transform:scale(1.02);}
 .proof-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,50,.08),rgba(10,20,50,.55));z-index:2;}
 .proof-label{position:absolute;left:16px;bottom:14px;z-index:3;color:white;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.35);font-size:.95rem;}
 .proof-label small{display:block;font-size:.72rem;font-weight:700;opacity:.86;margin-top:2px;}
-@keyframes proofFade{0%,28%{opacity:1;transform:scale(1.02)}33%,100%{opacity:0;transform:scale(1.08)}}
+.proof-empty{min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--gray);background:var(--light);border:1px dashed rgba(11,36,71,.18);border-radius:22px;grid-column:1/-1;}
+@keyframes proofFadePair{0%,45%{opacity:1;transform:scale(1.02)}50%,100%{opacity:0;transform:scale(1.07)}}
 
 </style>
 
@@ -924,23 +925,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     <div>
       <span class="section-label">Résultats visibles</span>
       <h2 class="section-title">AVANT / APRÈS ET PREUVES DE TRAVAIL</h2>
-      <p class="section-sub" style="margin-bottom:0;">Ajoutez ici vos vraies photos de chantiers, bureaux, vitrines ou parties communes. Cette section rassure les clients et renforce le référencement Google.</p>
     </div>
     <a href="avant-apres.html" class="btn-primary" style="white-space:nowrap;">Voir les réalisations</a>
   </div>
-  <div class="proof-grid">
-    <article class="proof-card fade-in">
-      <div class="proof-photo"><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_101029_poty4l.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_102722_i3wtlf.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779900561/1000079491_rcrinp.jpg')"></span><div class="proof-label">Avant / Après<small>Fin de chantier</small></div></div>
-      <div class="proof-body"><h3>Fin de chantier propre avant livraison</h3><p>Dépoussiérage, sols, vitres, traces de travaux et remise en état pour livrer un espace présentable.</p><a class="proof-cta" href="nettoyage-fin-de-chantier.html">Voir le service →</a></div>
-    </article>
-    <article class="proof-card fade-in">
-      <div class="proof-photo"><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_100159_x4uxyx.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_100704_dd9uv7.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779900319/20260519_134638_1_wem9qa.jpg')"></span><div class="proof-label">Avant / Après<small>Bureaux & locaux</small></div></div>
-      <div class="proof-body"><h3>Bureaux nets et sanitaires entretenus</h3><p>Entretien ponctuel ou régulier pour entreprises, commerces et locaux professionnels en Île-de-France.</p><a class="proof-cta" href="nettoyage-bureaux.html">Voir le service →</a></div>
-    </article>
-    <article class="proof-card fade-in">
-      <div class="proof-photo"><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_102722_i3wtlf.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779900319/20260519_134638_1_wem9qa.jpg')"></span><span class="proof-slide" style="background-image:url('https://res.cloudinary.com/dljukcipa/image/upload/v1779837051/20260506_100704_dd9uv7.jpg')"></span><div class="proof-label">Avant / Après<small>Vitres & vitrines</small></div></div>
-      <div class="proof-body"><h3>Vitrines propres pour commerces</h3><p>Nettoyage intérieur et extérieur des surfaces vitrées accessibles pour une meilleure image client.</p><a class="proof-cta" href="nettoyage-vitrines.html">Voir le service →</a></div>
-    </article>
+  <!-- Cette galerie est alimentée automatiquement par Admin > Avant / Après. -->
+  <div class="proof-grid" id="homeProofGrid" aria-live="polite">
+    <div class="proof-empty">Chargement des dernières réalisations…</div>
   </div>
 </section>
 
@@ -1825,6 +1815,120 @@ Message : ${message}`;
 
   window.location.href = 'mailto:cleannette7@gmail.com?subject=Demande de devis Clean-Cité&body=' + encodeURIComponent(body);
 }
+// ===== AVANT / APRÈS DYNAMIQUE DEPUIS L'ADMIN =====
+(function(){
+  const grid = document.getElementById('homeProofGrid');
+  if(!grid) return;
+
+  let interventions = [];
+  let pageIndex = 0;
+  let rotationTimer = null;
+  const pageSize = 3;
+
+  function esc(value){
+    return String(value ?? '').replace(/[&<>"']/g, function(char){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char] || char;
+    });
+  }
+
+  function pickImage(value){
+    if(!value) return '';
+    if(Array.isArray(value)) return pickImage(value[0]);
+    if(typeof value === 'object') return pickImage(value.url || value.path || value.src || value.file || value.image);
+    return String(value).trim();
+  }
+
+  function imageUrl(value){
+    const src = pickImage(value);
+    if(!src) return '';
+    if(/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+    if(src.startsWith('/')) return src;
+    if(src.startsWith('images/') || src.startsWith('uploads/')) return '/' + src;
+    return '/images/uploads/' + src;
+  }
+
+  function serviceLink(type){
+    const t = String(type || '').toLowerCase();
+    if(t.includes('fin de chantier')) return 'nettoyage-fin-de-chantier.html';
+    if(t.includes('chantier')) return 'nettoyage-chantier-en-cours.html';
+    if(t.includes('remise')) return 'remise-en-etat.html';
+    if(t.includes('bureau') || t.includes('locaux')) return 'nettoyage-bureaux.html';
+    if(t.includes('parties communes')) return 'nettoyage-parties-communes.html';
+    if(t.includes('poubelle')) return 'sortie-de-poubelles.html';
+    if(t.includes('vitr')) return 'nettoyage-vitrines.html';
+    if(t.includes('tapis') || t.includes('canap')) return 'nettoyage-tapis-canapes.html';
+    if(t.includes('terrasse') || t.includes('extérieur')) return 'nettoyage-terrasses.html';
+    return 'avant-apres.html';
+  }
+
+  function dateScore(item, index){
+    const raw = item && item.date ? Date.parse(item.date) : NaN;
+    return Number.isFinite(raw) ? raw : index;
+  }
+
+  function normalize(data){
+    const list = Array.isArray(data) ? data : (data && Array.isArray(data.interventions) ? data.interventions : []);
+    return list
+      .map((item,index)=>({item,index}))
+      .filter(({item})=> item && item.publier !== false && item.published !== false && item.brouillon !== true)
+      .filter(({item})=> imageUrl(item.photo_avant || item.photoAvant || item.avant || item.before) || imageUrl(item.photo_apres || item.photoApres || item.apres || item.after))
+      .sort((a,b)=> dateScore(b.item,b.index) - dateScore(a.item,a.index))
+      .map(x=>x.item);
+  }
+
+  function card(item){
+    const title = esc(item.titre || item.title || 'Intervention Clean-Cité');
+    const type = esc(item.type_prestation || item.type || 'Nettoyage');
+    const city = esc(item.ville || item.city || 'Île-de-France');
+    const desc = esc(item.description || 'Découvrez le résultat de cette intervention Clean-Cité.');
+    const before = imageUrl(item.photo_avant || item.photoAvant || item.avant || item.before);
+    const after = imageUrl(item.photo_apres || item.photoApres || item.apres || item.after);
+    const imgs = [before,after].filter(Boolean);
+    const unique = [...new Set(imgs)];
+    const slides = unique.length === 1
+      ? `<span class="proof-slide only" style="background-image:url('${esc(unique[0])}')"></span>`
+      : unique.map(src=>`<span class="proof-slide" style="background-image:url('${esc(src)}')"></span>`).join('');
+    const location = city ? ` · ${city}` : '';
+    return `<article class="proof-card fade-in visible">
+      <div class="proof-photo">${slides}<div class="proof-label">Avant / Après<small>${type}${location}</small></div></div>
+      <div class="proof-body"><h3>${title}</h3><p>${desc}</p><a class="proof-cta" href="${serviceLink(type)}">Voir le service →</a></div>
+    </article>`;
+  }
+
+  function render(){
+    if(!interventions.length){
+      grid.innerHTML = '<div class="proof-empty">Les réalisations publiées depuis l’espace administrateur apparaîtront ici automatiquement.</div>';
+      return;
+    }
+    const pages = Math.max(1, Math.ceil(interventions.length / pageSize));
+    pageIndex = pageIndex % pages;
+    let current = interventions.slice(pageIndex * pageSize, pageIndex * pageSize + pageSize);
+    if(current.length < pageSize && interventions.length > current.length){
+      current = current.concat(interventions.slice(0, pageSize-current.length));
+    }
+    grid.innerHTML = current.map(card).join('');
+  }
+
+  async function load(){
+    try{
+      const response = await fetch('/data/interventions.json?v=' + Date.now(), {cache:'no-store'});
+      if(!response.ok) throw new Error('HTTP ' + response.status);
+      interventions = normalize(await response.json());
+      render();
+      const pages = Math.ceil(interventions.length / pageSize);
+      if(pages > 1){
+        clearInterval(rotationTimer);
+        rotationTimer = setInterval(function(){ pageIndex = (pageIndex + 1) % pages; render(); }, 8000);
+      }
+    }catch(error){
+      console.error('Clean-Cité — chargement Avant/Après:', error);
+      grid.innerHTML = '<div class="proof-empty">Les réalisations sont momentanément indisponibles. <a href="avant-apres.html" style="color:var(--orange);font-weight:900;">Voir la galerie complète →</a></div>';
+    }
+  }
+
+  load();
+})();
+
 if('IntersectionObserver' in window){ const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1}); document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el)); } else { document.querySelectorAll('.fade-in').forEach(el=>el.classList.add('visible')); }
 
 </script>
