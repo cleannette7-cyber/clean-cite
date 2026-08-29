@@ -239,24 +239,44 @@ export async function fetchImageAttachments(message, maxImages = 3, maxTotalByte
   return imgs;
 }
 
+export const SETTINGS_VERSION = 2;
+
 export const DEFAULT_SETTINGS = {
-  mode: 'draft',
-  autoSimple: false,
-  query: 'is:unread in:inbox -from:me newer_than:2d',
-  maxPerRun: 3,
+  version: SETTINGS_VERSION,
+  mode: 'semi',
+  autoSimple: true,
+  query: 'in:inbox -from:me newer_than:2d',
+  maxPerRun: 5,
 };
 
 export async function getSettings() {
   const s = await mailStore().get('settings', { type: 'json', consistency: 'strong' });
-  return { ...DEFAULT_SETTINGS, ...(s || {}) };
+  // Migration v2 : l'automatisation sécurisée devient active par défaut et
+  // ne dépend plus du statut lu/non lu dans Gmail.
+  if (!s || Number(s.version || 0) < SETTINGS_VERSION) {
+    const migrated = {
+      ...DEFAULT_SETTINGS,
+      ...(s || {}),
+      version: SETTINGS_VERSION,
+      mode: 'semi',
+      autoSimple: true,
+      query: 'in:inbox -from:me newer_than:2d',
+      maxPerRun: Math.max(1, Math.min(5, Number(s?.maxPerRun) || 5)),
+      migratedAt: new Date().toISOString(),
+    };
+    await mailStore().setJSON('settings', migrated);
+    return migrated;
+  }
+  return { ...DEFAULT_SETTINGS, ...s };
 }
 
 export async function saveSettings(input = {}) {
   const next = {
-    mode: input.mode === 'semi' ? 'semi' : 'draft',
-    autoSimple: input.mode === 'semi' && !!input.autoSimple,
+    version: SETTINGS_VERSION,
+    mode: input.mode === 'draft' ? 'draft' : 'semi',
+    autoSimple: input.mode !== 'draft' && !!input.autoSimple,
     query: String(input.query || DEFAULT_SETTINGS.query).trim().slice(0, 300),
-    maxPerRun: Math.max(1, Math.min(5, Number(input.maxPerRun) || 3)),
+    maxPerRun: Math.max(1, Math.min(5, Number(input.maxPerRun) || 5)),
     updatedAt: new Date().toISOString(),
   };
   await mailStore().setJSON('settings', next);

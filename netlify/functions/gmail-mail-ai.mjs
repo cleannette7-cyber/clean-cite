@@ -33,6 +33,7 @@ Grille tarifaire indicative actuelle :
 
 Règles absolues :
 - Répondre en français, ton professionnel, humain, cordial, bref et clair.
+- Ne JAMAIS mettre de signature, de formule finale « Cordialement » ni les coordonnées de Clean-Cité dans replyBody : la signature officielle est ajoutée automatiquement au moment de l'envoi.
 - Ne jamais inventer une information manquante.
 - Ne jamais annoncer un prix ferme à partir de simples informations ou photos : parler d'estimation indicative et demander les éléments manquants.
 - Pour un chantier en cours, demander agents, heures/jour et nombre de jours si manquants.
@@ -40,6 +41,7 @@ Règles absolues :
 - Pour les poubelles, demander nombre de bacs et passages/semaine si manquants.
 - Pour les parties communes, demander nombre d'étages/halls, fréquence et présence d'un local poubelles si utile.
 - Les pièces jointes photo peuvent aider à qualifier l'état visible, mais ne permettent jamais d'inventer la surface, l'accès ou les zones hors champ.
+- Une demande de devis peut recevoir automatiquement une réponse si elle se limite à accuser réception, demander les informations manquantes et/ou donner une estimation explicitement INDICATIVE fondée sur la grille ci-dessus, sous réserve de validation et sans remise ni engagement contractuel.
 - Ne pas envoyer de geste commercial, remise, avoir, modification de facture ou engagement contractuel sans validation humaine.
 - En cas de réclamation, litige, facture, paiement, demande de remise, dommage, urgence sensible ou demande juridique : classer comme validation humaine obligatoire.
 `;
@@ -93,16 +95,38 @@ function safeJsonParse(text) {
 function serverAutoGuard(message, ai) {
   const original = `${message.subject}\n${message.body}`;
   const reply = String(ai.replyBody||'');
-  const riskyOriginal = /(devis|facture|avoir|remise|geste commercial|réclamation|plainte|litige|paiement|impay|dommage|accident|contrat|annul|juridique|avocat|mise en demeure|prix|tarif|€|euro|urgent)/i.test(original);
-  const riskyReply = /(€|euro|remise|avoir|facture rectificative|prix ferme|tarif définitif|nous vous accordons|indemn|responsabilit)/i.test(reply);
-  const safeCat = ['information_simple','accuse_reception'].includes(String(ai.category||''));
-  return safeCat && ai.risk === 'low' && ai.autoSuggested === true && !riskyOriginal && !riskyReply;
+  const from = String(message.from||'').toLowerCase();
+  const h = message.headers || {};
+
+  // Évite les boucles automatiques, newsletters et robots.
+  if (/(no-?reply|do-?not-?reply|mailer-daemon|postmaster|notification)/i.test(from)) return false;
+  if (String(h['auto-submitted']||'').toLowerCase() && String(h['auto-submitted']).toLowerCase() !== 'no') return false;
+  if (/(bulk|list|junk)/i.test(String(h.precedence||'')) || h['list-id']) return false;
+
+  // Ces sujets restent toujours sous validation humaine.
+  const riskyOriginal = /(facture|avoir|remise|geste commercial|réclamation|plainte|litige|paiement|impay|dommage|accident|contrat|annul|juridique|avocat|mise en demeure|responsabilit|sinistre)/i.test(original);
+  if (riskyOriginal) return false;
+
+  const category = String(ai.category||'');
+  const safeCategory = ['information_simple','accuse_reception','devis'].includes(category);
+  if (!safeCategory || ai.autoSuggested !== true) return false;
+  if (!['low','medium'].includes(String(ai.risk||''))) return false;
+
+  // Une demande de devis peut être automatique, mais jamais avec un engagement ferme.
+  const forbiddenReply = /(prix ferme|tarif définitif|devis définitif|nous vous accordons|remise de|avoir de|engagement ferme|commande confirmée|contrat accepté|responsabilité reconnue)/i.test(reply);
+  if (forbiddenReply) return false;
+
+  // Si un montant est donné automatiquement, il doit être explicitement présenté comme indicatif.
+  const hasAmount = /(?:\d[\d\s.,]*\s?(?:€|euros?)|€\s?\d)/i.test(reply);
+  if (hasAmount && !/(indicatif|indicative|estimation|pré-estimation|à titre indicatif|sous réserve)/i.test(reply)) return false;
+
+  return true;
 }
 
 async function generateAiDraft(message) {
   if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY n’est pas configurée dans Netlify.');
   const images = await fetchImageAttachments(message).catch(()=>[]);
-  const prompt = `Analyse cet e-mail reçu et prépare une réponse Clean-Cité.\n\nEXPÉDITEUR : ${message.from}\nOBJET : ${message.subject}\nMESSAGE :\n${message.body || message.snippet || '(message vide)'}\n\nRéponds uniquement avec un JSON valide :\n{\n  "category":"information_simple|accuse_reception|devis|facture|reclamation|paiement|autre",\n  "risk":"low|medium|high",\n  "autoSuggested":true|false,\n  "reason":"raison courte",\n  "replySubject":"objet de réponse",\n  "replyBody":"corps de la réponse sans signature excessive",\n  "missingInfo":["..."],\n  "photoNotes":"observation éventuelle des photos jointes, sinon chaîne vide"\n}\n\nUne réponse automatique ne doit être suggérée QUE pour une information générale simple ou un accusé de réception sans prix, engagement, facture, paiement, réclamation, remise ni modification contractuelle.`;
+  const prompt = `Analyse cet e-mail reçu et prépare une réponse Clean-Cité.\n\nEXPÉDITEUR : ${message.from}\nOBJET : ${message.subject}\nMESSAGE :\n${message.body || message.snippet || '(message vide)'}\n\nRéponds uniquement avec un JSON valide :\n{\n  "category":"information_simple|accuse_reception|devis|facture|reclamation|paiement|autre",\n  "risk":"low|medium|high",\n  "autoSuggested":true|false,\n  "reason":"raison courte",\n  "replySubject":"objet de réponse",\n  "replyBody":"corps de la réponse sans signature excessive",\n  "missingInfo":["..."],\n  "photoNotes":"observation éventuelle des photos jointes, sinon chaîne vide"\n}\n\nUne réponse automatique peut être suggérée pour : (1) une information générale simple, (2) un accusé de réception, ou (3) une demande de devis lorsque la réponse reste indicative, demande les précisions utiles et ne comporte aucun engagement ferme. Les factures, paiements, réclamations, remises, avoirs, litiges et modifications contractuelles restent toujours manuels. Ne mets AUCUNE signature dans replyBody.`;
   const parts = [{text:prompt}];
   for (const img of images) parts.push({inlineData:{mimeType:img.mimeType,data:img.data}});
   const responseJsonSchema = {
@@ -145,7 +169,7 @@ async function generateAiDraft(message) {
   if (!ai?.replyBody) {
     const finish = candidate?.finishReason || '';
     const block = d?.promptFeedback?.blockReason || '';
-    const fallbackPrompt = `Rédige uniquement la réponse e-mail que Clean-Cité doit envoyer au client, en français, sans JSON et sans commentaire.\n\nExpéditeur : ${message.from}\nObjet : ${message.subject}\nMessage :\n${message.body || message.snippet || '(message vide)'}\n\nSi des informations manquent pour chiffrer précisément, pose les questions nécessaires. Ne donne pas de prix ferme.`;
+    const fallbackPrompt = `Rédige uniquement la réponse e-mail que Clean-Cité doit envoyer au client, en français, sans JSON et sans commentaire.\n\nExpéditeur : ${message.from}\nObjet : ${message.subject}\nMessage :\n${message.body || message.snippet || '(message vide)'}\n\nSi des informations manquent pour chiffrer précisément, pose les questions nécessaires. Ne donne pas de prix ferme. N'ajoute aucune signature ni formule « Cordialement » à la fin.`;
     const fr = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -162,7 +186,7 @@ async function generateAiDraft(message) {
         ai = {
           category: risky ? 'devis' : 'autre',
           risk: risky ? 'medium' : 'low',
-          autoSuggested:false,
+          autoSuggested: risky ? false : true,
           reason:`Brouillon généré en mode de secours${finish?` (première génération : ${finish})`:''}${block?` (blocage : ${block})`:''}.`,
           replySubject:`Re: ${cleanSubject(message.subject)}`,
           replyBody:ftext,
@@ -182,12 +206,28 @@ async function generateAiDraft(message) {
   ai.category = String(ai.category||'autre');
   ai.risk = ['low','medium','high'].includes(ai.risk) ? ai.risk : 'medium';
   ai.replySubject = String(ai.replySubject || `Re: ${cleanSubject(message.subject)}`).slice(0,300);
-  ai.replyBody = String(ai.replyBody||'').slice(0,8000);
+  ai.replyBody = stripGeneratedSignature(String(ai.replyBody||'')).slice(0,8000);
   ai.missingInfo = Array.isArray(ai.missingInfo) ? ai.missingInfo.slice(0,5).map(String) : [];
   ai.photoNotes = String(ai.photoNotes||'').slice(0,1500);
   ai.autoEligible = serverAutoGuard(message, ai);
   ai.imagesAnalyzed = images.length;
   return ai;
+}
+
+function stripGeneratedSignature(value) {
+  let text = String(value||'').replace(/\r\n/g,'\n').trim();
+  // Gemini n'est pas censé signer, mais on nettoie défensivement les signatures
+  // générées afin qu'une seule signature officielle soit ajoutée par le serveur.
+  text = text.replace(/\n{1,3}(?:(?:bien\s+)?cordialement|sinc[eè]res?\s+salutations|respectueusement|bonne\s+journ[eé]e)[,\s]*\n[\s\S]{0,700}$/i, '').trim();
+  text = text.replace(/\n{1,3}(?:l[’']?[ée]quipe\s+)?clean[-–— ]?cit[ée][\s\S]{0,500}$/i, '').trim();
+  return text;
+}
+
+function encodeMimeHeader(value) {
+  const clean = String(value||'').replace(/[\r\n]+/g,' ').trim();
+  if (!clean) return '';
+  // RFC 2047 : évite « Clean-CitÃ© » dans Gmail et protège tous les accents.
+  return `=?UTF-8?B?${Buffer.from(clean,'utf8').toString('base64')}?=`;
 }
 
 function replyRaw(message, body, subject, senderEmail) {
@@ -197,11 +237,11 @@ function replyRaw(message, body, subject, senderEmail) {
   const subj = String(subject||`Re: ${cleanSubject(message.subject)}`).replace(/[\r\n]/g,' ').slice(0,300);
   const refs = [message.references, message.messageIdHeader].filter(Boolean).join(' ').replace(/[\r\n]/g,' ');
   const msgId = String(message.messageIdHeader||'').replace(/[\r\n]/g,' ');
-  const text = String(body).replace(/\r\n/g,'\n').trim();
+  const text = stripGeneratedSignature(body);
   const headers = [
-    `From: Clean-Cité <${senderEmail}>`,
+    `From: ${encodeMimeHeader('Clean-Cité')} <${senderEmail}>`,
     `To: ${to}`,
-    `Subject: ${subj}`,
+    `Subject: ${encodeMimeHeader(subj)}`,
     ...(msgId ? [`In-Reply-To: ${msgId}`] : []),
     ...(refs ? [`References: ${refs}`] : []),
     'MIME-Version: 1.0',
@@ -211,8 +251,9 @@ function replyRaw(message, body, subject, senderEmail) {
     text,
     '',
     'Cordialement,',
-    'Clean-Cité',
+    `L’équipe Clean-Cité`,
     '07 66 53 61 54',
+    '149 rue de Paris, 93000 Bobigny',
   ].join('\r\n');
   return { raw:toB64url(headers), to };
 }
