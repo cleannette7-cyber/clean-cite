@@ -105,19 +105,80 @@ async function generateAiDraft(message) {
   const prompt = `Analyse cet e-mail reçu et prépare une réponse Clean-Cité.\n\nEXPÉDITEUR : ${message.from}\nOBJET : ${message.subject}\nMESSAGE :\n${message.body || message.snippet || '(message vide)'}\n\nRéponds uniquement avec un JSON valide :\n{\n  "category":"information_simple|accuse_reception|devis|facture|reclamation|paiement|autre",\n  "risk":"low|medium|high",\n  "autoSuggested":true|false,\n  "reason":"raison courte",\n  "replySubject":"objet de réponse",\n  "replyBody":"corps de la réponse sans signature excessive",\n  "missingInfo":["..."],\n  "photoNotes":"observation éventuelle des photos jointes, sinon chaîne vide"\n}\n\nUne réponse automatique ne doit être suggérée QUE pour une information générale simple ou un accusé de réception sans prix, engagement, facture, paiement, réclamation, remise ni modification contractuelle.`;
   const parts = [{text:prompt}];
   for (const img of images) parts.push({inlineData:{mimeType:img.mimeType,data:img.data}});
+  const responseJsonSchema = {
+    type:'object',
+    additionalProperties:false,
+    required:['category','risk','autoSuggested','reason','replySubject','replyBody','missingInfo','photoNotes'],
+    properties:{
+      category:{type:'string',enum:['information_simple','accuse_reception','devis','facture','reclamation','paiement','autre']},
+      risk:{type:'string',enum:['low','medium','high']},
+      autoSuggested:{type:'boolean'},
+      reason:{type:'string'},
+      replySubject:{type:'string'},
+      replyBody:{type:'string'},
+      missingInfo:{type:'array',items:{type:'string'}},
+      photoNotes:{type:'string'}
+    }
+  };
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,{
     method:'POST', headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       systemInstruction:{parts:[{text:COMPANY_CONTEXT}]},
       contents:[{role:'user',parts}],
-      generationConfig:{temperature:0.15,maxOutputTokens:1200,responseMimeType:'application/json'}
+      generationConfig:{
+        temperature:0.15,
+        maxOutputTokens:2400,
+        responseMimeType:'application/json',
+        responseJsonSchema,
+        thinkingConfig:{thinkingBudget:0}
+      }
     })
   });
   const d = await r.json().catch(()=>({}));
   if (!r.ok) throw new Error(d?.error?.message || 'Erreur Gemini.');
-  const text = d?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '';
-  const ai = safeJsonParse(text);
-  if (!ai?.replyBody) throw new Error('Gemini n’a pas produit de réponse exploitable.');
+  const candidate = d?.candidates?.[0] || null;
+  const text = candidate?.content?.parts?.filter(p=>typeof p?.text==='string').map(p=>p.text).join('').trim() || '';
+  let ai = safeJsonParse(text);
+
+  // Secours : si Gemini renvoie du texte JSON incomplet ou aucun texte final,
+  // on fait une seconde tentative très courte, sans réflexion, en texte brut.
+  if (!ai?.replyBody) {
+    const finish = candidate?.finishReason || '';
+    const block = d?.promptFeedback?.blockReason || '';
+    const fallbackPrompt = `Rédige uniquement la réponse e-mail que Clean-Cité doit envoyer au client, en français, sans JSON et sans commentaire.\n\nExpéditeur : ${message.from}\nObjet : ${message.subject}\nMessage :\n${message.body || message.snippet || '(message vide)'}\n\nSi des informations manquent pour chiffrer précisément, pose les questions nécessaires. Ne donne pas de prix ferme.`;
+    const fr = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        systemInstruction:{parts:[{text:COMPANY_CONTEXT}]},
+        contents:[{role:'user',parts:[{text:fallbackPrompt}]}],
+        generationConfig:{temperature:0.2,maxOutputTokens:1200,thinkingConfig:{thinkingBudget:0}}
+      })
+    });
+    const fd = await fr.json().catch(()=>({}));
+    if (fr.ok) {
+      const ftext = fd?.candidates?.[0]?.content?.parts?.filter(p=>typeof p?.text==='string').map(p=>p.text).join('').trim() || '';
+      if (ftext) {
+        const risky = /(devis|prix|tarif|€|euro|facture|paiement|réclamation|plainte|litige|remise|avoir)/i.test(`${message.subject}\n${message.body}`);
+        ai = {
+          category: risky ? 'devis' : 'autre',
+          risk: risky ? 'medium' : 'low',
+          autoSuggested:false,
+          reason:`Brouillon généré en mode de secours${finish?` (première génération : ${finish})`:''}${block?` (blocage : ${block})`:''}.`,
+          replySubject:`Re: ${cleanSubject(message.subject)}`,
+          replyBody:ftext,
+          missingInfo:[],
+          photoNotes:''
+        };
+      }
+    }
+  }
+
+  if (!ai?.replyBody) {
+    const finish = candidate?.finishReason || 'INCONNU';
+    const block = d?.promptFeedback?.blockReason || '';
+    const detail = block ? ` Blocage : ${block}.` : '';
+    throw new Error(`Gemini n’a pas produit de réponse exploitable (fin : ${finish}).${detail}`);
+  }
   ai.category = String(ai.category||'autre');
   ai.risk = ['low','medium','high'].includes(ai.risk) ? ai.risk : 'medium';
   ai.replySubject = String(ai.replySubject || `Re: ${cleanSubject(message.subject)}`).slice(0,300);
