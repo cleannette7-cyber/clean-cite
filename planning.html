@@ -7,7 +7,9 @@
   <title>Mon planning client | Clean-Cité</title>
 <meta name="theme-color" content="#0B2447">
   <link rel="icon" type="image/png" href="/images/favicon-clean-cite.png?v=6">
-  <link rel="stylesheet" href="/assets/assistant-gemini.css">
+  <link rel="preload" href="/assets/assistant-gemini.css?v=6" as="style">
+<link rel="stylesheet" href="/assets/assistant-gemini.css?v=6" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/assistant-gemini.css?v=6"></noscript>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     :root {
@@ -41,10 +43,20 @@
     footer{padding:35px 7%;background:var(--navy);color:white;text-align:center;margin-top:60px;line-height:1.6}
     @media(max-width:980px){.stats{grid-template-columns:repeat(2,1fr)}.week-grid{grid-template-columns:repeat(2,1fr)}.nav-links{display:none}.job-card{grid-template-columns:1fr}}
     @media(max-width:560px){.wrap{width:calc(100% - 20px)}.stats{grid-template-columns:1fr}.week-grid{grid-template-columns:1fr}.panel-body{padding:16px}.hero{padding:58px 18px 78px}.filters input,.filters select{width:100%;min-width:0}}
-  </style>
+  
+/* ===== OPTIMISATIONS MOBILE / PAGESPEED ===== */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;}
+  .hero-agent-img{filter:none!important;}
+  .proof-section,.services,.why,.subscription,.seo-local-section,.seo-links-section,.seo-faq-section,.contact,footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 800px;
+  }
+}
+</style>
 </head>
 <body>
-<nav>
+<nav aria-label="Navigation principale">
   <a href="/" class="brand"><img src="/images/logo-clean-cite.png" alt="Logo Clean-Cité" loading="lazy"> CLEAN-<span>CITÉ</span></a>
   <div class="nav-links">
     <a href="/">Accueil</a>
@@ -289,6 +301,6 @@ if (window.netlifyIdentity) {
   document.getElementById("login-panel").querySelector(".panel-body").innerHTML = `<div class="status-box"><strong>Erreur :</strong> Netlify Identity n'est pas disponible.</div>`;
 }
 </script>
-<script defer src="/assets/assistant-gemini.js"></script>
+<script defer src="/assets/assistant-gemini.js?v=6"></script>
 </body>
 </html>

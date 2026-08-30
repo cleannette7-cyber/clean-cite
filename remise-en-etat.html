@@ -15,7 +15,7 @@
   --blue:#0B2447;
   --blue-2:#4f3818;
   --orange:#9a681f;
-  --orange-2:#c9973f;
+  --orange-2:#8a5b18;
   --text:#2b271f;
   --muted:#746b5d;
   --bg:#fcf7f0;
@@ -566,7 +566,7 @@ button{
   right:22px;
   bottom:22px;
   z-index:2000;
-  background:#25D366;
+  background:#0E7A3E;
   color:white;
   text-decoration:none;
   width:62px;
@@ -596,7 +596,9 @@ button{
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<link rel="stylesheet" href="/assets/assistant-gemini.css">
+<link rel="preload" href="/assets/assistant-gemini.css?v=6" as="style">
+<link rel="stylesheet" href="/assets/assistant-gemini.css?v=6" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/assistant-gemini.css?v=6"></noscript>
 <meta property="og:title" content="Remise en état locaux Bobigny 93 &amp; IDF | Clean-Cité">
 <meta property="og:description" content="Remise en état de locaux à Bobigny et en Île-de-France après travaux, déménagement ou fort encrassement : dès 6,50 €/m². Devis selon l’état réel.">
 <meta property="og:url" content="https://clean-cite.org/remise-en-etat.html">
@@ -620,6 +622,16 @@ button{
 .seo-faq-list p{margin:10px 0 0;color:#667085;line-height:1.7}
 .seo-city-links{display:flex;flex-wrap:wrap;gap:10px}.seo-city-links a{display:inline-flex;padding:9px 13px;border-radius:999px;border:1px solid #d8dee8;text-decoration:none;font-weight:800;font-size:.85rem;color:var(--navy,#0B2447);background:#fff}.seo-city-links a:hover{border-color:var(--orange,#9a681f);color:var(--orange,#9a681f)}
 @media(max-width:850px){.seo-link-grid{grid-template-columns:1fr}.seo-local-section,.seo-faq-section,.seo-links-section{padding:56px 6%}}
+
+/* ===== OPTIMISATIONS MOBILE / PAGESPEED ===== */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;}
+  .hero-agent-img{filter:none!important;}
+  .proof-section,.services,.why,.subscription,.seo-local-section,.seo-links-section,.seo-faq-section,.contact,footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 800px;
+  }
+}
 </style>
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Clean-Cité">
@@ -632,7 +644,7 @@ button{
 </head>
 <body>
   <header class="topbar">
-    <nav class="nav">
+    <nav class="nav" aria-label="Navigation principale">
       <a class="brand" href="index.html" aria-label="Accueil Clean-Cité">
         <img src="images/logo-clean-cite.png?v=5" alt="Logo Clean-Cité" loading="lazy">
       </a>
@@ -682,7 +694,7 @@ button{
           <div class="hero-btns"><a href="#contact" class="btn-primary">Demander un devis</a><a href="tel:0766536154" class="btn-outline">07 66 53 61 54</a></div>
           <div class="hero-stats"><div><span class="stat-num">PRO</span><span class="stat-label">Service professionnel</span></div><div><span class="stat-num">24H</span><span class="stat-label">Devis rapide</span></div><div><span class="stat-num">IDF</span><span class="stat-label">Intervention</span></div></div>
         </div>
-        <div class="visual-card" aria-hidden="true"><div class="agent-card"><img src="images/logo-clean-cite.png?v=5" class="logo-mini" alt=""><img src="images/agent-nettoyage.png?v=5" class="agent" alt=""></div></div>
+        <div class="visual-card" aria-hidden="true"><div class="agent-card"><img src="images/logo-clean-cite.png?v=5" class="logo-mini" alt="" loading="lazy" decoding="async"><img src="images/agent-nettoyage.png?v=5" class="agent" alt="" loading="lazy" decoding="async"></div></div>
       </div>
     </section>
 
@@ -752,55 +764,30 @@ button{
       document.getElementById('mobileMenu').classList.toggle('open');
     }
   </script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-(function () {
-  const ADMIN_EMAIL = "cleannette7@gmail.com";
-  const ADMIN_URL = "/admin/";
-  const CLIENT_URL = "/espace-client.html";
-
-  function normalizeEmail(value) {
-    return String(value || "").trim().toLowerCase();
-  }
-
-  function isAdminUser(user) {
-    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
-  }
-
-  function hasIdentityToken() {
-    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
-  }
-
-  function redirectAfterIdentity(user) {
-    window.location.href = isAdminUser(user) ? ADMIN_URL : CLIENT_URL;
-  }
-
-  if (!window.netlifyIdentity) return;
-
-  window.netlifyIdentity.on("init", function (user) {
-    if (hasIdentityToken()) {
+/* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
+(function(){
+  if(!/(?:invite|confirmation|recovery)_token=/.test(window.location.hash || '')) return;
+  const ADMIN_EMAIL='cleannette7@gmail.com', ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
+  const script=document.createElement('script');
+  script.src='https://identity.netlify.com/v1/netlify-identity-widget.js';
+  script.async=true;
+  script.onload=function(){
+    if(!window.netlifyIdentity) return;
+    const normalize=v=>String(v||'').trim().toLowerCase();
+    const redirect=user=>{ window.location.href=(user && normalize(user.email)===ADMIN_EMAIL)?ADMIN_URL:CLIENT_URL; };
+    window.netlifyIdentity.on('init',function(user){
       window.netlifyIdentity.open();
-    }
-
-    if (!user) {
-      window.netlifyIdentity.on("login", function (loggedUser) {
-        window.netlifyIdentity.close();
-        redirectAfterIdentity(loggedUser);
-      });
-    }
-  });
-
-  window.netlifyIdentity.on("close", function () {
-    if (hasIdentityToken()) {
-      const currentUser = window.netlifyIdentity.currentUser && window.netlifyIdentity.currentUser();
-      redirectAfterIdentity(currentUser);
-    }
-  });
+      if(!user){ window.netlifyIdentity.on('login',function(loggedUser){ window.netlifyIdentity.close(); redirect(loggedUser); }); }
+    });
+    window.netlifyIdentity.on('close',function(){ const u=window.netlifyIdentity.currentUser&&window.netlifyIdentity.currentUser(); if(u) redirect(u); });
+  };
+  document.head.appendChild(script);
 })();
 </script>
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<script defer src="/assets/assistant-gemini.js"></script>
+<script defer src="/assets/assistant-gemini.js?v=6"></script>
 </body>
 </html>

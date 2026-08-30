@@ -111,7 +111,9 @@
 }
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
 
 <style>
 :root{
@@ -282,7 +284,7 @@ footer{background:#2a261e;color:white;text-align:center;padding:34px 8%}
 footer .nav-logo{color:white;margin-bottom:12px}
 footer p{opacity:.9;margin:6px 0}
 .whatsapp-float{
-  position:fixed;right:22px;bottom:22px;z-index:2000;background:#25D366;color:white;
+  position:fixed;right:22px;bottom:22px;z-index:2000;background:#0E7A3E;color:white;
   width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   text-decoration:none;font-size:1.5rem;box-shadow:0 12px 30px rgba(0,0,0,.25)
 }
@@ -348,7 +350,9 @@ footer p{opacity:.9;margin:6px 0}
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<link rel="stylesheet" href="/assets/assistant-gemini.css">
+<link rel="preload" href="/assets/assistant-gemini.css?v=6" as="style">
+<link rel="stylesheet" href="/assets/assistant-gemini.css?v=6" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/assistant-gemini.css?v=6"></noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="/images/agent-nettoyage.png?v=5" fetchpriority="high">
@@ -370,6 +374,16 @@ footer p{opacity:.9;margin:6px 0}
 .seo-faq-list p{margin:10px 0 0;color:#667085;line-height:1.7}
 .seo-city-links{display:flex;flex-wrap:wrap;gap:10px}.seo-city-links a{display:inline-flex;padding:9px 13px;border-radius:999px;border:1px solid #d8dee8;text-decoration:none;font-weight:800;font-size:.85rem;color:var(--navy,#0B2447);background:#fff}.seo-city-links a:hover{border-color:var(--orange,#9a681f);color:var(--orange,#9a681f)}
 @media(max-width:850px){.seo-link-grid{grid-template-columns:1fr}.seo-local-section,.seo-faq-section,.seo-links-section{padding:56px 6%}}
+
+/* ===== OPTIMISATIONS MOBILE / PAGESPEED ===== */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;}
+  .hero-agent-img{filter:none!important;}
+  .proof-section,.services,.why,.subscription,.seo-local-section,.seo-links-section,.seo-faq-section,.contact,footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 800px;
+  }
+}
 </style>
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Clean-Cité">
@@ -382,19 +396,19 @@ footer p{opacity:.9;margin:6px 0}
 </head>
 <body>
 
-<nav>
+<nav aria-label="Navigation principale">
   <a href="index.html" class="nav-brand">
     <img src="images/logo-clean-cite.png?v=5" class="nav-city-logo" alt="Logo Clean-Cité" width="54" height="54" decoding="async">
     <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
   </a>
 
-  <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+  <button type="button" class="hamburger" aria-label="Ouvrir le menu" aria-controls="nav-right" aria-expanded="false" onclick="toggleMobile()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 
   <div class="nav-right" id="nav-right">
     <div class="dd-wrap">
-      <button class="dd-btn" onclick="toggleDd(event)">Services ▾</button>
+      <button type="button" class="dd-btn" aria-haspopup="true" aria-controls="dd-menu" aria-expanded="false" onclick="toggleDd(event)">Services ▾</button>
       <div class="dd-menu" id="dd-menu">
         <div class="dd-group">🧹 Nettoyage</div>
         <a href="nettoyage-chantier-en-cours.html" onclick="closeDd();closeMobile()">Chantier en cours</a>
@@ -590,10 +604,10 @@ footer p{opacity:.9;margin:6px 0}
 </footer>
 <script>
 function $(id){return document.getElementById(id);}
-function toggleMobile(){ $('nav-right').classList.toggle('show'); }
-function closeMobile(){ $('nav-right')?.classList.remove('show'); }
-function toggleDd(e){ e.stopPropagation(); $('dd-menu').classList.toggle('show'); }
-function closeDd(){ $('dd-menu')?.classList.remove('show'); }
+function toggleMobile(){const n=$('nav-right');const o=n.classList.toggle('show');const b=document.querySelector('.hamburger');if(b)b.setAttribute('aria-expanded',String(o));}
+function closeMobile(){const n=$('nav-right');if(n)n.classList.remove('show');const b=document.querySelector('.hamburger');if(b)b.setAttribute('aria-expanded','false');}
+function toggleDd(e){e.stopPropagation();const m=$('dd-menu');const o=m.classList.toggle('show');const b=document.querySelector('.dd-btn');if(b)b.setAttribute('aria-expanded',String(o));}
+function closeDd(){const m=$('dd-menu');if(m)m.classList.remove('show');const b=document.querySelector('.dd-btn');if(b)b.setAttribute('aria-expanded','false');}
 document.addEventListener('click', function(e){ if(!e.target.closest('.dd-wrap')) closeDd(); });
 function calculer(){
   const surface = parseFloat($('surface').value || 0);
@@ -618,55 +632,30 @@ Merci.`;
   $('wa-devis').href = 'https://wa.me/33766536154?text=' + encodeURIComponent(msg);
 }
 </script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-(function () {
-  const ADMIN_EMAIL = "cleannette7@gmail.com";
-  const ADMIN_URL = "/admin/";
-  const CLIENT_URL = "/espace-client.html";
-
-  function normalizeEmail(value) {
-    return String(value || "").trim().toLowerCase();
-  }
-
-  function isAdminUser(user) {
-    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
-  }
-
-  function hasIdentityToken() {
-    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
-  }
-
-  function redirectAfterIdentity(user) {
-    window.location.href = isAdminUser(user) ? ADMIN_URL : CLIENT_URL;
-  }
-
-  if (!window.netlifyIdentity) return;
-
-  window.netlifyIdentity.on("init", function (user) {
-    if (hasIdentityToken()) {
+/* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
+(function(){
+  if(!/(?:invite|confirmation|recovery)_token=/.test(window.location.hash || '')) return;
+  const ADMIN_EMAIL='cleannette7@gmail.com', ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
+  const script=document.createElement('script');
+  script.src='https://identity.netlify.com/v1/netlify-identity-widget.js';
+  script.async=true;
+  script.onload=function(){
+    if(!window.netlifyIdentity) return;
+    const normalize=v=>String(v||'').trim().toLowerCase();
+    const redirect=user=>{ window.location.href=(user && normalize(user.email)===ADMIN_EMAIL)?ADMIN_URL:CLIENT_URL; };
+    window.netlifyIdentity.on('init',function(user){
       window.netlifyIdentity.open();
-    }
-
-    if (!user) {
-      window.netlifyIdentity.on("login", function (loggedUser) {
-        window.netlifyIdentity.close();
-        redirectAfterIdentity(loggedUser);
-      });
-    }
-  });
-
-  window.netlifyIdentity.on("close", function () {
-    if (hasIdentityToken()) {
-      const currentUser = window.netlifyIdentity.currentUser && window.netlifyIdentity.currentUser();
-      redirectAfterIdentity(currentUser);
-    }
-  });
+      if(!user){ window.netlifyIdentity.on('login',function(loggedUser){ window.netlifyIdentity.close(); redirect(loggedUser); }); }
+    });
+    window.netlifyIdentity.on('close',function(){ const u=window.netlifyIdentity.currentUser&&window.netlifyIdentity.currentUser(); if(u) redirect(u); });
+  };
+  document.head.appendChild(script);
 })();
 </script>
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<script defer src="/assets/assistant-gemini.js"></script>
+<script defer src="/assets/assistant-gemini.js?v=6"></script>
 </body>
 </html>

@@ -516,7 +516,7 @@ footer p{font-size:.82rem;}
   right:22px;
   bottom:22px;
   z-index:2000;
-  background:#25D366;
+  background:#0E7A3E;
   color:white;
   width:62px;
   height:62px;
@@ -647,7 +647,9 @@ footer p{font-size:.82rem;}
 </style>
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<link rel="stylesheet" href="/assets/assistant-gemini.css">
+<link rel="preload" href="/assets/assistant-gemini.css?v=6" as="style">
+<link rel="stylesheet" href="/assets/assistant-gemini.css?v=6" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/assistant-gemini.css?v=6"></noscript>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="/images/agent-nettoyage.png?v=5" fetchpriority="high">
@@ -670,6 +672,16 @@ footer p{font-size:.82rem;}
 .seo-faq-list p{margin:10px 0 0;color:#667085;line-height:1.7}
 .seo-city-links{display:flex;flex-wrap:wrap;gap:10px}.seo-city-links a{display:inline-flex;padding:9px 13px;border-radius:999px;border:1px solid #d8dee8;text-decoration:none;font-weight:800;font-size:.85rem;color:var(--navy,#0B2447);background:#fff}.seo-city-links a:hover{border-color:var(--orange,#9a681f);color:var(--orange,#9a681f)}
 @media(max-width:850px){.seo-link-grid{grid-template-columns:1fr}.seo-local-section,.seo-faq-section,.seo-links-section{padding:56px 6%}}
+
+/* ===== OPTIMISATIONS MOBILE / PAGESPEED ===== */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;}
+  .hero-agent-img{filter:none!important;}
+  .proof-section,.services,.why,.subscription,.seo-local-section,.seo-links-section,.seo-faq-section,.contact,footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 800px;
+  }
+}
 </style>
 <script type="application/ld+json">
 {
@@ -743,13 +755,13 @@ footer p{font-size:.82rem;}
 
 <body>
 
-<nav>
+<nav aria-label="Navigation principale">
   <a href="index.html" class="nav-brand" aria-label="Accueil Clean-Cité">
     <img src="images/logo-clean-cite.png?v=5" class="nav-city-logo" alt="Logo Clean-Cité" width="54" height="54" decoding="async">
     <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
   </a>
 
-  <button class="hamburger" onclick="toggleMobile()" aria-label="Ouvrir le menu">
+  <button type="button" class="hamburger" aria-label="Ouvrir le menu" aria-controls="nav-right" aria-expanded="false" onclick="toggleMobile()" aria-label="Ouvrir le menu">
     <span></span><span></span><span></span>
   </button>
 
@@ -996,55 +1008,30 @@ async function loadInterventions(){
 loadInterventions();
 </script>
 
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-(function () {
-  const ADMIN_EMAIL = "cleannette7@gmail.com";
-  const ADMIN_URL = "/admin/";
-  const CLIENT_URL = "/espace-client.html";
-
-  function normalizeEmail(value) {
-    return String(value || "").trim().toLowerCase();
-  }
-
-  function isAdminUser(user) {
-    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
-  }
-
-  function hasIdentityToken() {
-    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
-  }
-
-  function redirectAfterIdentity(user) {
-    window.location.href = isAdminUser(user) ? ADMIN_URL : CLIENT_URL;
-  }
-
-  if (!window.netlifyIdentity) return;
-
-  window.netlifyIdentity.on("init", function (user) {
-    if (hasIdentityToken()) {
+/* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
+(function(){
+  if(!/(?:invite|confirmation|recovery)_token=/.test(window.location.hash || '')) return;
+  const ADMIN_EMAIL='cleannette7@gmail.com', ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
+  const script=document.createElement('script');
+  script.src='https://identity.netlify.com/v1/netlify-identity-widget.js';
+  script.async=true;
+  script.onload=function(){
+    if(!window.netlifyIdentity) return;
+    const normalize=v=>String(v||'').trim().toLowerCase();
+    const redirect=user=>{ window.location.href=(user && normalize(user.email)===ADMIN_EMAIL)?ADMIN_URL:CLIENT_URL; };
+    window.netlifyIdentity.on('init',function(user){
       window.netlifyIdentity.open();
-    }
-
-    if (!user) {
-      window.netlifyIdentity.on("login", function (loggedUser) {
-        window.netlifyIdentity.close();
-        redirectAfterIdentity(loggedUser);
-      });
-    }
-  });
-
-  window.netlifyIdentity.on("close", function () {
-    if (hasIdentityToken()) {
-      const currentUser = window.netlifyIdentity.currentUser && window.netlifyIdentity.currentUser();
-      redirectAfterIdentity(currentUser);
-    }
-  });
+      if(!user){ window.netlifyIdentity.on('login',function(loggedUser){ window.netlifyIdentity.close(); redirect(loggedUser); }); }
+    });
+    window.netlifyIdentity.on('close',function(){ const u=window.netlifyIdentity.currentUser&&window.netlifyIdentity.currentUser(); if(u) redirect(u); });
+  };
+  document.head.appendChild(script);
 })();
 </script>
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<script defer src="/assets/assistant-gemini.js"></script>
+<script defer src="/assets/assistant-gemini.js?v=6"></script>
 </body>
 </html>

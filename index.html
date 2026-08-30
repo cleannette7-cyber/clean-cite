@@ -130,7 +130,9 @@
   ]
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
 <style>
 :root {
   --navy: #0B2447;
@@ -274,7 +276,7 @@ nav {
 .btn-outline:hover { border-color:white; background:rgba(255,255,255,0.1); }
 .btn-whatsapp {
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
-  background:#25D366; color:white; padding:15px 24px; border-radius:50px;
+  background:#0E7A3E; color:white; padding:15px 24px; border-radius:50px;
   font-weight:900; font-size:1rem; text-decoration:none;
   box-shadow:0 8px 28px rgba(37,211,102,0.32);
   transition:transform 0.2s, box-shadow 0.2s, background 0.2s;
@@ -336,7 +338,7 @@ nav {
 .service-card.blue-card { background:linear-gradient(135deg,#f5eadb,#f2e6d5); }
 .service-card.blue-card:hover { border-color:var(--navy); box-shadow:0 18px 50px rgba(11,36,71,0.12); }
 .svc-icon {
-  width:52px; height:52px; background:linear-gradient(135deg,var(--orange),#c9973f);
+  width:52px; height:52px; background:linear-gradient(135deg,var(--orange),#8a5b18);
   border-radius:14px; display:flex; align-items:center; justify-content:center;
   font-size:1.5rem; margin-bottom:16px; box-shadow:0 6px 18px rgba(154,104,31,0.25);
 }
@@ -351,7 +353,7 @@ nav {
 /* PRICE ELEMENTS */
 .price-badge {
   display:inline-block; margin-top:12px;
-  background:linear-gradient(135deg,var(--orange),#c9973f); color:white;
+  background:linear-gradient(135deg,var(--orange),#8a5b18); color:white;
   font-weight:800; font-size:0.95rem; padding:6px 16px; border-radius:50px;
   box-shadow:0 4px 12px rgba(154,104,31,0.35);
 }
@@ -473,7 +475,7 @@ nav {
 .contact > div > p { color:var(--gray); line-height:1.7; margin-bottom:36px; }
 .cinfo { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
 .cicon {
-  width:46px; height:46px; background:linear-gradient(135deg,var(--orange),#c9973f);
+  width:46px; height:46px; background:linear-gradient(135deg,var(--orange),#8a5b18);
   border-radius:11px; display:flex; align-items:center; justify-content:center;
   font-size:1.1rem; flex-shrink:0;
 }
@@ -556,7 +558,7 @@ footer p { font-size:0.82rem; }
   padding:8px 0; border-bottom:1px solid var(--light-gray); gap:10px; }
 .devis-line:last-child { border:none; }
 .devis-total {
-  background:linear-gradient(135deg,var(--orange),#c9973f); color:white;
+  background:linear-gradient(135deg,var(--orange),#8a5b18); color:white;
   border-radius:12px; padding:15px 18px;
   display:flex; justify-content:space-between; align-items:center; margin-top:14px;
 }
@@ -698,7 +700,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   right:22px;
   bottom:22px;
   z-index:2000;
-  background:#25D366;
+  background:#0E7A3E;
   color:white;
   text-decoration:none;
   width:62px;
@@ -774,7 +776,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<link rel="stylesheet" href="/assets/assistant-gemini.css">
+<link rel="preload" href="/assets/assistant-gemini.css?v=6" as="style">
+<link rel="stylesheet" href="/assets/assistant-gemini.css?v=6" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/assistant-gemini.css?v=6"></noscript>
 
 <script type="application/ld+json">
 {
@@ -808,6 +812,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .seo-faq-list p{margin:10px 0 0;color:#667085;line-height:1.7}
 .seo-city-links{display:flex;flex-wrap:wrap;gap:10px}.seo-city-links a{display:inline-flex;padding:9px 13px;border-radius:999px;border:1px solid #d8dee8;text-decoration:none;font-weight:800;font-size:.85rem;color:var(--navy,#0B2447);background:#fff}.seo-city-links a:hover{border-color:var(--orange,#9a681f);color:var(--orange,#9a681f)}
 @media(max-width:850px){.seo-link-grid{grid-template-columns:1fr}.seo-local-section,.seo-faq-section,.seo-links-section{padding:56px 6%}}
+
+/* ===== OPTIMISATIONS MOBILE / PAGESPEED ===== */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;}
+  .hero-agent-img{filter:none!important;}
+  .proof-section,.services,.why,.subscription,.seo-local-section,.seo-links-section,.seo-faq-section,.contact,footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 800px;
+  }
+}
 </style>
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Clean-Cité">
@@ -821,17 +835,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 <body>
 
 <!-- NAV -->
-<nav>
+<nav aria-label="Navigation principale">
   <a href="index.html" class="nav-brand">
     <img src="images/logo-clean-cite.png?v=5" class="nav-city-logo" alt="Logo Clean-Cité" width="54" height="54" decoding="async">
     <div class="nav-logo">CLEAN-<span>CITÉ</span></div>
   </a>
-  <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+  <button type="button" class="hamburger" aria-label="Ouvrir le menu" aria-controls="nav-right" aria-expanded="false" onclick="toggleMobile()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="nav-right" id="nav-right">
     <div class="dd-wrap">
-      <button class="dd-btn" onclick="toggleDd(event)">Services ▾</button>
+      <button type="button" class="dd-btn" aria-haspopup="true" aria-controls="dd-menu" aria-expanded="false" onclick="toggleDd(event)">Services ▾</button>
       <div class="dd-menu" id="dd-menu">
         <div class="dd-col">
           <div class="dd-group">🧹 Nettoyage</div>
@@ -1232,28 +1246,28 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   <h3>DEMANDE DE DEVIS NETTOYAGE</h3>
 
   <div class="form-group">
-    <label>Votre nom</label>
-    <input type="text" name="nom" required placeholder="Jean Dupont">
+    <label for="contact-nom">Votre nom</label>
+    <input id="contact-nom" type="text" name="nom" required placeholder="Jean Dupont">
   </div>
 
   <div class="form-group">
-    <label>Téléphone</label>
-    <input type="tel" name="telephone" required placeholder="06 00 00 00 00">
+    <label for="contact-telephone">Téléphone</label>
+    <input id="contact-telephone" type="tel" name="telephone" required placeholder="06 00 00 00 00">
   </div>
 
   <div class="form-group">
-    <label>Email</label>
-    <input type="email" name="email" required placeholder="votre@email.com">
+    <label for="contact-email">Email</label>
+    <input id="contact-email" type="email" name="email" required placeholder="votre@email.com">
   </div>
 
   <div class="form-group">
-    <label>Ville / adresse d’intervention</label>
-    <input type="text" name="ville_adresse" required placeholder="Ex : Bobigny, Paris 19e, Drancy...">
+    <label for="contact-ville">Ville / adresse d’intervention</label>
+    <input id="contact-ville" type="text" name="ville_adresse" required placeholder="Ex : Bobigny, Paris 19e, Drancy...">
   </div>
 
   <div class="form-group">
-    <label>Type de service</label>
-    <select name="type_service" required>
+    <label for="contact-service">Type de service</label>
+    <select id="contact-service" name="type_service" required>
       <option value="">Sélectionnez un service</option>
       <option>Chantier en cours</option>
       <option>Fin de chantier</option>
@@ -1268,8 +1282,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   </div>
 
   <div class="form-group">
-    <label>Message</label>
-    <textarea name="message" required placeholder="Décrivez votre besoin..."></textarea>
+    <label for="contact-message">Message</label>
+    <textarea id="contact-message" name="message" required placeholder="Décrivez votre besoin..."></textarea>
   </div>
 
   <button class="btn-submit" type="submit">ENVOYER MA DEMANDE</button>
@@ -1287,13 +1301,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 <!-- MODALE SERVICE -->
 <div class="modal-box" id="svc-modal">
-  <button class="modal-close" onclick="closeAll()">✕</button>
+  <button type="button" class="modal-close" onclick="closeAll()" aria-label="Fermer la fenêtre">✕</button>
   <div class="modal-body" id="svc-modal-body"></div>
 </div>
 
 <!-- MODALE DEVIS IA -->
 <div class="modal-box" id="devis-modal">
-  <button class="modal-close" onclick="closeAll()">✕</button>
+  <button type="button" class="modal-close" onclick="closeAll()" aria-label="Fermer la fenêtre">✕</button>
   <div class="modal-body">
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px;">
       <div style="width:50px;height:50px;background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">🤖</div>
@@ -1332,20 +1346,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   <p id="chantier-main-oeuvre-note" style="display:none;margin:-1px 0 16px;font-size:.78rem;color:#667085;">🏗️ Chantier : <strong>28 € HT/h par agent</strong> · journée type de 7 h = <strong>196 € HT par agent/jour</strong>. Le 3e champ correspond au nombre de jours.</p>
 
   <p class="devis-sep">3. Superficie (m²) — si applicable</p>
-  <input id="d-surface" type="number" min="0" placeholder="ex : 80" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;font-family:'Nunito',sans-serif;font-size:0.95rem;margin-bottom:16px;outline:none;">
+  <input id="d-surface" type="number" min="0" placeholder="ex : 80" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;font-family:'Nunito',sans-serif;font-size:0.95rem;margin-bottom:16px;outline:none;" aria-label="Surface en mètres carrés">
 
   <p class="devis-sep">4. Canapé / tapis — si applicable</p>
   <div id="bloc-canape-tapis"style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;">
-    <input id="d-canape-places" type="number" min="0" placeholder="Nombre de places canapé" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
+    <input id="d-canape-places" type="number" min="0" placeholder="Nombre de places canapé" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;" aria-label="Nombre de places du canapé">
     <label class="devis-check"><input id="d-canape-angle" type="checkbox"> Canapé d’angle</label>
-    <input id="d-tapis-petit" type="number" min="0" placeholder="Nombre de petits tapis" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
-    <input id="d-tapis-grand" type="number" min="0" placeholder="Nombre de grands tapis" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
+    <input id="d-tapis-petit" type="number" min="0" placeholder="Nombre de petits tapis" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;" aria-label="Nombre de petits tapis">
+    <input id="d-tapis-grand" type="number" min="0" placeholder="Nombre de grands tapis" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;" aria-label="Nombre de grands tapis">
   </div>
 
   <p class="devis-sep">5. Sortie de poubelles — si applicable</p>
   <div id="bloc-poubelles"style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;">
-    <input id="d-bacs" type="number" min="0" placeholder="Nombre de bacs" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
-    <input id="d-passages-poubelles" type="number" min="1" value="1" placeholder="Passages / semaine" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;">
+    <input id="d-bacs" type="number" min="0" placeholder="Nombre de bacs" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;" aria-label="Nombre de bacs">
+    <input id="d-passages-poubelles" type="number" min="1" value="1" placeholder="Passages / semaine" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;" aria-label="Nombre de passages poubelles par semaine">
   </div>
 
   <p class="devis-sep">6. État du lieu</p>
@@ -1372,7 +1386,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   </div>
 
   <p class="devis-sep">9. Description — optionnel</p>
-  <textarea id="d-desc" placeholder="Ex : chantier 3600 m², 2 agents par jour, journées de 7 h pendant 5 jours…" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;font-family:'Nunito',sans-serif;font-size:0.9rem;min-height:80px;resize:vertical;outline:none;margin-bottom:20px;"></textarea>
+  <textarea id="d-desc" placeholder="Ex : chantier 3600 m², 2 agents par jour, journées de 7 h pendant 5 jours…" style="width:100%;padding:11px 15px;border:2px solid var(--light-gray);border-radius:11px;font-family:'Nunito',sans-serif;font-size:0.9rem;min-height:80px;resize:vertical;outline:none;margin-bottom:20px;" aria-label="Description complémentaire de la prestation"></textarea>
 
   <button onclick="genererDevis()" style="width:100%;background:linear-gradient(135deg,var(--navy),var(--blue));color:white;border:none;padding:15px;border-radius:50px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;letter-spacing:0.5px;">Calculer mon pré-devis</button>
 </div>
@@ -1406,10 +1420,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 };
 let lastEstimateMessage = '';
 const $ = (id) => document.getElementById(id);
-function toggleMobile(){ const nav=$('nav-right'); if(nav) nav.classList.toggle('open'); }
-function closeMobile(){ const nav=$('nav-right'); if(nav) nav.classList.remove('open'); closeDd(); }
-function toggleDd(e){ if(e){e.preventDefault(); e.stopPropagation();} const menu=$('dd-menu'); if(menu) menu.classList.toggle('open'); }
-function closeDd(){ const menu=$('dd-menu'); if(menu) menu.classList.remove('open'); }
+function toggleMobile(){ const nav=$('nav-right'); if(!nav)return; const open=nav.classList.toggle('open'); const b=document.querySelector('.hamburger'); if(b){b.setAttribute('aria-expanded',String(open)); b.setAttribute('aria-label',open?'Fermer le menu':'Ouvrir le menu');} }
+function closeMobile(){ const nav=$('nav-right'); if(nav)nav.classList.remove('open'); const b=document.querySelector('.hamburger'); if(b){b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Ouvrir le menu');} closeDd(); }
+function toggleDd(e){ if(e){e.preventDefault();e.stopPropagation();} const menu=$('dd-menu'); if(!menu)return; const open=menu.classList.toggle('open'); const b=document.querySelector('.dd-btn'); if(b)b.setAttribute('aria-expanded',String(open)); }
+function closeDd(){ const menu=$('dd-menu'); if(menu)menu.classList.remove('open'); const b=document.querySelector('.dd-btn'); if(b)b.setAttribute('aria-expanded','false'); }
 document.addEventListener('click', function(e){ if(!e.target.closest('.dd-wrap')) closeDd(); });
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeAll(); });
 function showOverlay(){ const o=$('modal-overlay'); if(o) o.style.display='block'; document.body.style.overflow='hidden'; }
@@ -1417,7 +1431,7 @@ function closeAll(){ ['modal-overlay','svc-modal','devis-modal'].forEach(id=>{ c
 function svcClick(id){ if(window.event) window.event.preventDefault(); closeDd(); closeMobile(); openService(id); return false; }
 function openService(id){
   const s = SVC[id]; if(!s) return;
-  let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;"><div style="width:52px;height:52px;background:linear-gradient(135deg,#9a681f,#c9973f);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.icon}</div><h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:2px;color:#0B2447;line-height:1;">${s.title}</h2></div><p style="color:#6f675a;line-height:1.7;margin-bottom:20px;">${s.desc}</p>`;
+  let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;"><div style="width:52px;height:52px;background:linear-gradient(135deg,#9a681f,#8a5b18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.icon}</div><h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:2px;color:#0B2447;line-height:1;">${s.title}</h2></div><p style="color:#6f675a;line-height:1.7;margin-bottom:20px;">${s.desc}</p>`;
   html += `<p style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#9a681f;margin-bottom:10px;">Tarifs indicatifs</p><div class="devis-result-card">`;
   s.tarifs.forEach(t=>{ html += `<div class="devis-line"><span>${t.l}</span><strong style="color:var(--orange);">${t.v}</strong></div>`; });
   html += `</div>`;
@@ -1911,7 +1925,7 @@ Message : ${message}`;
 
   async function load(){
     try{
-      const response = await fetch('/data/interventions.json?v=' + Date.now(), {cache:'no-store'});
+      const response = await fetch('/data/interventions.json', {cache:'default'});
       if(!response.ok) throw new Error('HTTP ' + response.status);
       interventions = normalize(await response.json());
       render();
@@ -1926,61 +1940,44 @@ Message : ${message}`;
     }
   }
 
-  load();
+  const section=document.getElementById('preuves');
+  if('IntersectionObserver' in window && section){
+    const proofObserver=new IntersectionObserver(function(entries,obs){
+      if(entries.some(e=>e.isIntersecting)){ obs.disconnect(); load(); }
+    },{rootMargin:'500px 0px'});
+    proofObserver.observe(section);
+  } else {
+    load();
+  }
 })();
 
 if('IntersectionObserver' in window){ const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1}); document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el)); } else { document.querySelectorAll('.fade-in').forEach(el=>el.classList.add('visible')); }
 
 </script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-(function () {
-  const ADMIN_EMAIL = "cleannette7@gmail.com";
-  const ADMIN_URL = "/admin/";
-  const CLIENT_URL = "/espace-client.html";
-
-  function normalizeEmail(value) {
-    return String(value || "").trim().toLowerCase();
-  }
-
-  function isAdminUser(user) {
-    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
-  }
-
-  function hasIdentityToken() {
-    return /(?:invite|confirmation|recovery)_token=/.test(window.location.hash || "");
-  }
-
-  function redirectAfterIdentity(user) {
-    window.location.href = isAdminUser(user) ? ADMIN_URL : CLIENT_URL;
-  }
-
-  if (!window.netlifyIdentity) return;
-
-  window.netlifyIdentity.on("init", function (user) {
-    if (hasIdentityToken()) {
+/* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
+(function(){
+  if(!/(?:invite|confirmation|recovery)_token=/.test(window.location.hash || '')) return;
+  const ADMIN_EMAIL='cleannette7@gmail.com', ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
+  const script=document.createElement('script');
+  script.src='https://identity.netlify.com/v1/netlify-identity-widget.js';
+  script.async=true;
+  script.onload=function(){
+    if(!window.netlifyIdentity) return;
+    const normalize=v=>String(v||'').trim().toLowerCase();
+    const redirect=user=>{ window.location.href=(user && normalize(user.email)===ADMIN_EMAIL)?ADMIN_URL:CLIENT_URL; };
+    window.netlifyIdentity.on('init',function(user){
       window.netlifyIdentity.open();
-    }
-
-    if (!user) {
-      window.netlifyIdentity.on("login", function (loggedUser) {
-        window.netlifyIdentity.close();
-        redirectAfterIdentity(loggedUser);
-      });
-    }
-  });
-
-  window.netlifyIdentity.on("close", function () {
-    if (hasIdentityToken()) {
-      const currentUser = window.netlifyIdentity.currentUser && window.netlifyIdentity.currentUser();
-      redirectAfterIdentity(currentUser);
-    }
-  });
+      if(!user){ window.netlifyIdentity.on('login',function(loggedUser){ window.netlifyIdentity.close(); redirect(loggedUser); }); }
+    });
+    window.netlifyIdentity.on('close',function(){ const u=window.netlifyIdentity.currentUser&&window.netlifyIdentity.currentUser(); if(u) redirect(u); });
+  };
+  document.head.appendChild(script);
 })();
 </script>
 
 
 <!-- Assistant IA Clean-Cité Gemini -->
-<script defer src="/assets/assistant-gemini.js"></script>
+<script defer src="/assets/assistant-gemini.js?v=6"></script>
 </body>
 </html>
