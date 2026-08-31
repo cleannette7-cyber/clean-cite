@@ -492,8 +492,8 @@ footer p{opacity:.9;margin:6px 0}
 <section class="devis-section" id="devis">
 <span class="section-label">Pré-devis Airbnb</span>
 <h2 class="section-title">ESTIMEZ UNE ROTATION AIRBNB</h2>
-<p class="section-sub">Indiquez la surface du logement. Le simulateur choisit automatiquement le forfait indicatif correspondant.</p>
-<div class="devis-box"><div class="devis-grid"><div class="form-group"><label>Surface du logement (m²)</label><input id="surface" min="1" placeholder="Ex : 140" type="number"/></div><div class="form-group"><label>Nombre de niveaux</label><input id="niveaux" min="1" value="1" type="number"/></div><div class="form-group"><label>Chambres</label><input id="chambres" min="0" value="1" type="number"/></div><div class="form-group"><label>Salles d’eau / douches</label><input id="sde" min="0" value="1" type="number"/></div><div class="form-group"><label>WC</label><input id="wc" min="0" value="1" type="number"/></div><div class="form-group"><label>Cuisines</label><input id="cuisines" min="0" value="1" type="number"/></div><div class="form-group"><label>Salons / séjours</label><input id="sejours" min="0" value="1" type="number"/></div><div class="form-group"><label>Nombre de rotations à chiffrer</label><input id="option" min="1" value="1" type="number"/></div><div class="form-group"><label>Fréquence</label><select id="etat"><option value="once">Une rotation</option><option value="regular">Rotations régulières</option></select></div><div class="form-group"><label>Ville</label><input id="ville" placeholder="Ex : Paris 11e, Bobigny..." type="text"/></div></div><button class="btn-submit" onclick="calculer()" type="button">Calculer mon estimation</button><div class="estimate" id="resultat">Estimation indicative : renseignez la surface puis cliquez sur calculer.</div><div style="margin-top:16px"><a class="btn-primary" href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20un%20devis%20Airbnb." id="wa-devis" target="_blank">Envoyer sur WhatsApp</a></div></div>
+<p class="section-sub">Indiquez la surface <strong>par niveau ou totale</strong>, la configuration du logement et les éventuels travaux de sol. Le calcul affiche séparément le ménage courant et le décapage ponctuel.</p>
+<div class="devis-box"><div class="devis-grid"><div class="form-group"><label>Surface renseignée (m²)</label><input id="surface" min="1" placeholder="Ex : 140" type="number"/></div><div class="form-group"><label>Cette surface correspond à</label><select id="surfaceMode"><option value="per_level" selected>Surface par niveau</option><option value="total">Surface totale du logement</option></select></div><div class="form-group"><label>Nombre de niveaux</label><input id="niveaux" min="1" value="1" type="number"/></div><div class="form-group"><label>Chambres</label><input id="chambres" min="0" value="1" type="number"/></div><div class="form-group"><label>Salles d’eau / douches</label><input id="sde" min="0" value="1" type="number"/></div><div class="form-group"><label>WC</label><input id="wc" min="0" value="1" type="number"/></div><div class="form-group"><label>Cuisines</label><input id="cuisines" min="0" value="1" type="number"/></div><div class="form-group"><label>Salons / séjours</label><input id="sejours" min="0" value="1" type="number"/></div><div class="form-group"><label>Type de sol</label><select id="floorType"><option value="standard">Standard / mixte</option><option value="pvc">PVC / vinyle</option><option value="tile">Carrelage</option><option value="wood">Parquet</option><option value="carpet">Moquette</option></select></div><div class="form-group"><label>Traitement du sol</label><select id="floorTreatment"><option value="none">Entretien courant</option><option value="strip">Décapage / remise en état — 6,50 €/m²</option><option value="strip_heavy">Décapage lourd — 8,50 €/m²</option></select></div><div class="form-group"><label>Surface de sol à décaper (m²)</label><input id="stripArea" min="0" value="0" type="number"/></div><div class="form-group"><label>Nombre de rotations à chiffrer</label><input id="option" min="1" value="1" type="number"/></div><div class="form-group"><label>Fréquence</label><select id="etat"><option value="once">Une rotation</option><option value="regular">Rotations régulières</option></select></div><div class="form-group"><label>Ville</label><input id="ville" placeholder="Ex : Paris 11e, Bobigny..." type="text"/></div></div><button class="btn-submit" onclick="calculer()" type="button">Calculer mon estimation</button><div class="estimate" id="resultat">Estimation indicative : renseignez la surface puis cliquez sur calculer.</div><div style="margin-top:16px"><a class="btn-primary" href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20un%20devis%20Airbnb." id="wa-devis" target="_blank">Envoyer sur WhatsApp</a></div></div>
 </section>
 <section class="seo-links-section"><div class="seo-wrap"><span class="seo-kicker">Zones d’intervention</span><h2 class="seo-title">Nettoyage Airbnb à Paris, Bobigny et en Île-de-France</h2><p class="seo-copy">Clean-Cité accompagne les hôtes, propriétaires et conciergeries pour les rotations de locations courte durée à Paris, en Seine-Saint-Denis et dans les communes voisines.</p><div class="seo-city-links"><a href="nettoyage-paris.html">Paris</a><a href="nettoyage-bobigny.html">Bobigny</a><a href="nettoyage-pantin.html">Pantin</a><a href="nettoyage-drancy.html">Drancy</a><a href="nettoyage-aubervilliers.html">Aubervilliers</a><a href="nettoyage-saint-denis.html">Saint-Denis</a><a href="nettoyage-montreuil.html">Montreuil</a><a href="nettoyage-ile-de-france.html">Île-de-France</a></div></div></section>
 <section class="seo-faq-section" id="faq"><div class="seo-wrap"><span class="seo-kicker">FAQ</span><h2 class="seo-title">Questions fréquentes sur le ménage Airbnb</h2><p class="seo-copy">Les points essentiels avant de mettre en place une rotation régulière.</p><div class="seo-faq-list"><details><summary>Quel est le prix d’un ménage Airbnb ?</summary><p>Clean-Cité calcule désormais le pré-devis Airbnb selon la surface et la configuration réelle du logement : niveaux, chambres, salles d’eau/douches, WC, cuisines et salons/séjours. Les anciennes bases par typologie restent le point de départ du calcul. Le tarif final dépend de la surface, du nombre de niveaux, de chambres, de salles d’eau, de WC, de cuisines, de salons/séjours, du linge et de l’état réel.</p></details><details><summary>Le changement de linge est-il compris ?</summary><p>Le changement du linge peut être réalisé dans la rotation standard lorsque les draps et serviettes propres sont fournis sur place par l’hôte. La blanchisserie et la fourniture de linge sont chiffrées séparément.</p></details><details><summary>Pouvez-vous intervenir plusieurs fois par semaine ?</summary><p>Oui. Un planning de rotations peut être organisé selon les réservations, les horaires de check-out/check-in et les modalités d’accès au logement.</p></details></div></div></section>
@@ -509,60 +509,57 @@ document.addEventListener('click', function(e){
   if(!e.target.closest('.dd-wrap')) closeDd();
 });
 
-function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels){
-  surface = Math.max(0, Number(surface)||0);
-  bedrooms = Math.max(0, Number(bedrooms)||0);
-  bathrooms = Math.max(0, Number(bathrooms)||0);
-  toilets = Math.max(0, Number(toilets)||0);
-  kitchens = Math.max(0, Number(kitchens)||0);
-  livingRooms = Math.max(0, Number(livingRooms)||0);
-  levels = Math.max(1, Number(levels)||1);
-  let base=0, typology='';
-  if(surface<=30){ base=55; typology='Studio / T1'; }
-  else if(surface<=50){ base=70; typology='T2'; }
-  else if(surface<=75){ base=90; typology='T3'; }
-  else if(surface<=100){ base=120; typology='T4'; }
-  else { base=Math.max(150, Math.round(120 + (surface-100)*1.2)); typology='T5+ / grand logement'; }
-  const bedroomExtra=Math.max(0,bedrooms-1)*10;
-  const bathroomExtra=Math.max(0,bathrooms-1)*15;
-  const toiletExtra=Math.max(0,toilets-1)*6;
-  const kitchenExtra=Math.max(0,kitchens-1)*15;
-  const livingExtra=Math.max(0,livingRooms-1)*10;
-  const levelExtra=Math.max(0,levels-1)*12;
-  const supplements=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
-  const perRotation=Math.round(base+supplements);
-  return {base,typology,perRotation,supplements,bedroomExtra,bathroomExtra,toiletExtra,kitchenExtra,livingExtra,levelExtra};
+function calcAirbnbDetailed(surfaceInput, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels, surfaceMode="total", floorTreatment="none", stripArea=0){
+  surfaceInput=Math.max(0,Number(surfaceInput)||0);bedrooms=Math.max(0,Number(bedrooms)||0);bathrooms=Math.max(0,Number(bathrooms)||0);toilets=Math.max(0,Number(toilets)||0);kitchens=Math.max(0,Number(kitchens)||0);livingRooms=Math.max(0,Number(livingRooms)||0);levels=Math.max(1,Number(levels)||1);stripArea=Math.max(0,Number(stripArea)||0);
+  const totalArea=surfaceMode==='per_level'?surfaceInput*levels:surfaceInput;
+  let base=0,typology='';
+  if(totalArea<=30){base=55;typology='Studio / T1'}else if(totalArea<=50){base=70;typology='T2'}else if(totalArea<=75){base=90;typology='T3'}else if(totalArea<=100){base=120;typology='T4'}else{base=Math.max(150,Math.round(120+(totalArea-100)*1.2));typology='T5+ / grand logement'}
+  const bedroomExtra=Math.max(0,bedrooms-1)*10,bathroomExtra=Math.max(0,bathrooms-1)*15,toiletExtra=Math.max(0,toilets-1)*6,kitchenExtra=Math.max(0,kitchens-1)*15,livingExtra=Math.max(0,livingRooms-1)*10,levelExtra=Math.max(0,levels-1)*12;
+  const configurationExtra=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
+  const rotationPrice=Math.round(base+configurationExtra);
+  const floorRate=floorTreatment==='strip_heavy'?8.5:floorTreatment==='strip'?6.5:0;
+  const floorExtra=floorRate>0?Math.round(stripArea*floorRate*100)/100:0;
+  return{base,typology,totalArea,rotationPrice,configurationExtra,floorRate,floorExtra,stripArea,surfaceInput,surfaceMode};
 }
 
 function calculer(){
   const surface = parseFloat($('surface').value || 0);
   const niveaux=Math.max(1,parseInt($('niveaux').value||1,10));
+  const surfaceMode=$('surfaceMode').value||'per_level';
   const chambres=Math.max(0,parseInt($('chambres').value||0,10));
   const sde=Math.max(0,parseInt($('sde').value||0,10));
   const wc=Math.max(0,parseInt($('wc').value||0,10));
   const cuisines=Math.max(0,parseInt($('cuisines').value||0,10));
   const sejours=Math.max(0,parseInt($('sejours').value||0,10));
+  const floorType=$('floorType').value||'standard';
+  const floorTreatment=$('floorTreatment').value||'none';
+  const stripArea=Math.max(0,parseFloat($('stripArea').value||0));
   const freq = $('etat').value;
   const rotations = Math.max(1, parseInt($('option').value || 1, 10));
   const ville = $('ville').value.trim() || 'non précisée';
   if(!surface || surface <= 0){ $('resultat').innerHTML = 'Merci d’indiquer la surface du logement.'; return; }
-  const a=calcAirbnbDetailed(surface,chambres,sde,wc,cuisines,sejours,niveaux);
-  const total=a.perRotation*rotations;
-  $('resultat').innerHTML = `Estimation indicative : <strong>${a.perRotation} € / rotation</strong>${rotations>1?` · ${rotations} rotations : <strong>${total} €</strong>`:''}<br>${a.typology} · ${surface} m² · ${niveaux} niveau(x) · ${chambres} chambre(s) · ${sde} salle(s) d’eau · ${wc} WC · ${cuisines} cuisine(s) · ${sejours} salon(s)/séjour(s)<br><small>Base surface : ${a.base} € · ajustement configuration : ${a.supplements} €. Le devis final reste confirmé selon l’état, le linge, l’accès et les contraintes de rotation.</small>${freq==='regular'?'<br><small>Pour un planning régulier, le tarif final peut être ajusté selon la fréquence et le protocole convenu.</small>':''}`;
+  const a=calcAirbnbDetailed(surface,chambres,sde,wc,cuisines,sejours,niveaux,surfaceMode,floorTreatment,stripArea);
+  if(a.floorRate>0&&!stripArea){$('resultat').innerHTML=`Ménage courant : <strong>${a.rotationPrice} € / rotation</strong> sur <strong>${a.totalArea} m²</strong>.<br><small>Pour chiffrer le décapage précisément à ${String(a.floorRate).replace('.',',')} €/m², indiquez la surface de sol réellement à décaper.</small>`;return;}
+  const total=a.rotationPrice*rotations+a.floorExtra;
+  $('resultat').innerHTML = `Estimation indicative : <strong>${a.rotationPrice} € / rotation</strong>${rotations>1?` · ${rotations} rotations : <strong>${a.rotationPrice*rotations} €</strong>`:''}${a.floorExtra?`<br>Décapage ponctuel : <strong>${a.stripArea} m² × ${String(a.floorRate).replace('.',',')} €/m² = ${a.floorExtra} €</strong>`:''}<br>Total à chiffrer : <strong>${total} € HT</strong><br>${a.typology} · surface calculée <strong>${a.totalArea} m²</strong> (${surface} m² ${surfaceMode==='per_level'?'par niveau':'au total'}) · ${niveaux} niveau(x) · ${chambres} chambre(s) · ${sde} salle(s) d’eau · ${wc} WC · ${cuisines} cuisine(s) · ${sejours} salon(s)/séjour(s)<br><small>Base surface : ${a.base} € · ajustement configuration : ${a.configurationExtra} €. Le décapage est facturé une seule fois, séparément des rotations.</small>${freq==='regular'?'<br><small>Pour un planning régulier, le tarif final peut être ajusté selon la fréquence et le protocole convenu.</small>':''}`;
   const msg=`Bonjour Clean-Cité,
 
 Je souhaite un devis pour le nettoyage courant d’un Airbnb / location courte durée.
-Surface : ${surface} m²
+Surface saisie : ${surface} m² (${surfaceMode==='per_level'?'par niveau':'surface totale'})
+Surface totale calculée : ${a.totalArea} m²
 Niveaux : ${niveaux}
 Chambres : ${chambres}
 Salles d’eau / douches : ${sde}
 WC : ${wc}
 Cuisines : ${cuisines}
 Salons / séjours : ${sejours}
+Type de sol : ${floorType}
+Traitement du sol : ${floorTreatment}
+Surface à décaper : ${stripArea} m²
 Nombre de rotations à chiffrer : ${rotations}
 Fréquence : ${freq==='regular'?'régulière':'ponctuelle'}
 Ville : ${ville}
-Estimation du simulateur : ${a.perRotation} € par rotation${rotations>1?` soit ${total} € pour ${rotations} rotations`:''}.
+Estimation ménage courant : ${a.rotationPrice} € par rotation${rotations>1?` soit ${a.rotationPrice*rotations} € pour ${rotations} rotations`:''}.${a.floorExtra?` Décapage ponctuel : ${a.floorExtra} €.`:''} Total indicatif : ${total} € HT.
 
 Merci.`;
   $('wa-devis').href='https://wa.me/33766536154?text='+encodeURIComponent(msg);
@@ -590,6 +587,6 @@ Merci.`;
 })();
 </script>
 <!-- Assistant IA Clean-Cité Gemini -->
-<script defer="" src="/assets/assistant-gemini.js?v=9"></script>
+<script defer="" src="/assets/assistant-gemini.js?v=10"></script>
 </body>
 </html>

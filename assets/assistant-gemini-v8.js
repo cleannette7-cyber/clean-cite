@@ -175,13 +175,17 @@
 
               <div class="ccai-worksite-grid" id="ccai-airbnb-row" style="display:none">
                 <div class="ccai-field"><label for="ccai-airbnb-levels">Niveaux</label><input class="ccai-input" id="ccai-airbnb-levels" type="number" min="1" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-surface-mode">La surface indiquée correspond à</label><select class="ccai-input" id="ccai-airbnb-surface-mode"><option value="per_level" selected>Surface par niveau</option><option value="total">Surface totale du logement</option></select></div>
                 <div class="ccai-field"><label for="ccai-airbnb-bedrooms">Chambres</label><input class="ccai-input" id="ccai-airbnb-bedrooms" type="number" min="0" value="1"></div>
                 <div class="ccai-field"><label for="ccai-airbnb-bathrooms">Salles d’eau / douches</label><input class="ccai-input" id="ccai-airbnb-bathrooms" type="number" min="0" value="1"></div>
                 <div class="ccai-field"><label for="ccai-airbnb-toilets">WC</label><input class="ccai-input" id="ccai-airbnb-toilets" type="number" min="0" value="1"></div>
                 <div class="ccai-field"><label for="ccai-airbnb-kitchens">Cuisines</label><input class="ccai-input" id="ccai-airbnb-kitchens" type="number" min="0" value="1"></div>
                 <div class="ccai-field"><label for="ccai-airbnb-living">Salons / séjours</label><input class="ccai-input" id="ccai-airbnb-living" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-floor-type">Type de sol</label><select class="ccai-input" id="ccai-airbnb-floor-type"><option value="standard">Standard / mixte</option><option value="pvc">PVC / vinyle</option><option value="tile">Carrelage</option><option value="wood">Parquet</option><option value="carpet">Moquette</option></select></div>
+                <div class="ccai-field"><label for="ccai-airbnb-floor-treatment">Traitement du sol</label><select class="ccai-input" id="ccai-airbnb-floor-treatment"><option value="none">Entretien courant</option><option value="strip">Décapage / remise en état — 6,50 €/m²</option><option value="strip_heavy">Décapage lourd — 8,50 €/m²</option></select></div>
+                <div class="ccai-field"><label for="ccai-airbnb-strip-area">Surface de sol à décaper (m²)</label><input class="ccai-input" id="ccai-airbnb-strip-area" type="number" min="0" value="0"></div>
                 <div class="ccai-field"><label for="ccai-airbnb-rotations">Rotations à chiffrer</label><input class="ccai-input" id="ccai-airbnb-rotations" type="number" min="1" value="1"></div>
-                <div class="ccai-worksite-note">Le calcul Airbnb combine <strong>surface + configuration réelle</strong> du logement. Le tarif reste indicatif jusqu’à validation Clean-Cité.</div>
+                <div class="ccai-worksite-note"><strong>Important :</strong> « 140 m² sur 3 niveaux » est calculé comme <strong>140 m² par niveau = 420 m²</strong>. Si 140 m² représente le total des 3 niveaux, choisissez « Surface totale ». Le décapage est chiffré séparément et une seule fois.</div>
               </div>
 
               <div class="ccai-grid2" id="ccai-bins-row" style="display:none">
@@ -425,7 +429,8 @@
       const engine = root.querySelector("#ccai-engine-status");
       if (engine) {
         if (data.mode === "gemini") { engine.textContent = "● Gemini actif"; engine.className = "ccai-engine-status gemini"; }
-        else if (data.mode === "fallback") { engine.textContent = "● Mode secours actif"; engine.className = "ccai-engine-status fallback"; }
+        else if (data.mode === "calculator") { engine.textContent = "● Calcul Clean-Cité précis"; engine.className = "ccai-engine-status gemini"; }
+        else if (data.mode === "fallback" || data.mode === "local-fallback") { engine.textContent = "● Mode secours actif"; engine.className = "ccai-engine-status fallback"; }
         else { engine.textContent = "Gemini prêt"; engine.className = "ccai-engine-status"; }
       }
       const reply = data.reply || data.message || "Je n'ai pas pu répondre pour le moment.";
@@ -580,29 +585,33 @@
     }[value] || value;
   }
 
-  function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels){
-    surface = Math.max(0, Number(surface)||0);
+  function calcAirbnbDetailed(surfaceInput, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels, surfaceMode="total", floorTreatment="none", stripArea=0){
+    surfaceInput = Math.max(0, Number(surfaceInput)||0);
     bedrooms = Math.max(0, Number(bedrooms)||0);
     bathrooms = Math.max(0, Number(bathrooms)||0);
     toilets = Math.max(0, Number(toilets)||0);
     kitchens = Math.max(0, Number(kitchens)||0);
     livingRooms = Math.max(0, Number(livingRooms)||0);
     levels = Math.max(1, Number(levels)||1);
+    stripArea = Math.max(0, Number(stripArea)||0);
+    const totalArea = surfaceMode === "per_level" ? surfaceInput * levels : surfaceInput;
     let base=0, typology='';
-    if(surface<=30){ base=55; typology='Studio / T1'; }
-    else if(surface<=50){ base=70; typology='T2'; }
-    else if(surface<=75){ base=90; typology='T3'; }
-    else if(surface<=100){ base=120; typology='T4'; }
-    else { base=Math.max(150, Math.round(120 + (surface-100)*1.2)); typology='T5+ / grand logement'; }
+    if(totalArea<=30){ base=55; typology='Studio / T1'; }
+    else if(totalArea<=50){ base=70; typology='T2'; }
+    else if(totalArea<=75){ base=90; typology='T3'; }
+    else if(totalArea<=100){ base=120; typology='T4'; }
+    else { base=Math.max(150, Math.round(120 + (totalArea-100)*1.2)); typology='T5+ / grand logement'; }
     const bedroomExtra=Math.max(0,bedrooms-1)*10;
     const bathroomExtra=Math.max(0,bathrooms-1)*15;
     const toiletExtra=Math.max(0,toilets-1)*6;
     const kitchenExtra=Math.max(0,kitchens-1)*15;
     const livingExtra=Math.max(0,livingRooms-1)*10;
     const levelExtra=Math.max(0,levels-1)*12;
-    const supplements=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
-    const perRotation=Math.round(base+supplements);
-    return {base,typology,perRotation,supplements,bedroomExtra,bathroomExtra,toiletExtra,kitchenExtra,livingExtra,levelExtra};
+    const configurationExtra=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
+    const rotationPrice=Math.round(base+configurationExtra);
+    const floorRate = floorTreatment === "strip_heavy" ? 8.5 : floorTreatment === "strip" ? 6.5 : 0;
+    const floorExtra = floorRate > 0 ? Math.round(stripArea * floorRate * 100) / 100 : 0;
+    return {base,typology,totalArea,rotationPrice,configurationExtra,bedroomExtra,bathroomExtra,toiletExtra,kitchenExtra,livingExtra,levelExtra,floorRate,floorExtra,stripArea,surfaceInput,surfaceMode};
   }
 
   function getEstimatePayload(root) {
@@ -617,11 +626,15 @@
     const bins = Math.max(0, Number(root.querySelector("#ccai-bins").value || 0));
     const binPasses = Math.max(0, Number(root.querySelector("#ccai-bin-passes").value || 0));
     const airbnbLevels=Math.max(1,Number(root.querySelector("#ccai-airbnb-levels").value||1));
+    const airbnbSurfaceMode=root.querySelector("#ccai-airbnb-surface-mode")?.value||"per_level";
     const airbnbBedrooms=Math.max(0,Number(root.querySelector("#ccai-airbnb-bedrooms").value||0));
     const airbnbBathrooms=Math.max(0,Number(root.querySelector("#ccai-airbnb-bathrooms").value||0));
     const airbnbToilets=Math.max(0,Number(root.querySelector("#ccai-airbnb-toilets").value||0));
     const airbnbKitchens=Math.max(0,Number(root.querySelector("#ccai-airbnb-kitchens").value||0));
     const airbnbLiving=Math.max(0,Number(root.querySelector("#ccai-airbnb-living").value||0));
+    const airbnbFloorType=root.querySelector("#ccai-airbnb-floor-type")?.value||"standard";
+    const airbnbFloorTreatment=root.querySelector("#ccai-airbnb-floor-treatment")?.value||"none";
+    const airbnbStripArea=Math.max(0,Number(root.querySelector("#ccai-airbnb-strip-area")?.value||0));
     const airbnbRotations=Math.max(1,Number(root.querySelector("#ccai-airbnb-rotations").value||1));
 
     let total = null;
@@ -665,11 +678,16 @@
     }
 
     if (selected.type === "airbnb" && surface > 0) {
-      const a=calcAirbnbDetailed(surface,airbnbBedrooms,airbnbBathrooms,airbnbToilets,airbnbKitchens,airbnbLiving,airbnbLevels);
-      total=a.perRotation*airbnbRotations;
-      billingUnit = airbnbRotations>1 ? `${airbnbRotations} rotations` : "par rotation";
-      estimateText = airbnbRotations>1 ? `${money(total)} pour ${airbnbRotations} rotations` : `${money(a.perRotation)} / rotation`;
-      detail = `${a.typology} · ${surface} m² · ${airbnbLevels} niveau(x) · ${airbnbBedrooms} chambre(s) · ${airbnbBathrooms} salle(s) d’eau · ${airbnbToilets} WC · ${airbnbKitchens} cuisine(s) · ${airbnbLiving} salon(s)/séjour(s). Base surface ${money(a.base)} + ajustement configuration ${money(a.supplements)}.`;
+      const a=calcAirbnbDetailed(surface,airbnbBedrooms,airbnbBathrooms,airbnbToilets,airbnbKitchens,airbnbLiving,airbnbLevels,airbnbSurfaceMode,airbnbFloorTreatment,airbnbStripArea);
+      if(a.floorRate>0 && a.stripArea<=0){
+        estimateText="Surface de décapage à préciser";
+        detail=`Le ménage courant est estimé à ${money(a.rotationPrice)} / rotation sur ${a.totalArea} m². Pour chiffrer le décapage ${airbnbFloorType==='pvc'?'PVC ':''}à ${String(a.floorRate).replace('.',',')} €/m², indiquez la surface de sol réellement à décaper.`;
+      } else {
+        total=a.rotationPrice*airbnbRotations+a.floorExtra;
+        billingUnit = airbnbRotations>1 ? `${airbnbRotations} rotations` : "par rotation";
+        estimateText = `${money(a.rotationPrice)} / rotation${a.floorExtra?` + ${money(a.floorExtra)} de décapage ponctuel`:''}${airbnbRotations>1?` · total ${money(total)}`:''}`;
+        detail = `${a.typology} · surface calculée ${a.totalArea} m² (${surface} m² ${airbnbSurfaceMode==='per_level'?'par niveau':'au total'} × ${airbnbSurfaceMode==='per_level'?airbnbLevels:1}) · ${airbnbLevels} niveau(x) · ${airbnbBedrooms} chambre(s) · ${airbnbBathrooms} salle(s) d’eau · ${airbnbToilets} WC · ${airbnbKitchens} cuisine(s) · ${airbnbLiving} salon(s)/séjour(s). Base surface ${money(a.base)} + configuration ${money(a.configurationExtra)}${a.floorExtra?` + décapage ${a.stripArea} m² × ${String(a.floorRate).replace('.',',')} €/m² = ${money(a.floorExtra)}`:''}.`;
+      }
     }
 
     if (selected.type === "restoration" && surface > 0) {
@@ -743,7 +761,7 @@
       workDays,
       bins,
       binPasses,
-      airbnbLevels, airbnbBedrooms, airbnbBathrooms, airbnbToilets, airbnbKitchens, airbnbLiving, airbnbRotations,
+      airbnbLevels, airbnbSurfaceMode, airbnbBedrooms, airbnbBathrooms, airbnbToilets, airbnbKitchens, airbnbLiving, airbnbFloorType, airbnbFloorTreatment, airbnbStripArea, airbnbRotations,
       name: root.querySelector("#ccai-name").value.trim(),
       phone: root.querySelector("#ccai-phone").value.trim(),
       email: root.querySelector("#ccai-email").value.trim(),

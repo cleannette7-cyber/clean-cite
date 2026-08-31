@@ -28,7 +28,7 @@ Services :
 - Nettoyage de tapis, canapés et terrasses
 
 GRILLE TARIFAIRE CLEAN-CITÉ À UTILISER :
-- Airbnb / location courte durée — calcul détaillé par rotation : base surface 55 € jusqu’à 30 m², 70 € jusqu’à 50 m², 90 € jusqu’à 75 m², 120 € jusqu’à 100 m² ; au-delà, base = max(150 €, 120 € + 1,20 € par m² au-dessus de 100 m²). Ajustements de configuration : +10 € par chambre au-delà de la première, +15 € par salle d’eau/douche au-delà de la première, +6 € par WC au-delà du premier, +15 € par cuisine au-delà de la première, +10 € par salon/séjour au-delà du premier, +12 € par niveau au-delà du premier. Le changement du linge propre fourni par l’hôte et le réassort des consommables fournis peuvent être inclus. Blanchisserie, fourniture de linge, très fort encrassement, après fête ou urgence : sur devis.
+- Airbnb / location courte durée — CALCUL SERVEUR OBLIGATOIRE, Gemini ne doit jamais recalculer le prix. La surface peut être saisie PAR NIVEAU ou AU TOTAL. Dans Clean-Cité, la formulation « 140 m² sur 3 niveaux » est interprétée comme 140 m² par niveau = 420 m², sauf si le client précise « 140 m² au total ». Base surface : 55 € jusqu’à 30 m², 70 € jusqu’à 50 m², 90 € jusqu’à 75 m², 120 € jusqu’à 100 m² ; au-delà, base = max(150 €, 120 € + 1,20 € par m² au-dessus de 100 m²). Ajustements : +10 € par chambre au-delà de la première, +15 € par salle d’eau/douche au-delà de la première, +6 € par WC au-delà du premier, +15 € par cuisine au-delà de la première, +10 € par salon/séjour au-delà du premier, +12 € par niveau au-delà du premier. Décapage/remise en état du sol : 6,50 €/m² ; décapage lourd : 8,50 €/m², calculé séparément sur la surface de sol réellement à traiter et une seule fois. Blanchisserie, fourniture de linge, après fête ou urgence : sur devis.
 - Bureaux ponctuels : dès 1,50 €/m². Minimum d'intervention ponctuelle : 150 €.
 - Bureaux réguliers : dès 1 €/m² PAR PASSAGE. Ne pas appliquer automatiquement le minimum ponctuel de 150 € à un contrat régulier.
 - Chantier en cours : 28 € HT/heure PAR AGENT. Une journée type de 7 heures correspond à 196 € HT par agent et par jour. Le calcul indicatif est : nombre d'agents × heures par jour × nombre de jours × 28 €. Pour une intervention ponctuelle, le minimum de 150 € peut s'appliquer ; les contrats récurrents sont confirmés sur devis.
@@ -204,14 +204,82 @@ function euro(value) {
 }
 
 
-function calcAirbnbDetailed(surface, bedrooms=1, bathrooms=1, toilets=1, kitchens=1, livingRooms=1, levels=1) {
-  surface=Math.max(0,Number(surface)||0); bedrooms=Math.max(0,Number(bedrooms)||0); bathrooms=Math.max(0,Number(bathrooms)||0); toilets=Math.max(0,Number(toilets)||0); kitchens=Math.max(0,Number(kitchens)||0); livingRooms=Math.max(0,Number(livingRooms)||0); levels=Math.max(1,Number(levels)||1);
-  let base=0, type='';
-  if(surface<=30){base=55;type='Studio / T1';} else if(surface<=50){base=70;type='T2';} else if(surface<=75){base=90;type='T3';} else if(surface<=100){base=120;type='T4';} else {base=Math.max(150,Math.round(120+(surface-100)*1.2));type='T5+ / grand logement';}
-  const supplements=Math.max(0,bedrooms-1)*10 + Math.max(0,bathrooms-1)*15 + Math.max(0,toilets-1)*6 + Math.max(0,kitchens-1)*15 + Math.max(0,livingRooms-1)*10 + Math.max(0,levels-1)*12;
-  return {base,type,supplements,perRotation:Math.round(base+supplements)};
+function calcAirbnbDetailed(surfaceInput, bedrooms=1, bathrooms=1, toilets=1, kitchens=1, livingRooms=1, levels=1, surfaceMode="total", floorTreatment="none", stripArea=0) {
+  surfaceInput=Math.max(0,Number(surfaceInput)||0); bedrooms=Math.max(0,Number(bedrooms)||0); bathrooms=Math.max(0,Number(bathrooms)||0); toilets=Math.max(0,Number(toilets)||0); kitchens=Math.max(0,Number(kitchens)||0); livingRooms=Math.max(0,Number(livingRooms)||0); levels=Math.max(1,Number(levels)||1); stripArea=Math.max(0,Number(stripArea)||0);
+  const totalArea=surfaceMode==='per_level'?surfaceInput*levels:surfaceInput;
+  let base=0,type='';
+  if(totalArea<=30){base=55;type='Studio / T1';} else if(totalArea<=50){base=70;type='T2';} else if(totalArea<=75){base=90;type='T3';} else if(totalArea<=100){base=120;type='T4';} else {base=Math.max(150,Math.round(120+(totalArea-100)*1.2));type='T5+ / grand logement';}
+  const configurationExtra=Math.max(0,bedrooms-1)*10 + Math.max(0,bathrooms-1)*15 + Math.max(0,toilets-1)*6 + Math.max(0,kitchens-1)*15 + Math.max(0,livingRooms-1)*10 + Math.max(0,levels-1)*12;
+  const rotationPrice=Math.round(base+configurationExtra);
+  const floorRate=floorTreatment==='strip_heavy'?8.5:floorTreatment==='strip'?6.5:0;
+  const floorExtra=floorRate>0?Math.round(stripArea*floorRate*100)/100:0;
+  return {base,type,totalArea,configurationExtra,rotationPrice,floorRate,floorExtra,stripArea,surfaceInput,surfaceMode};
 }
 function extractCount(text, patterns, fallback=1) { for (const re of patterns) { const m=String(text||'').match(re); if(m) return Math.max(0,Number(m[1])||0); } return fallback; }
+
+function parseAirbnbSurfaceMode(text, levels){
+  const t=String(text||'').toLowerCase();
+  if(/(?:au total|surface totale|total de)\s*/i.test(t)) return 'total';
+  if(/(?:par niveau|chaque niveau|par étage|chaque étage)/i.test(t)) return 'per_level';
+  if(levels>1 && /\d[\d\s.,]*\s*(?:m2|m²|mètres?\s+carr[ée]s?).{0,35}(?:sur|réparti[^ ]* sur)\s*\d+\s*(?:niveaux|étages?)/i.test(t)) return 'per_level';
+  return 'total';
+}
+function parseStripArea(text){
+  const t=String(text||'');
+  const m=t.match(/(\d[\d\s.,]{0,8})\s*(?:m2|m²)\s*(?:de\s*)?(?:sol\s*)?(?:à\s*)?d[ée]cap/i);
+  if(!m) return 0;
+  const n=Number(m[1].replace(/\s/g,'').replace(',','.')); return Number.isFinite(n)?n:0;
+}
+function buildAirbnbDeterministicReply(text,imageCount=0){
+  const input=String(text||''); const surface=parseSurface(input);
+  const bedrooms=extractCount(input,[/(\d+)\s*chambre/i],1);
+  const bathrooms=extractCount(input,[/(\d+)\s*(?:salles?\s*d['’]?eau|salles?\s*de\s*bain|douches?)/i],1);
+  const toilets=extractCount(input,[/(\d+)\s*(?:wc|toilettes?)/i],1);
+  const kitchens=extractCount(input,[/(\d+)\s*cuisines?/i],1);
+  const living=extractCount(input,[/(\d+)\s*(?:salons?|s[ée]jours?)/i],1);
+  const levels=extractCount(input,[/(\d+)\s*(?:niveaux|étages?)/i],1);
+  const rotations=extractCount(input,[/(\d+)\s*rotations?/i],1);
+  const surfaceMode=parseAirbnbSurfaceMode(input,levels);
+  const needsStrip=/d[ée]cap|taches?\s+(?:à|a)\s+d[ée]cap/i.test(input);
+  const heavy=/d[ée]capage\s+lourd|tr[eè]s\s+encrass|fortement\s+tach/i.test(input);
+  const stripArea=parseStripArea(input);
+  const floorTreatment=needsStrip?(heavy?'strip_heavy':'strip'):'none';
+  const floorType=/\bpvc\b|vinyle|lino/i.test(input)?'PVC':/carrelage/i.test(input)?'carrelage':/parquet/i.test(input)?'parquet':/moquette/i.test(input)?'moquette':'non précisé';
+  const photoNote=imageCount?`
+Photos reçues : ${imageCount}. Gemini peut les commenter visuellement, mais le calcul tarifaire ci-dessous reste celui du moteur Clean-Cité.`:'';
+  if(!surface) return `Pour un calcul Airbnb précis, indiquez la surface, le nombre de niveaux, chambres, salles d’eau/douches, WC, cuisines et salons/séjours. Précisez surtout si la surface est « par niveau » ou « au total ».${photoNote}`;
+  const a=calcAirbnbDetailed(surface,bedrooms,bathrooms,toilets,kitchens,living,levels,surfaceMode,floorTreatment,stripArea);
+  const rotationTotal=a.rotationPrice*rotations;
+  let out=`PRÉ-DEVIS AIRBNB — CALCUL CLEAN-CITÉ
+
+Surface saisie : ${surface} m² ${surfaceMode==='per_level'?'par niveau':'au total'}
+Niveaux : ${levels}
+Surface totale calculée : ${a.totalArea} m²
+Chambres : ${bedrooms}
+Salles d’eau / douches : ${bathrooms}
+WC : ${toilets}
+Cuisine(s) : ${kitchens}
+Salon(s) / séjour(s) : ${living}
+
+Base surface : ${euro(a.base)}
+Ajustement configuration : ${euro(a.configurationExtra)}
+Ménage courant : ${euro(a.rotationPrice)} / rotation${rotations>1?`
+${rotations} rotations : ${euro(rotationTotal)}`:''}`;
+  if(needsStrip && !stripArea){out+=`
+
+Sol : ${floorType}, décapage demandé. Le décapage n’est PAS inclus dans le montant ci-dessus tant que la surface de sol à traiter n’est pas précisée. Base : ${heavy?'8,50':'6,50'} €/m². Indiquez-moi combien de m² de PVC doivent réellement être décapés.`;}
+  else if(a.floorExtra){out+=`
+
+Décapage ${floorType} : ${a.stripArea} m² × ${String(a.floorRate).replace('.',',')} €/m² = ${euro(a.floorExtra)} (ponctuel, une seule fois)
+TOTAL INDICATIF : ${euro(rotationTotal+a.floorExtra)} HT.`;}
+  else {out+=`
+
+TOTAL INDICATIF : ${euro(rotationTotal)} HT.`;}
+  out+=`
+
+Ce calcul est déterministe : Gemini n’est pas autorisé à modifier les montants. Le devis final reste validé par Clean-Cité.${photoNote}`;
+  return out;
+}
 
 function localFallbackReply(text, imageCount = 0) {
   const input = String(text || "").toLowerCase();
@@ -249,33 +317,7 @@ function localFallbackReply(text, imageCount = 0) {
   }
 
   if (/airbnb|location courte|location saisonni|meubl[ée] touristique|rotation/.test(input)) {
-    const bedrooms=extractCount(text,[/(\d+)\s*chambre/i],1);
-    const bathrooms=extractCount(text,[/(\d+)\s*(?:salles?\s*d['’]?eau|salles?\s*de\s*bain|douches?)/i],1);
-    const toilets=extractCount(text,[/(\d+)\s*(?:wc|toilettes?)/i],1);
-    const kitchens=extractCount(text,[/(\d+)\s*cuisines?/i],1);
-    const living=extractCount(text,[/(\d+)\s*(?:salons?|s[ée]jours?)/i],1);
-    const levels=extractCount(text,[/(\d+)\s*(?:niveaux|étages?)/i],1);
-    const rotations=extractCount(text,[/(\d+)\s*rotations?/i],1);
-    if (surface > 0) {
-      const a=calcAirbnbDetailed(surface,bedrooms,bathrooms,toilets,kitchens,living,levels);
-      const total=a.perRotation*rotations;
-      return `PRÉ-DEVIS INDICATIF — Airbnb / location courte durée
-
-Surface : ${surface} m²
-Niveaux : ${levels}
-Chambres : ${bedrooms}
-Salles d’eau / douches : ${bathrooms}
-WC : ${toilets}
-Cuisines : ${kitchens}
-Salons / séjours : ${living}
-Typologie indicative : ${a.type}
-Base surface : ${euro(a.base)}
-Ajustement configuration : ${euro(a.supplements)}
-Ménage courant : ${euro(a.perRotation)} par rotation${rotations>1?` · ${rotations} rotations : ${euro(total)}`:''}.
-
-Le devis final reste à confirmer selon l’état, le linge, l’accès et les contraintes de check-out/check-in.${photoNote}`;
-    }
-    return `Pour établir un pré-devis Airbnb précis, indiquez : la surface en m², le nombre de niveaux, de chambres, de salles d’eau/douches, de WC, de cuisines, de salons/séjours et le nombre de rotations à chiffrer. Exemple : « 140 m², 3 niveaux, 6 chambres, 5 salles d’eau, 1 cuisine, 1 séjour ».${photoNote}`;
+    return buildAirbnbDeterministicReply(text,imageCount);
   }
 
   if (/terrasse|balcon|cour\b/.test(input)) {
@@ -358,6 +400,11 @@ exports.handler = async function handler(event) {
     }
 
     const lastUserText = extractLastUserText(payload.messages, message);
+
+    // Les prix Airbnb sont calculés par le moteur Clean-Cité, jamais par Gemini.
+    if (/airbnb|location courte|location saisonni|meubl[ée] touristique|rotation/i.test(lastUserText)) {
+      return json(200, { reply: buildAirbnbDeterministicReply(lastUserText, images.length), mode: "calculator", imagesProcessed: images.length });
+    }
 
     const { response, data } = await callGemini(messages);
 
