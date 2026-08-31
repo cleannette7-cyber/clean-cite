@@ -18,6 +18,7 @@ Identité Clean-Cité :
 
 Services :
 - Nettoyage de bureaux et locaux professionnels
+- Nettoyage Airbnb et location courte durée entre deux voyageurs
 - Nettoyage de fin de chantier
 - Nettoyage de chantier en cours
 - Remise en état après travaux, sinistre ou déménagement
@@ -27,6 +28,7 @@ Services :
 - Nettoyage de tapis, canapés et terrasses
 
 GRILLE TARIFAIRE CLEAN-CITÉ À UTILISER :
+- Airbnb / location courte durée — calcul détaillé par rotation : base surface 55 € jusqu’à 30 m², 70 € jusqu’à 50 m², 90 € jusqu’à 75 m², 120 € jusqu’à 100 m² ; au-delà, base = max(150 €, 120 € + 1,20 € par m² au-dessus de 100 m²). Ajustements de configuration : +10 € par chambre au-delà de la première, +15 € par salle d’eau/douche au-delà de la première, +6 € par WC au-delà du premier, +15 € par cuisine au-delà de la première, +10 € par salon/séjour au-delà du premier, +12 € par niveau au-delà du premier. Le changement du linge propre fourni par l’hôte et le réassort des consommables fournis peuvent être inclus. Blanchisserie, fourniture de linge, très fort encrassement, après fête ou urgence : sur devis.
 - Bureaux ponctuels : dès 1,50 €/m². Minimum d'intervention ponctuelle : 150 €.
 - Bureaux réguliers : dès 1 €/m² PAR PASSAGE. Ne pas appliquer automatiquement le minimum ponctuel de 150 € à un contrat régulier.
 - Chantier en cours : 28 € HT/heure PAR AGENT. Une journée type de 7 heures correspond à 196 € HT par agent et par jour. Le calcul indicatif est : nombre d'agents × heures par jour × nombre de jours × 28 €. Pour une intervention ponctuelle, le minimum de 150 € peut s'appliquer ; les contrats récurrents sont confirmés sur devis.
@@ -49,6 +51,7 @@ GRILLE TARIFAIRE CLEAN-CITÉ À UTILISER :
 
 Règles de calcul et de formulation :
 - Les prix sont indicatifs et doivent être présentés comme « dès », « à partir de » ou « estimation indicative ».
+- Pour un Airbnb, demande prioritairement la surface en m², le nombre de niveaux, de chambres, de salles d’eau/douches, de WC, de cuisines, de salons/séjours, le nombre de rotations à chiffrer, la ville et la fréquence. Demande aussi si le linge propre est disponible sur place si utile. Une rotation standard ne doit pas être confondue avec une remise en état très sale.
 - Pour les bureaux réguliers, précise toujours « 1 €/m² par passage », pas 1 €/m² par mois.
 - Pour une fin de chantier, demande le niveau d'encrassement si le client ne le précise pas avant de donner une estimation.
 - Pour un chantier en cours, demande toujours le nombre d'agents prévus par jour, le nombre d'heures par jour et le nombre de jours. Propose 7 heures par jour comme journée type si le client n'a pas encore fixé la durée. Utilise le calcul : agents × heures/jour × jours × 28 € HT. Précise qu'une journée de 7 h revient à 196 € HT par agent.
@@ -174,6 +177,159 @@ function normalizeMessages(messages, fallbackMessage, images) {
   return normalized;
 }
 
+
+function extractLastUserText(messages, fallbackMessage) {
+  if (Array.isArray(messages)) {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const m = messages[i];
+      if ((m?.role === "user" || !m?.role) && String(m?.content || "").trim()) {
+        return String(m.content).trim();
+      }
+    }
+  }
+  return String(fallbackMessage || "").trim();
+}
+
+function parseSurface(text) {
+  const t = String(text || "").replace(/\u00a0/g, " ");
+  const m = t.match(/(?:surface(?:\s+de)?\s*)?(\d[\d\s.,]{0,12})\s*(?:m2|m²|mètre(?:s)?\s+carr(?:é|e|és|ées))/i);
+  if (!m) return 0;
+  const raw = m[1].replace(/\s/g, "").replace(/,(?=\d{1,2}$)/, ".");
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+function euro(value) {
+  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+}
+
+
+function calcAirbnbDetailed(surface, bedrooms=1, bathrooms=1, toilets=1, kitchens=1, livingRooms=1, levels=1) {
+  surface=Math.max(0,Number(surface)||0); bedrooms=Math.max(0,Number(bedrooms)||0); bathrooms=Math.max(0,Number(bathrooms)||0); toilets=Math.max(0,Number(toilets)||0); kitchens=Math.max(0,Number(kitchens)||0); livingRooms=Math.max(0,Number(livingRooms)||0); levels=Math.max(1,Number(levels)||1);
+  let base=0, type='';
+  if(surface<=30){base=55;type='Studio / T1';} else if(surface<=50){base=70;type='T2';} else if(surface<=75){base=90;type='T3';} else if(surface<=100){base=120;type='T4';} else {base=Math.max(150,Math.round(120+(surface-100)*1.2));type='T5+ / grand logement';}
+  const supplements=Math.max(0,bedrooms-1)*10 + Math.max(0,bathrooms-1)*15 + Math.max(0,toilets-1)*6 + Math.max(0,kitchens-1)*15 + Math.max(0,livingRooms-1)*10 + Math.max(0,levels-1)*12;
+  return {base,type,supplements,perRotation:Math.round(base+supplements)};
+}
+function extractCount(text, patterns, fallback=1) { for (const re of patterns) { const m=String(text||'').match(re); if(m) return Math.max(0,Number(m[1])||0); } return fallback; }
+
+function localFallbackReply(text, imageCount = 0) {
+  const input = String(text || "").toLowerCase();
+  const surface = parseSurface(text);
+  const photoNote = imageCount
+    ? ` J’ai bien reçu ${imageCount} photo${imageCount > 1 ? "s" : ""}, mais leur analyse IA détaillée est momentanément indisponible.`
+    : "";
+
+  if (/fin\s*(?:de\s*)?chantier|après\s*travaux|apres\s*travaux/.test(input)) {
+    let rate = 0;
+    let state = "";
+    if (/très\s*sale|tres\s*sale|fortement\s*encrass|sale\s*important/.test(input)) { rate = 9; state = "très sale"; }
+    else if (/léger|leger|peu\s*sale/.test(input)) { rate = 4.5; state = "léger"; }
+    else if (/standard|moyen|moyenne|moyennement/.test(input)) { rate = 6; state = "standard"; }
+    if (surface && rate) {
+      const total = Math.max(surface * rate, 150);
+      return `PRÉ-DEVIS INDICATIF — Fin de chantier\n\nSurface : ${surface} m²\nÉtat : ${state}\nBase : ${String(rate).replace('.', ',')} €/m²\nEstimation indicative : ${euro(total)} HT.\n\nLe prix définitif dépend notamment des déchets à évacuer, des vitrages, des accès et des finitions.${photoNote}\nPour affiner le devis, indiquez-moi la ville, les contraintes d’accès et votre téléphone.`;
+    }
+    return `Bien sûr. Pour préparer un pré-devis de fin de chantier, j’ai besoin de 3 informations :\n1. la surface en m² ;\n2. l’état du chantier (léger, standard ou très sale) ;\n3. la ville et les éventuels déchets/matériaux à évacuer.\n\nNos bases sont de 4,50 €/m² (léger), 6 €/m² (standard) et 9 €/m² (très sale), avec un minimum ponctuel de 150 €.${photoNote}`;
+  }
+
+  if (/chantier\s+en\s+cours|nettoyage\s+de\s+chantier\s+en\s+cours/.test(input)) {
+    return `Pour un chantier en cours, la base Clean-Cité est de 28 € HT/heure par agent. Une journée type de 7 h revient à 196 € HT par agent.\n\nPour calculer votre pré-devis, indiquez-moi :\n1. le nombre d’agents par jour ;\n2. le nombre d’heures par jour (7 h par défaut) ;\n3. le nombre de jours prévus.${photoNote}`;
+  }
+
+  if (/bureau|locaux\s+professionnels?/.test(input)) {
+    if (surface) {
+      return `Pour ${surface} m² de bureaux :\n• intervention ponctuelle : dès 1,50 €/m², soit une base indicative de ${euro(Math.max(surface * 1.5, 150))} ;\n• entretien régulier : dès 1 €/m² par passage, soit ${euro(surface)} par passage avant ajustement selon la fréquence et les tâches.\n\nIndiquez-moi si vous souhaitez du ponctuel ou du régulier, la fréquence et la ville.${photoNote}`;
+    }
+    return `Pour les bureaux, Clean-Cité propose une base dès 1,50 €/m² en ponctuel et dès 1 €/m² par passage en entretien régulier.\n\nIndiquez-moi la surface, la ville et la fréquence souhaitée pour que je vous donne une estimation indicative.${photoNote}`;
+  }
+
+  if (/poubelle|bac(?:s)?/.test(input)) {
+    return `Pour la sortie et rentrée des poubelles :\n• Starter : 79 €/mois — jusqu’à 4 bacs, 1 passage/semaine ;\n• Confort : 159 €/mois — jusqu’à 10 bacs, 2 passages/semaine ;\n• Premium : dès 249 €/mois — jusqu’à 15 bacs, 3 passages/semaine.\n\nIndiquez-moi le nombre de bacs, le nombre de passages par semaine et la ville pour vous orienter vers la bonne formule.${photoNote}`;
+  }
+
+  if (/airbnb|location courte|location saisonni|meubl[ée] touristique|rotation/.test(input)) {
+    const bedrooms=extractCount(text,[/(\d+)\s*chambre/i],1);
+    const bathrooms=extractCount(text,[/(\d+)\s*(?:salles?\s*d['’]?eau|salles?\s*de\s*bain|douches?)/i],1);
+    const toilets=extractCount(text,[/(\d+)\s*(?:wc|toilettes?)/i],1);
+    const kitchens=extractCount(text,[/(\d+)\s*cuisines?/i],1);
+    const living=extractCount(text,[/(\d+)\s*(?:salons?|s[ée]jours?)/i],1);
+    const levels=extractCount(text,[/(\d+)\s*(?:niveaux|étages?)/i],1);
+    const rotations=extractCount(text,[/(\d+)\s*rotations?/i],1);
+    if (surface > 0) {
+      const a=calcAirbnbDetailed(surface,bedrooms,bathrooms,toilets,kitchens,living,levels);
+      const total=a.perRotation*rotations;
+      return `PRÉ-DEVIS INDICATIF — Airbnb / location courte durée
+
+Surface : ${surface} m²
+Niveaux : ${levels}
+Chambres : ${bedrooms}
+Salles d’eau / douches : ${bathrooms}
+WC : ${toilets}
+Cuisines : ${kitchens}
+Salons / séjours : ${living}
+Typologie indicative : ${a.type}
+Base surface : ${euro(a.base)}
+Ajustement configuration : ${euro(a.supplements)}
+Ménage courant : ${euro(a.perRotation)} par rotation${rotations>1?` · ${rotations} rotations : ${euro(total)}`:''}.
+
+Le devis final reste à confirmer selon l’état, le linge, l’accès et les contraintes de check-out/check-in.${photoNote}`;
+    }
+    return `Pour établir un pré-devis Airbnb précis, indiquez : la surface en m², le nombre de niveaux, de chambres, de salles d’eau/douches, de WC, de cuisines, de salons/séjours et le nombre de rotations à chiffrer. Exemple : « 140 m², 3 niveaux, 6 chambres, 5 salles d’eau, 1 cuisine, 1 séjour ».${photoNote}`;
+  }
+
+  if (/terrasse|balcon|cour\b/.test(input)) {
+    if (surface) {
+      const dirty = /très\s*sale|tres\s*sale|très\s*encrass|tres\s*encrass|fortement\s*encrass/.test(input);
+      const rate = dirty ? 6.5 : 4.9;
+      return `Pour une terrasse/balcon de ${surface} m², la base indicative est de ${String(rate).replace('.', ',')} €/m², soit environ ${euro(Math.max(surface * rate, 150))} pour cette intervention ponctuelle${dirty ? " très encrassée" : " standard"}.\n\nIndiquez-moi la ville et si un nettoyage haute pression est possible.${photoNote}`;
+    }
+    return `Le nettoyage de terrasse démarre à 4,90 €/m², et à 6,50 €/m² pour une terrasse très encrassée. Indiquez-moi la surface, l’état, la ville et si l’accès à l’eau/haute pression est possible.${photoNote}`;
+  }
+
+  if (/vitre|vitrine|vitrage/.test(input)) {
+    return `La vitrerie accessible démarre à 4 €/m², ou 6,50 €/m² pour une première intervention / vitrages très sales. La hauteur, la nacelle et les accès difficiles sont sur devis.\n\nIndiquez-moi la surface vitrée approximative, l’état, la hauteur et la ville.${photoNote}`;
+  }
+
+  if (/parties?\s+communes?|copropri[eé]t[eé]|immeuble/.test(input)) {
+    return `L’entretien des parties communes démarre à 199 €/mois. Pour vous donner une estimation utile, indiquez-moi le nombre d’étages, de halls, la fréquence souhaitée, la présence d’un ascenseur/local poubelles et la ville.${photoNote}`;
+  }
+
+  if (/remise\s+en\s+[ée]tat|d[eé]crassage|d[eé]m[eé]nagement/.test(input)) {
+    return `La remise en état démarre à 6,50 €/m², et à 8,50 €/m² pour un site très encrassé. Indiquez-moi la surface, l’état, la ville et les contraintes particulières pour obtenir une estimation indicative.${photoNote}`;
+  }
+
+  return `Je peux vous aider à préparer un pré-devis Clean-Cité. Indiquez-moi simplement : le type de nettoyage, la ville, la surface approximative et l’état du lieu. Pour un chantier en cours, ajoutez le nombre d’agents, les heures par jour et le nombre de jours.${photoNote}\n\nSi c’est urgent, vous pouvez aussi appeler ou écrire sur WhatsApp au 07 66 53 61 54.`;
+}
+
+async function callGemini(messages) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 22000);
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: COMPANY_CONTEXT }] },
+          contents: messages,
+          generationConfig: {
+            temperature: 0.18,
+            maxOutputTokens: 1800,
+            thinkingConfig: { thinkingBudget: 0 }
+          }
+        })
+      }
+    );
+    const data = await response.json().catch(() => ({}));
+    return { response, data };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 exports.handler = async function handler(event) {
   if (event.httpMethod === "OPTIONS") {
     return json(200, { ok: true });
@@ -184,9 +340,11 @@ exports.handler = async function handler(event) {
   }
 
   if (!process.env.GEMINI_API_KEY) {
-    return json(200, {
-      reply: "L'assistant IA Clean-Cité est bien installé mais Gemini n'est pas encore activé sur le serveur. Pour un devis, indiquez la ville, la surface, le type de nettoyage et votre téléphone. Vous pouvez aussi utiliser le devis rapide, WhatsApp ou appeler Clean-Cité au 07 66 53 61 54."
-    });
+    let payload = {};
+    try { payload = JSON.parse(event.body || "{}"); } catch (_) {}
+    const fallbackText = extractLastUserText(payload.messages, payload.message);
+    const images = sanitizeImages(payload.images);
+    return json(200, { reply: localFallbackReply(fallbackText, images.length), mode: "local-fallback" });
   }
 
   try {
@@ -199,47 +357,46 @@ exports.handler = async function handler(event) {
       return json(400, { error: "Message ou photo manquante." });
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: COMPANY_CONTEXT }]
-          },
-          contents: messages,
-          generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: 1100
-          }
-        })
-      }
-    );
+    const lastUserText = extractLastUserText(payload.messages, message);
 
-    const data = await response.json();
+    const { response, data } = await callGemini(messages);
 
     if (!response.ok) {
-      return json(response.status, {
-        error: "Erreur Gemini.",
-        details: data
+      console.error("assistant-gemini-api", response.status, data?.error?.message || data);
+      return json(200, {
+        reply: localFallbackReply(lastUserText, images.length),
+        mode: "local-fallback",
+        imagesProcessed: images.length
       });
     }
 
-    const reply =
-      data?.candidates?.[0]?.content?.parts
-        ?.map((part) => part.text || "")
-        .join("\n")
-        .trim() ||
-      "Je n'ai pas pu générer de réponse pour le moment. Vous pouvez contacter Clean-Cité au 07 66 53 61 54.";
+    const candidate = data?.candidates?.[0] || null;
+    const reply = candidate?.content?.parts
+      ?.filter((part) => typeof part?.text === "string")
+      .map((part) => part.text)
+      .join("\n")
+      .trim() || "";
 
-    return json(200, { reply, imagesProcessed: images.length });
+    if (!reply) {
+      console.error("assistant-gemini-empty", candidate?.finishReason || "INCONNU", data?.promptFeedback?.blockReason || "");
+      return json(200, {
+        reply: localFallbackReply(lastUserText, images.length),
+        mode: "local-fallback",
+        imagesProcessed: images.length
+      });
+    }
+
+    return json(200, { reply, mode: "gemini", imagesProcessed: images.length });
   } catch (error) {
-    return json(500, {
-      error: "Erreur serveur.",
-      message: error.message
+    console.error("assistant-gemini-server", error);
+    let payload = {};
+    try { payload = JSON.parse(event.body || "{}"); } catch (_) {}
+    const fallbackText = extractLastUserText(payload.messages, payload.message);
+    const images = sanitizeImages(payload.images);
+    return json(200, {
+      reply: localFallbackReply(fallbackText, images.length),
+      mode: "local-fallback",
+      imagesProcessed: images.length
     });
   }
 };

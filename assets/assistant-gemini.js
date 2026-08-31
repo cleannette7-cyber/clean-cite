@@ -6,6 +6,7 @@
 
   const services = {
     bureaux: { label: "Nettoyage de bureaux", type: "office" },
+    airbnb: { label: "Airbnb / location courte durée", type: "airbnb" },
     fin_chantier: { label: "Nettoyage fin de chantier", type: "surface_state" },
     chantier: { label: "Nettoyage chantier en cours", type: "hourly" },
     remise_etat: { label: "Remise en état", type: "restoration" },
@@ -83,6 +84,7 @@
             <div class="ccai-messages" id="ccai-messages"></div>
             <div class="ccai-quick">
               <button class="ccai-chip" type="button" data-q="J'ai besoin d'un nettoyage de fin de chantier à Bobigny.">Fin de chantier</button>
+              <button class="ccai-chip" type="button" data-q="Combien coûte un ménage Airbnb entre deux voyageurs ?">Airbnb</button>
               <button class="ccai-chip" type="button" data-q="Combien coûte un nettoyage de bureaux ponctuel et régulier ?">Tarifs bureaux</button>
               <button class="ccai-chip" type="button" data-q="Quels sont vos forfaits de sortie et rentrée de poubelles ?">Poubelles</button>
               <button class="ccai-chip" type="button" data-q="Intervenez-vous en Île-de-France ?">Zone intervention</button>
@@ -113,6 +115,7 @@
                   <option value="fin_chantier">Nettoyage fin de chantier</option>
                   <option value="chantier">Nettoyage chantier en cours</option>
                   <option value="bureaux">Nettoyage de bureaux</option>
+                  <option value="airbnb">Airbnb / location courte durée</option>
                   <option value="remise_etat">Remise en état</option>
                   <option value="vitrerie">Vitrerie / vitrines</option>
                   <option value="parties_communes">Parties communes</option>
@@ -168,6 +171,17 @@
                   <input class="ccai-input" id="ccai-workdays" type="number" min="1" step="1" value="1">
                 </div>
                 <div class="ccai-worksite-note">Base : <strong>28 € HT/h par agent</strong> · journée type 7 h = <strong>196 € HT / agent / jour</strong>.</div>
+              </div>
+
+              <div class="ccai-worksite-grid" id="ccai-airbnb-row" style="display:none">
+                <div class="ccai-field"><label for="ccai-airbnb-levels">Niveaux</label><input class="ccai-input" id="ccai-airbnb-levels" type="number" min="1" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-bedrooms">Chambres</label><input class="ccai-input" id="ccai-airbnb-bedrooms" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-bathrooms">Salles d’eau / douches</label><input class="ccai-input" id="ccai-airbnb-bathrooms" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-toilets">WC</label><input class="ccai-input" id="ccai-airbnb-toilets" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-kitchens">Cuisines</label><input class="ccai-input" id="ccai-airbnb-kitchens" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-living">Salons / séjours</label><input class="ccai-input" id="ccai-airbnb-living" type="number" min="0" value="1"></div>
+                <div class="ccai-field"><label for="ccai-airbnb-rotations">Rotations à chiffrer</label><input class="ccai-input" id="ccai-airbnb-rotations" type="number" min="1" value="1"></div>
+                <div class="ccai-worksite-note">Le calcul Airbnb combine <strong>surface + configuration réelle</strong> du logement. Le tarif reste indicatif jusqu’à validation Clean-Cité.</div>
               </div>
 
               <div class="ccai-grid2" id="ccai-bins-row" style="display:none">
@@ -560,6 +574,31 @@
     }[value] || value;
   }
 
+  function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels){
+    surface = Math.max(0, Number(surface)||0);
+    bedrooms = Math.max(0, Number(bedrooms)||0);
+    bathrooms = Math.max(0, Number(bathrooms)||0);
+    toilets = Math.max(0, Number(toilets)||0);
+    kitchens = Math.max(0, Number(kitchens)||0);
+    livingRooms = Math.max(0, Number(livingRooms)||0);
+    levels = Math.max(1, Number(levels)||1);
+    let base=0, typology='';
+    if(surface<=30){ base=55; typology='Studio / T1'; }
+    else if(surface<=50){ base=70; typology='T2'; }
+    else if(surface<=75){ base=90; typology='T3'; }
+    else if(surface<=100){ base=120; typology='T4'; }
+    else { base=Math.max(150, Math.round(120 + (surface-100)*1.2)); typology='T5+ / grand logement'; }
+    const bedroomExtra=Math.max(0,bedrooms-1)*10;
+    const bathroomExtra=Math.max(0,bathrooms-1)*15;
+    const toiletExtra=Math.max(0,toilets-1)*6;
+    const kitchenExtra=Math.max(0,kitchens-1)*15;
+    const livingExtra=Math.max(0,livingRooms-1)*10;
+    const levelExtra=Math.max(0,levels-1)*12;
+    const supplements=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
+    const perRotation=Math.round(base+supplements);
+    return {base,typology,perRotation,supplements,bedroomExtra,bathroomExtra,toiletExtra,kitchenExtra,livingExtra,levelExtra};
+  }
+
   function getEstimatePayload(root) {
     const service = root.querySelector("#ccai-service").value;
     const selected = services[service] || services.fin_chantier;
@@ -571,6 +610,13 @@
     const workDays = Math.max(1, Number(root.querySelector("#ccai-workdays").value || 1));
     const bins = Math.max(0, Number(root.querySelector("#ccai-bins").value || 0));
     const binPasses = Math.max(0, Number(root.querySelector("#ccai-bin-passes").value || 0));
+    const airbnbLevels=Math.max(1,Number(root.querySelector("#ccai-airbnb-levels").value||1));
+    const airbnbBedrooms=Math.max(0,Number(root.querySelector("#ccai-airbnb-bedrooms").value||0));
+    const airbnbBathrooms=Math.max(0,Number(root.querySelector("#ccai-airbnb-bathrooms").value||0));
+    const airbnbToilets=Math.max(0,Number(root.querySelector("#ccai-airbnb-toilets").value||0));
+    const airbnbKitchens=Math.max(0,Number(root.querySelector("#ccai-airbnb-kitchens").value||0));
+    const airbnbLiving=Math.max(0,Number(root.querySelector("#ccai-airbnb-living").value||0));
+    const airbnbRotations=Math.max(1,Number(root.querySelector("#ccai-airbnb-rotations").value||1));
 
     let total = null;
     let estimateText = "Sur devis";
@@ -610,6 +656,14 @@
       billingUnit = "intervention";
       estimateText = money(total);
       detail = `${agents} agent(s) × ${hours} h/jour × ${workDays} jour(s) × 28 € HT/h. Journée type 7 h = 196 € HT par agent. Minimum ponctuel de 150 € si nécessaire.`;
+    }
+
+    if (selected.type === "airbnb" && surface > 0) {
+      const a=calcAirbnbDetailed(surface,airbnbBedrooms,airbnbBathrooms,airbnbToilets,airbnbKitchens,airbnbLiving,airbnbLevels);
+      total=a.perRotation*airbnbRotations;
+      billingUnit = airbnbRotations>1 ? `${airbnbRotations} rotations` : "par rotation";
+      estimateText = airbnbRotations>1 ? `${money(total)} pour ${airbnbRotations} rotations` : `${money(a.perRotation)} / rotation`;
+      detail = `${a.typology} · ${surface} m² · ${airbnbLevels} niveau(x) · ${airbnbBedrooms} chambre(s) · ${airbnbBathrooms} salle(s) d’eau · ${airbnbToilets} WC · ${airbnbKitchens} cuisine(s) · ${airbnbLiving} salon(s)/séjour(s). Base surface ${money(a.base)} + ajustement configuration ${money(a.supplements)}.`;
     }
 
     if (selected.type === "restoration" && surface > 0) {
@@ -683,6 +737,7 @@
       workDays,
       bins,
       binPasses,
+      airbnbLevels, airbnbBedrooms, airbnbBathrooms, airbnbToilets, airbnbKitchens, airbnbLiving, airbnbRotations,
       name: root.querySelector("#ccai-name").value.trim(),
       phone: root.querySelector("#ccai-phone").value.trim(),
       email: root.querySelector("#ccai-email").value.trim(),
@@ -706,16 +761,18 @@
     const frequencyWrap = root.querySelector("#ccai-frequency-wrap");
     const hourlyRow = root.querySelector("#ccai-hourly-row");
     const binsRow = root.querySelector("#ccai-bins-row");
+    const airbnbRow = root.querySelector("#ccai-airbnb-row");
 
-    const needsSurface = ["office", "surface_state", "restoration", "glass", "terrace"].includes(selected.type);
+    const needsSurface = ["office", "airbnb", "surface_state", "restoration", "glass", "terrace"].includes(selected.type);
     const needsCondition = ["surface_state", "restoration", "glass", "terrace"].includes(selected.type);
-    const needsFrequency = ["office"].includes(selected.type);
+    const needsFrequency = ["office", "airbnb"].includes(selected.type);
 
     surfaceWrap.style.display = needsSurface ? "block" : "none";
     conditionWrap.style.display = needsCondition ? "block" : "none";
     frequencyWrap.style.display = needsFrequency ? "block" : "none";
     hourlyRow.style.display = selected.type === "hourly" ? "grid" : "none";
     binsRow.style.display = selected.type === "bins" ? "grid" : "none";
+    airbnbRow.style.display = selected.type === "airbnb" ? "grid" : "none";
   }
 
   function updateEstimate(root) {
@@ -736,6 +793,15 @@
     if (payload.bins && payload.service === "sortie_poubelles") extras.push(`Bacs : ${payload.bins}`);
     if (payload.binPasses && payload.service === "sortie_poubelles") extras.push(`Passages : ${payload.binPasses} / semaine`);
     if (payload.plan) extras.push(`Formule : ${payload.plan}`);
+    if(payload.service === "airbnb"){
+      extras.push(`Niveaux : ${payload.airbnbLevels}`);
+      extras.push(`Chambres : ${payload.airbnbBedrooms}`);
+      extras.push(`Salles d’eau / douches : ${payload.airbnbBathrooms}`);
+      extras.push(`WC : ${payload.airbnbToilets}`);
+      extras.push(`Cuisines : ${payload.airbnbKitchens}`);
+      extras.push(`Salons / séjours : ${payload.airbnbLiving}`);
+      extras.push(`Rotations : ${payload.airbnbRotations}`);
+    }
 
     if (state.lastPhotoAnalysis) extras.push("Photos analysées par l'IA : oui");
     const analysisForWa = state.lastPhotoAnalysis ? `\nSynthèse IA photos : ${state.lastPhotoAnalysis.replace(/\s+/g, " ").slice(0, 900)}` : "";
