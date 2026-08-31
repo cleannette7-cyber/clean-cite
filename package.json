@@ -7,6 +7,6 @@
     "@netlify/identity": "2.0.0"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=22.12.0 <23"
   }
 }

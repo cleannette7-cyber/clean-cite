@@ -96,3 +96,7 @@
   .ccai-photo-count { margin-left:0; }
   .ccai-photo-btn { flex:1 1 auto; }
 }
+
+/* Gemini branding restored v9 */
+.ccai-bubble-brand{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}.ccai-bubble-brand strong{font-size:14px}.ccai-bubble-brand small{display:block;font-size:10px;font-weight:800;opacity:.82;margin-top:3px}.ccai-engine-status{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.15);font-size:10px!important;font-weight:900!important;color:#fff!important}.ccai-engine-status.gemini{background:rgba(41,189,105,.25)}.ccai-engine-status.fallback{background:rgba(255,190,70,.25)}
+.ccai-gemini-bridge{margin-top:12px;padding:13px 14px;border:1px solid rgba(154,104,31,.28);border-radius:15px;background:linear-gradient(135deg,#fffaf2,#f3f7ff);display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 20px rgba(11,36,71,.08)}.ccai-gemini-bridge div{display:flex;flex-direction:column;gap:3px}.ccai-gemini-bridge strong{color:#0B2447;font-size:13px}.ccai-gemini-bridge small{color:#6f675a;font-size:11px;line-height:1.35}.ccai-gemini-bridge button{border:0;border-radius:999px;background:linear-gradient(135deg,#0B2447,#9a681f);color:#fff;font-weight:900;padding:10px 13px;cursor:pointer;white-space:nowrap}@media(max-width:600px){.ccai-gemini-bridge{align-items:flex-start;flex-direction:column}.ccai-gemini-bridge button{width:100%}}
