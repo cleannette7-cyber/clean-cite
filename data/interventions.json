@@ -26,6 +26,16 @@
       "description": "Nettoyage et évacuation des matériaux non exploitables.",
       "photo_avant": "/images/uploads/20260723_093309.jpg",
       "photo_apres": "/images/uploads/20260723_100404.jpg"
+    },
+    {
+      "publier": true,
+      "ville": "Île-de-France",
+      "titre": "Nettoyage local poubelle plessis trévise 94420",
+      "type_prestation": "Fin de chantier",
+      "date": "2026-09-08",
+      "photo_avant": "/images/uploads/1000109920.jpg",
+      "photo_apres": "/images/uploads/1000109939.jpg",
+      "description": "Un local poubelle contenant  des traces de peinture Et des saletés "
     }
   ]
 }
