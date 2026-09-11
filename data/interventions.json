@@ -26,6 +26,16 @@
       "description": "Nettoyage et évacuation des matériaux non exploitables.",
       "photo_avant": "/images/uploads/20260723_093309.jpg",
       "photo_apres": "/images/uploads/20260723_100404.jpg"
+    },
+    {
+      "publier": true,
+      "ville": "plessis-trevis",
+      "date": "2026-09-08",
+      "type_prestation": "Fin de chantier",
+      "photo_avant": "/images/uploads/1000109920.jpg",
+      "photo_apres": "/images/uploads/1000109939.jpg",
+      "description": "nettoyage du local à poubelles ",
+      "titre": "Nettoyage fin de chantier"
     }
   ]
 }
