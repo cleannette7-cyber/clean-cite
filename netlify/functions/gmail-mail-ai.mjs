@@ -10,7 +10,10 @@ import {
   saveSettings,
   toB64url,
   extractEmail,
+  sendGmailMail,
 } from './_gmail-common.mjs';
+import { quoteFromAnalysis, prequoteText, prequotePdf, newMessageText } from './_prequote.mjs';
+import { quoteId, quoteStatusList, recordQuote, runFollowups, setQuotePaused } from './_quote-followups.mjs';
 
 const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -20,17 +23,8 @@ const COMPANY_CONTEXT = `
 Tu es l'assistant e-mail professionnel de Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny (93), intervenant en Île-de-France.
 Coordonnées : Clean-Cité, 149 rue de Paris, 93000 Bobigny, 07 66 53 61 54.
 
-Grille tarifaire indicative actuelle :
-- Airbnb / location courte durée : ne jamais confondre surface totale et surface par niveau. Dans Clean-Cité, « 140 m² sur 3 niveaux » signifie 140 m² par niveau = 420 m², sauf mention explicite « 140 m² au total ». Calcul détaillé : base surface 55 € jusqu’à 30 m², 70 € jusqu’à 50 m², 90 € jusqu’à 75 m², 120 € jusqu’à 100 m² ; au-delà max(150 €, 120 € + 1,20 € par m² au-dessus de 100 m²). Ajustements : +10 € par chambre au-delà de la première, +15 € par salle d’eau/douche au-delà de la première, +6 € par WC au-delà du premier, +15 € par cuisine au-delà de la première, +10 € par salon/séjour au-delà du premier, +12 € par niveau au-delà du premier. Décapage sol : 6,50 €/m² ou 8,50 €/m² en lourd, sur la surface réellement à traiter, séparé du ménage courant. Ménage courant entre voyageurs ; linge propre fourni par l’hôte et consommables fournis peuvent être pris en charge.
-- Bureaux ponctuels : dès 1,50 €/m². Minimum ponctuel : 150 €.
-- Bureaux réguliers : dès 1 €/m² PAR PASSAGE, sans appliquer automatiquement le minimum ponctuel.
-- Chantier en cours : 28 € HT/heure PAR AGENT. Journée type 7 h = 196 € HT par agent. Calcul : agents × heures/jour × jours × 28 €.
-- Fin de chantier : léger 4,50 €/m² ; standard 6 €/m² ; très sale 9 €/m².
-- Remise en état : dès 6,50 €/m² ; très encrassée dès 8,50 €/m².
-- Vitrerie accessible : dès 4 €/m² ; très sale/première intervention dès 6,50 €/m² ; hauteur/nacelle sur devis.
-- Terrasse : dès 4,90 €/m² ; très encrassée dès 6,50 €/m².
-- Parties communes : dès 199 €/mois, à préciser selon immeuble et fréquence.
-- Poubelles : Starter 79 €/mois (jusqu'à 4 bacs, 1 passage/semaine) ; Confort 159 €/mois (jusqu'à 10 bacs, 2 passages/semaine) ; Premium dès 249 €/mois (jusqu'à 15 bacs, 3 passages/semaine).
+Les tarifs sont exclusivement calculés côté serveur avec la grille du calculateur public.
+N'écris jamais de montant toi-même : le pré-devis vérifié remplacera ta proposition si toutes les informations sont présentes.
 
 Règles absolues :
 - Répondre en français, ton professionnel, humain, cordial, bref et clair.
@@ -43,7 +37,7 @@ Règles absolues :
 - Pour les poubelles, demander nombre de bacs et passages/semaine si manquants.
 - Pour les parties communes, demander nombre d'étages/halls, fréquence et présence d'un local poubelles si utile.
 - Les pièces jointes photo peuvent aider à qualifier l'état visible, mais ne permettent jamais d'inventer la surface, l'accès ou les zones hors champ.
-- Une demande de devis peut recevoir automatiquement une réponse si elle se limite à accuser réception, demander les informations manquantes et/ou donner une estimation explicitement INDICATIVE fondée sur la grille ci-dessus, sous réserve de validation et sans remise ni engagement contractuel.
+- Une demande de devis peut recevoir automatiquement un accusé de réception ou des questions complémentaires sans prix, sous réserve de validation et sans remise ni engagement contractuel.
 - Ne pas envoyer de geste commercial, remise, avoir, modification de facture ou engagement contractuel sans validation humaine.
 - En cas de réclamation, litige, facture, paiement, demande de remise, dommage, urgence sensible ou demande juridique : classer comme validation humaine obligatoire.
 `;
@@ -92,6 +86,16 @@ function safeJsonParse(text) {
   const a = raw.indexOf('{'), b = raw.lastIndexOf('}');
   if (a>=0 && b>a) { try { return JSON.parse(raw.slice(a,b+1)); } catch {} }
   return null;
+}
+
+async function extractQuoteFacts(message) {
+  const prompt = `Extrais uniquement les faits explicitement présents dans l'e-mail ci-dessous pour un pré-devis Clean-Cité. JSON uniquement.\nPour chaque champ de quoteData, renvoie sa valeur ou null si absente. quoteEvidence doit contenir, pour chaque champ non nul, un court fragment EXACT recopié de l'objet ou du corps de l'e-mail qui prouve à la fois le nombre et son unité/objet (ex : "140 m²", "3 niveaux", "2 salles d'eau"). Les chiffres dans les tarifs de Clean-Cité ne sont pas des données du client. Pour surfaceScope, écris "total" uniquement si le texte précise une surface totale/au total ; sinon null. Pour Airbnb, si plusieurs niveaux sont mentionnés, ne multiplie JAMAIS la surface donnée par les niveaux : demande sa portée. service parmi bureaux, fin_chantier, chantier_cours, poubelles, airbnb, ou null si ambigu. frequency unique ou regulier. Pour bureaux réguliers, periodUnit vaut semaine ou mois, uniquement si précisé. condition leger, standard ou tres_sale. Tous les nombres doivent être numériques. Ne déduis aucun zéro ni aucun 1 implicite.\nFormat : {"quoteData":{"service":null,"surface":null,"frequency":null,"passages":null,"periodUnit":null,"condition":null,"bins":null,"binPasses":null,"agents":null,"hours":null,"days":null,"levels":null,"rotations":null,"bedrooms":null,"bathrooms":null,"toilets":null,"kitchens":null,"livingRooms":null,"surfaceScope":null,"city":null},"quoteEvidence":{}}\nE-MAIL :\nObjet : ${message.subject}\nCorps : ${newMessageText(message.body||message.snippet)}`;
+  const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0,maxOutputTokens:1600,responseMimeType:'application/json',thinkingConfig:{thinkingBudget:0}}})
+  });
+  const result=await response.json().catch(()=>({}));
+  if (!response.ok) return null;
+  return safeJsonParse(result?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join(''));
 }
 
 function serverAutoGuard(message, ai) {
@@ -211,6 +215,21 @@ async function generateAiDraft(message) {
   ai.replyBody = stripGeneratedSignature(String(ai.replyBody||'')).slice(0,8000);
   ai.missingInfo = Array.isArray(ai.missingInfo) ? ai.missingInfo.slice(0,5).map(String) : [];
   ai.photoNotes = String(ai.photoNotes||'').slice(0,1500);
+  if (ai.category === 'devis') {
+    const facts=await extractQuoteFacts(message).catch(()=>null);
+    if (facts) {
+      ai.quoteData=facts.quoteData; ai.quoteEvidence=facts.quoteEvidence;
+      ai.prequote=quoteFromAnalysis(message,facts);
+    }
+    if (ai.prequote?.complete) {
+      ai.replyBody=prequoteText(ai.prequote);
+      ai.replySubject=`Re: ${cleanSubject(message.subject)}`;
+      ai.reason='Pré-devis calculé depuis la grille du site ; montant et informations justifiés dans le message.';
+    } else {
+      const missing=ai.prequote?.missing?.slice(0,6) || ai.missingInfo.slice(0,6);
+      ai.replyBody=`Bonjour,\n\nMerci pour votre demande de devis. Nous l'avons bien reçue. Pour préparer une estimation adaptée, pourriez-vous nous préciser ${missing.length ? missing.join(', ') : 'la prestation, la surface, la ville et les informations nécessaires au chiffrage'} ?\n\nNous reviendrons vers vous dès réception de ces éléments.`;
+    }
+  }
   ai.autoEligible = serverAutoGuard(message, ai);
   ai.imagesAnalyzed = images.length;
   return ai;
@@ -260,14 +279,26 @@ function replyRaw(message, body, subject, senderEmail) {
   return { raw:toB64url(headers), to };
 }
 
-async function sendReply(message, body, subject, mode='manual') {
+async function sendReply(message, body, subject, mode='manual', prequote=null) {
   const conn = await getConnection();
   if (!conn?.email) throw new Error('Gmail n’est pas connecté.');
   const built = replyRaw(message, body, subject, conn.email);
-  const sent = await gmailFetch('/messages/send',{method:'POST',body:JSON.stringify({raw:built.raw,threadId:message.threadId})});
+  const store=mailStore();
+  const pdf=prequote ? await prequotePdf(prequote,`PRE-${message.id.slice(0,12).toUpperCase()}`) : null;
+  if (mode!=='manual' || prequote) {
+    const claim=await store.setJSON(`send-claims/${message.id}`,{claimedAt:new Date().toISOString(),mode},{onlyIfNew:true});
+    if (!claim.modified) throw new Error('Ce message a déjà fait l’objet d’un envoi ou d’une tentative. Vérifie Gmail avant de réessayer.');
+  }
+  const sent = prequote
+    ? await sendGmailMail({to:built.to,subject,body:`${/^bonjour\b/i.test(String(body).trim())?'':'Bonjour,\n\n'}${stripGeneratedSignature(body)}\n\nCordialement,\nL'équipe Clean-Cité\n07 66 53 61 54`,threadId:message.threadId,inReplyTo:message.messageIdHeader,references:[message.references,message.messageIdHeader].filter(Boolean).join(' '),attachment:{bytes:pdf}})
+    : await gmailFetch('/messages/send',{method:'POST',body:JSON.stringify({raw:built.raw,threadId:message.threadId})});
   await mailStore().setJSON(`processed/${message.id}`,{
     sentAt:new Date().toISOString(), mode, sentMessageId:sent.id||'', to:built.to, subject:String(subject||''),
   });
+  if (prequote) {
+    try { sent.followupTracked=await recordQuote({id:quoteId('gmail',message.id),source:'gmail',email:built.to,reference:`pré-devis PRE-${message.id.slice(0,12).toUpperCase()}`,subject:subject||`Pré-devis Clean-Cité`,threadId:sent.threadId||message.threadId,sentMessageId:sent.id}); }
+    catch(e) { console.error('prequote-sent-tracking-failed',e); sent.followupTracked=false; }
+  }
   return sent;
 }
 
@@ -287,7 +318,8 @@ async function autoProcessInternal() {
       const ai = await generateAiDraft(message);
       await mailStore().setJSON(`drafts/${item.id}`,{...ai,generatedAt:new Date().toISOString()});
       if (ai.autoEligible) {
-        await sendReply(message, ai.replyBody, ai.replySubject, 'semi-auto');
+        const prequote=ai.prequote?.complete && settings.autoPrequote ? ai.prequote : null;
+        await sendReply(message,prequote?prequoteText(prequote):ai.prequote?.complete?'Merci pour votre demande. Nous avons reçu les informations nécessaires et préparons votre pré-devis. Nous reviendrons vers vous rapidement.':ai.replyBody,ai.replySubject,'semi-auto',prequote);
         sent++;
       } else skipped++;
     } catch(e) {
@@ -329,10 +361,20 @@ export default async function handler(req) {
     }
     if (action === 'send') {
       const message=await fetchMessage(String(body.messageId||''));
-      const sent=await sendReply(message,String(body.replyBody||''),String(body.replySubject||''),'manual');
-      return json(200,{ok:true,sentId:sent.id||''});
+      let prequote=null;
+      if (body.attachPrequote) {
+        const draft=await mailStore().get(`drafts/${message.id}`,{type:'json',consistency:'strong'});
+        if (!draft?.quoteData || !draft?.quoteEvidence) return json(400,{error:'Génère et vérifie d’abord un pré-devis.'});
+        prequote=quoteFromAnalysis(message,draft);
+        if (!prequote.complete) return json(400,{error:'Le pré-devis ne dispose pas de toutes les informations vérifiées.'});
+      }
+      const sent=await sendReply(message,String(body.replyBody||''),String(body.replySubject||''),'manual',prequote);
+      return json(200,{ok:true,sentId:sent.id||'',followupTracked:prequote?!!sent.followupTracked:null});
     }
     if (action === 'auto_run') return json(200,{result:await autoProcessInternal()});
+    if (action === 'quotes_list') return json(200,{quotes:await quoteStatusList()});
+    if (action === 'quote_pause') return json(200,{quote:await setQuotePaused(String(body.id||''),!!body.paused)});
+    if (action === 'followups_run') return json(200,{result:await runFollowups()});
     return json(400,{error:'Action inconnue.'});
   } catch(e) {
     console.error('gmail-mail-ai',e);

@@ -1,4 +1,5 @@
 import { getUser } from "@netlify/identity";
+import { quoteId, recordQuote } from './_quote-followups.mjs';
 
 const ADMIN_EMAIL = (process.env.CLEAN_CITE_ADMIN_EMAIL || "cleannette7@gmail.com").toLowerCase();
 const COMPANY_EMAIL = process.env.CLEAN_CITE_EMAIL || "cleannette7@gmail.com";
@@ -97,10 +98,19 @@ export default async function handler(req) {
     }
 
     const result = await sendBrevo(p);
+    let followupTracked = false;
+    try {
+      followupTracked = await recordQuote({
+        id:quoteId('admin',`${p.quoteNumber}|${p.client.email}`),source:'admin',email:p.client.email,
+        reference:`devis ${p.quoteNumber}`,subject:formatQuote(p).subject,
+        sentAt:new Date().toISOString(),sentMessageId:result.messageId||''
+      });
+    } catch(e) { console.error('quote-tracking-after-send',e); }
     return json(200, {
       sent: true,
       message: `Devis ${p.quoteNumber} envoyé à ${p.client.email}.`,
       messageId: result.messageId || null,
+      followupTracked,
     });
   } catch (e) {
     return json(e.status || 500, {

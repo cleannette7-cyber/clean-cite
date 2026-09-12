@@ -1440,15 +1440,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     </div>
   </div>
 </div>
+<script src="/assets/pricing.js?v=20260912"></script>
 <script>
 // ===== DONNÉES SERVICES =====
 
   
   const SVC = {
-  'chantier-cours':{icon:'🏗️',title:'Chantier en cours',desc:"Entretien et nettoyage pendant la durée du chantier : déblaiement, dépoussiérage, évacuation des déchets au fil de l'avancement.",tarifs:[{l:'Tarif horaire / agent',v:'28 € HT / heure'},{l:'Journée type 7 h / agent',v:'196 € HT'}],extras:[],note:'Estimation = agents × heures/jour × jours × 28 €. Minimum d’intervention ponctuelle : 150 €. Contrat récurrent sur devis.'},
-  'chantier-fin':{icon:'✅',title:'Fin de chantier',desc:'Remise en propreté complète après travaux : nettoyage des sols, vitres, surfaces et évacuation des déchets avant livraison.',tarifs:[{l:'Léger',v:'4,50 € / m²'},{l:'Standard',v:'6 € / m²'},{l:'Très sale',v:'9 € / m²'}],extras:[],note:'Minimum d’intervention ponctuelle : 150 €.'},
-  'bureaux':{icon:'🏢',title:'Nettoyage de bureaux',desc:'Entretien ponctuel ou régulier de vos espaces de travail pour un environnement sain, propre et agréable.',tarifs:[{l:'Ponctuel',v:'1,50 € / m²'},{l:'Régulier',v:'1 € / m² / passage'}],extras:[{l:'Désinfection',v:'+ 20 %'},{l:'Vitres',v:'dès 4 € / m²'}],note:'Minimum de 150 € pour une intervention ponctuelle.'},
-  'poubelles':{icon:'🗑️',title:'Sortie de poubelles',desc:'Sortie et rentrée des conteneurs pour syndics, copropriétés et résidences selon un planning défini.',tarifs:[{l:'Starter',v:'79 € / mois'},{l:'Confort',v:'159 € / mois'},{l:'Premium',v:'dès 249 € / mois'}],extras:[],note:'Jusqu’à 4 bacs / 1 passage par semaine en Starter. Au-delà des formules : sur devis.'},
+  'chantier-cours':{icon:'🏗️',title:'Chantier en cours',desc:"Entretien et nettoyage pendant la durée du chantier : déblaiement, dépoussiérage, évacuation des déchets au fil de l'avancement.",tarifs:[{l:'Tarif horaire / agent',v:`${CleanCitePricing.rates.chantierHour} € HT / heure`},{l:'Journée type 7 h / agent',v:`${7*CleanCitePricing.rates.chantierHour} € HT`}],extras:[],note:'Estimation = agents × heures/jour × jours × tarif horaire. Minimum d’intervention ponctuelle : 150 €. Contrat récurrent sur devis.'},
+  'chantier-fin':{icon:'✅',title:'Fin de chantier',desc:'Remise en propreté complète après travaux : nettoyage des sols, vitres, surfaces et évacuation des déchets avant livraison.',tarifs:[{l:'Léger',v:`${CleanCitePricing.rates.finishLight.toString().replace('.',',')} € / m²`},{l:'Standard',v:`${CleanCitePricing.rates.finishStandard} € / m²`},{l:'Très sale',v:`${CleanCitePricing.rates.finishHeavy} € / m²`}],extras:[],note:'Minimum d’intervention ponctuelle : 150 €.'},
+  'bureaux':{icon:'🏢',title:'Nettoyage de bureaux',desc:'Entretien ponctuel ou régulier de vos espaces de travail pour un environnement sain, propre et agréable.',tarifs:[{l:'Ponctuel',v:`${CleanCitePricing.rates.officeOnce.toString().replace('.',',')} € / m²`},{l:'Régulier',v:`${CleanCitePricing.rates.officeRegular} € / m² / passage`}],extras:[{l:'Désinfection',v:'+ 20 %'},{l:'Vitres',v:'dès 4 € / m²'}],note:'Minimum de 150 € pour une intervention ponctuelle.'},
+  'poubelles':{icon:'🗑️',title:'Sortie de poubelles',desc:'Sortie et rentrée des conteneurs pour syndics, copropriétés et résidences selon un planning défini.',tarifs:[{l:'Starter',v:`${CleanCitePricing.rates.binsStarter} € / mois`},{l:'Confort',v:`${CleanCitePricing.rates.binsComfort} € / mois`},{l:'Premium',v:`dès ${CleanCitePricing.rates.binsPremium} € / mois`}],extras:[],note:'Jusqu’à 4 bacs / 1 passage par semaine en Starter. Au-delà des formules : sur devis.'},
   'tapis':{icon:'🧹',title:'Tapis & canapés',desc:'Nettoyage en profondeur de vos textiles avec équipements professionnels.',tarifs:[{l:'Petit tapis',v:'30–60 €'},{l:'Grand tapis',v:'80–150 €'},{l:'Canapé 2 places',v:'70–120 €'},{l:'Canapé 3 places',v:'120–180 €'},{l:"Canapé d'angle",v:'180–350 €'},{l:'Matelas',v:'50–120 €'}],extras:[{l:'Taches difficiles',v:'+ 20 €'},{l:"Poils d'animaux",v:'+ 30 €'},{l:'Désinfection vapeur',v:'+ 40 €'},{l:'Déplacement',v:'+ 20 à 50 €'}],note:''},
   'airbnb':{icon:'🧳',title:'Airbnb & location courte durée',desc:'Ménage courant entre deux voyageurs pour préparer le logement avant le prochain check-in.',tarifs:[{l:'Studio / T1',v:'55 € / rotation'},{l:'T2',v:'70 € / rotation'},{l:'T3',v:'90 € / rotation'},{l:'T4',v:'120 € / rotation'},{l:'T5+',v:'dès 150 € / rotation'}],extras:[{l:'Blanchisserie / linge fourni',v:'Sur devis'},{l:'Très sale / après fête',v:'Sur devis'}],note:'Le changement du linge propre fourni par l’hôte et le réassort des consommables fournis peuvent être inclus dans la rotation standard.'},
   'terrasse':{icon:'🌿',title:'Nettoyage de terrasse',desc:'Démoussage, nettoyage haute pression et entretien de vos terrasses et espaces extérieurs.',tarifs:[{l:'Entretien',v:'dès 4,90 € / m²'},{l:'Encrassée',v:'dès 6,50 € / m²'},{l:'Cas complexe',v:'Sur devis'}],extras:[{l:'Démoussage important',v:'Sur devis'}],note:'Minimum d’intervention ponctuelle : 150 €.'},
@@ -1590,28 +1591,7 @@ document.addEventListener('DOMContentLoaded', function () {
   mettreAJourPreDevis();
 });
 function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels){
-  surface = Math.max(0, Number(surface)||0);
-  bedrooms = Math.max(0, Number(bedrooms)||0);
-  bathrooms = Math.max(0, Number(bathrooms)||0);
-  toilets = Math.max(0, Number(toilets)||0);
-  kitchens = Math.max(0, Number(kitchens)||0);
-  livingRooms = Math.max(0, Number(livingRooms)||0);
-  levels = Math.max(1, Number(levels)||1);
-  let base=0, typology='';
-  if(surface<=30){ base=55; typology='Studio / T1'; }
-  else if(surface<=50){ base=70; typology='T2'; }
-  else if(surface<=75){ base=90; typology='T3'; }
-  else if(surface<=100){ base=120; typology='T4'; }
-  else { base=Math.max(150, Math.round(120 + (surface-100)*1.2)); typology='T5+ / grand logement'; }
-  const bedroomExtra=Math.max(0,bedrooms-1)*10;
-  const bathroomExtra=Math.max(0,bathrooms-1)*15;
-  const toiletExtra=Math.max(0,toilets-1)*6;
-  const kitchenExtra=Math.max(0,kitchens-1)*15;
-  const livingExtra=Math.max(0,livingRooms-1)*10;
-  const levelExtra=Math.max(0,levels-1)*12;
-  const supplements=bedroomExtra+bathroomExtra+toiletExtra+kitchenExtra+livingExtra+levelExtra;
-  const perRotation=Math.round(base+supplements);
-  return {base,typology,perRotation,supplements,bedroomExtra,bathroomExtra,toiletExtra,kitchenExtra,livingExtra,levelExtra};
+  return CleanCitePricing.airbnb(surface, bedrooms, bathrooms, toilets, kitchens, livingRooms, levels);
 }
 
   function genererDevis(){
@@ -1662,7 +1642,8 @@ function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, liv
     }
   };
 
-  const hourlyTotal = agents * heures * passages * 28;
+  const rates = CleanCitePricing.rates;
+  const hourlyTotal = agents * heures * passages * rates.chantierHour;
 
   if(services.includes('Chantier en cours')){
     addLine(
@@ -1677,12 +1658,12 @@ function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, liv
       alert('Pour le nettoyage de bureaux et locaux, indique une superficie en m².');
       return;
     }
-    const tarif = freq === 'unique' ? 1.5 : 1;
+    const tarif = freq === 'unique' ? rates.officeOnce : rates.officeRegular;
     const nbPassages = freq === 'unique' ? 1 : passages;
     addLine(
       'Bureaux & locaux',
       `${surface} m² x ${String(tarif).replace('.',',')}€/m² x ${nbPassages} passage(s)`,
-      freq === 'unique' ? Math.max(surface * tarif, 150) : surface * tarif * nbPassages
+      freq === 'unique' ? Math.max(surface * tarif, rates.minimumOnce) : surface * tarif * nbPassages
     );
   }
 
@@ -1698,8 +1679,8 @@ function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, liv
       alert('Pour une fin de chantier, indique une superficie en m².');
       return;
     }
-    const tarif = etat === 'léger' ? 4.5 : etat === 'très sale' ? 9 : 6;
-    addLine('Fin de chantier', `${surface} m² x ${String(tarif).replace('.',',')}€/m²`, Math.max(surface * tarif, 150));
+    const tarif = etat === 'léger' ? rates.finishLight : etat === 'très sale' ? rates.finishHeavy : rates.finishStandard;
+    addLine('Fin de chantier', `${surface} m² x ${String(tarif).replace('.',',')}€/m²`, Math.max(surface * tarif, rates.minimumOnce));
   }
 
   if(services.includes('Remise en état')){
@@ -1735,9 +1716,9 @@ function calcAirbnbDetailed(surface, bedrooms, bathrooms, toilets, kitchens, liv
     }
 
     let montantPoubelles; let formule;
-    if(bacs <= 4 && passagesPoubelles <= 1){ montantPoubelles=79; formule='Starter — jusqu’à 4 bacs · 1 passage/semaine'; }
-    else if(bacs <= 10 && passagesPoubelles <= 2){ montantPoubelles=159; formule='Confort — jusqu’à 10 bacs · 2 passages/semaine'; }
-    else if(bacs <= 15 && passagesPoubelles <= 3){ montantPoubelles=249; formule='Premium — jusqu’à 15 bacs · 3 passages/semaine'; }
+    if(bacs <= 4 && passagesPoubelles <= 1){ montantPoubelles=rates.binsStarter; formule='Starter — jusqu’à 4 bacs · 1 passage/semaine'; }
+    else if(bacs <= 10 && passagesPoubelles <= 2){ montantPoubelles=rates.binsComfort; formule='Confort — jusqu’à 10 bacs · 2 passages/semaine'; }
+    else if(bacs <= 15 && passagesPoubelles <= 3){ montantPoubelles=rates.binsPremium; formule='Premium — jusqu’à 15 bacs · 3 passages/semaine'; }
     else { montantPoubelles='Sur devis'; formule='Besoin supérieur aux forfaits (plus de 15 bacs ou plus de 3 passages/semaine)'; }
     addLine('Sortie poubelles', formule, montantPoubelles);
   }

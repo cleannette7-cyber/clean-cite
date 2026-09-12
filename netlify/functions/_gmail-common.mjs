@@ -60,6 +60,10 @@ export function mailStore() {
   return getStore({ name: 'clean-cite-gmail-mail', consistency: 'strong' });
 }
 
+export function quoteStore() {
+  return getStore({ name: 'clean-cite-gmail-quotes', consistency: 'strong' });
+}
+
 export async function getConnection() {
   return await authStore().get('connection', { type: 'json', consistency: 'strong' });
 }
@@ -224,6 +228,34 @@ export function extractEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate) ? candidate : '';
 }
 
+function header(value) {
+  return `=?UTF-8?B?${Buffer.from(String(value||'').replace(/[\r\n]+/g,' ').trim(),'utf8').toString('base64')}?=`;
+}
+
+export async function sendGmailMail({ to, subject, body, threadId, inReplyTo, references, attachment }) {
+  const email = extractEmail(to);
+  const connection = await getConnection();
+  if (!connection?.email || !email) throw new Error('Adresse Gmail ou destinataire invalide.');
+  const safeId = String(inReplyTo || '').replace(/[\r\n]/g,' ').slice(0,300);
+  const safeRefs = String(references || safeId).replace(/[\r\n]/g,' ').slice(0,1000);
+  const headers = [
+    `From: ${header('Clean-Cité')} <${connection.email}>`, `To: ${email}`,
+    `Subject: ${header(subject)}`, ...(safeId ? [`In-Reply-To: ${safeId}`,`References: ${safeRefs}`] : []),
+    'MIME-Version: 1.0'
+  ];
+  const text = String(body || '').replace(/\r?\n/g,'\r\n');
+  let mime;
+  if (attachment) {
+    const boundary = `clean-cite-${randomBytes(12).toString('hex')}`;
+    headers.push(`Content-Type: multipart/mixed; boundary="${boundary}"`);
+    const chunks = Buffer.from(attachment.bytes).toString('base64').match(/.{1,76}/g) || [];
+    mime = [...headers,'',`--${boundary}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: 8bit','',text,`--${boundary}`,'Content-Type: application/pdf; name="pre-devis-clean-cite.pdf"','Content-Disposition: attachment; filename="pre-devis-clean-cite.pdf"','Content-Transfer-Encoding: base64','',...chunks,`--${boundary}--`,''].join('\r\n');
+  } else mime = [...headers,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: 8bit','',text,''].join('\r\n');
+  const payload = { raw:toB64url(mime) };
+  if (threadId) payload.threadId = threadId;
+  return gmailFetch('/messages/send',{method:'POST',body:JSON.stringify(payload)});
+}
+
 export async function fetchImageAttachments(message, maxImages = 3, maxTotalBytes = 2_400_000) {
   const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
   const imgs = [];
@@ -239,28 +271,31 @@ export async function fetchImageAttachments(message, maxImages = 3, maxTotalByte
   return imgs;
 }
 
-export const SETTINGS_VERSION = 2;
+export const SETTINGS_VERSION = 3;
 
 export const DEFAULT_SETTINGS = {
   version: SETTINGS_VERSION,
   mode: 'semi',
   autoSimple: true,
+  autoPrequote: false,
+  autoFollowups: false,
   query: 'in:inbox -from:me newer_than:2d',
   maxPerRun: 5,
 };
 
 export async function getSettings() {
   const s = await mailStore().get('settings', { type: 'json', consistency: 'strong' });
-  // Migration v2 : l'automatisation sécurisée devient active par défaut et
-  // ne dépend plus du statut lu/non lu dans Gmail.
+  // La v3 ajoute des envois nouveaux, désactivés jusqu'à activation par l'admin.
   if (!s || Number(s.version || 0) < SETTINGS_VERSION) {
     const migrated = {
       ...DEFAULT_SETTINGS,
       ...(s || {}),
       version: SETTINGS_VERSION,
-      mode: 'semi',
-      autoSimple: true,
-      query: 'in:inbox -from:me newer_than:2d',
+      mode: s?.mode === 'draft' ? 'draft' : DEFAULT_SETTINGS.mode,
+      autoSimple: typeof s?.autoSimple === 'boolean' ? s.autoSimple : DEFAULT_SETTINGS.autoSimple,
+      autoPrequote: false,
+      autoFollowups: false,
+      query: String(s?.query || DEFAULT_SETTINGS.query),
       maxPerRun: Math.max(1, Math.min(5, Number(s?.maxPerRun) || 5)),
       migratedAt: new Date().toISOString(),
     };
@@ -275,6 +310,8 @@ export async function saveSettings(input = {}) {
     version: SETTINGS_VERSION,
     mode: input.mode === 'draft' ? 'draft' : 'semi',
     autoSimple: input.mode !== 'draft' && !!input.autoSimple,
+    autoPrequote: input.mode !== 'draft' && !!input.autoPrequote,
+    autoFollowups: input.mode !== 'draft' && !!input.autoFollowups,
     query: String(input.query || DEFAULT_SETTINGS.query).trim().slice(0, 300),
     maxPerRun: Math.max(1, Math.min(5, Number(input.maxPerRun) || 5)),
     updatedAt: new Date().toISOString(),

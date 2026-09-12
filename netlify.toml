@@ -16,7 +16,7 @@
     Cache-Control = "no-store"
 
 [functions]
-  included_files = ["data/planning.json"]
+  included_files = ["data/planning.json", "assets/fonts/*.ttf"]
 
 # SEO / performance / voice headers
 [[headers]]
