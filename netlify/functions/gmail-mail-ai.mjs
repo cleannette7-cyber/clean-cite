@@ -88,13 +88,30 @@ function safeJsonParse(text) {
   return null;
 }
 
+export function geminiQuotaError(response, data) {
+  if (response.status !== 429) return null;
+  const details = Array.isArray(data?.error?.details) ? data.error.details : [];
+  const retryInfo = details.find(detail => /[/.]RetryInfo$/.test(String(detail?.['@type'] || '')));
+  const retryText = String(retryInfo?.retryDelay || data?.error?.message || '');
+  const retryMatch = retryText.match(/(?:please retry in\s*)?(\d+(?:\.\d+)?)\s*s(?:econds?)?/i);
+  const retryAfterSeconds = retryMatch ? Math.ceil(Number(retryMatch[1])) : 60;
+  const error = new Error(`Limite Gemini atteinte. Réessaie la génération dans environ ${retryAfterSeconds} secondes. Si elle reste bloquée, vérifie les quotas de ton projet dans Google AI Studio.`);
+  error.code = 'GEMINI_QUOTA';
+  error.retryAfterSeconds = retryAfterSeconds;
+  return error;
+}
+
 async function extractQuoteFacts(message) {
   const prompt = `Extrais uniquement les faits explicitement présents dans l'e-mail ci-dessous pour un pré-devis Clean-Cité. JSON uniquement.\nPour chaque champ de quoteData, renvoie sa valeur ou null si absente. quoteEvidence doit contenir, pour chaque champ non nul, un court fragment EXACT recopié de l'objet ou du corps de l'e-mail qui prouve à la fois le nombre et son unité/objet (ex : "140 m²", "3 niveaux", "2 salles d'eau"). Les chiffres dans les tarifs de Clean-Cité ne sont pas des données du client. Pour surfaceScope, écris "total" uniquement si le texte précise une surface totale/au total ; sinon null. Pour Airbnb, si plusieurs niveaux sont mentionnés, ne multiplie JAMAIS la surface donnée par les niveaux : demande sa portée. service parmi bureaux, fin_chantier, chantier_cours, poubelles, airbnb, ou null si ambigu. frequency unique ou regulier. Pour bureaux réguliers, periodUnit vaut semaine ou mois, uniquement si précisé. condition leger, standard ou tres_sale. Tous les nombres doivent être numériques. Ne déduis aucun zéro ni aucun 1 implicite.\nFormat : {"quoteData":{"service":null,"surface":null,"frequency":null,"passages":null,"periodUnit":null,"condition":null,"bins":null,"binPasses":null,"agents":null,"hours":null,"days":null,"levels":null,"rotations":null,"bedrooms":null,"bathrooms":null,"toilets":null,"kitchens":null,"livingRooms":null,"surfaceScope":null,"city":null},"quoteEvidence":{}}\nE-MAIL :\nObjet : ${message.subject}\nCorps : ${newMessageText(message.body||message.snippet)}`;
   const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0,maxOutputTokens:1600,responseMimeType:'application/json',thinkingConfig:{thinkingBudget:0}}})
   });
   const result=await response.json().catch(()=>({}));
-  if (!response.ok) return null;
+  if (!response.ok) {
+    const quota = geminiQuotaError(response,result);
+    if (quota) throw quota;
+    return null;
+  }
   return safeJsonParse(result?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join(''));
 }
 
@@ -165,7 +182,7 @@ async function generateAiDraft(message) {
     })
   });
   const d = await r.json().catch(()=>({}));
-  if (!r.ok) throw new Error(d?.error?.message || 'Erreur Gemini.');
+  if (!r.ok) throw geminiQuotaError(r,d) || new Error(d?.error?.message || 'Erreur Gemini.');
   const candidate = d?.candidates?.[0] || null;
   const text = candidate?.content?.parts?.filter(p=>typeof p?.text==='string').map(p=>p.text).join('').trim() || '';
   let ai = safeJsonParse(text);
@@ -185,6 +202,10 @@ async function generateAiDraft(message) {
       })
     });
     const fd = await fr.json().catch(()=>({}));
+    if (!fr.ok) {
+      const quota = geminiQuotaError(fr,fd);
+      if (quota) throw quota;
+    }
     if (fr.ok) {
       const ftext = fd?.candidates?.[0]?.content?.parts?.filter(p=>typeof p?.text==='string').map(p=>p.text).join('').trim() || '';
       if (ftext) {
@@ -216,7 +237,9 @@ async function generateAiDraft(message) {
   ai.missingInfo = Array.isArray(ai.missingInfo) ? ai.missingInfo.slice(0,5).map(String) : [];
   ai.photoNotes = String(ai.photoNotes||'').slice(0,1500);
   if (ai.category === 'devis') {
-    const facts=await extractQuoteFacts(message).catch(()=>null);
+    let facts=null;
+    try { facts=await extractQuoteFacts(message); }
+    catch(e) { if (e.code === 'GEMINI_QUOTA') throw e; }
     if (facts) {
       ai.quoteData=facts.quoteData; ai.quoteEvidence=facts.quoteEvidence;
       ai.prequote=quoteFromAnalysis(message,facts);
@@ -307,6 +330,11 @@ async function autoProcessInternal() {
   if (!(settings.mode === 'semi' && settings.autoSimple)) return {enabled:false,checked:0,sent:0,skipped:0};
   const conn = await getConnection();
   if (!conn?.refreshToken) return {enabled:true,connected:false,checked:0,sent:0,skipped:0};
+  const store=mailStore();
+  const cooldown=await store.get('gemini-quota-cooldown',{type:'json'}).catch(()=>null);
+  if (Date.parse(cooldown?.until) > Date.now()) {
+    return {enabled:true,connected:true,pausedForQuota:true,retryAt:cooldown.until,checked:0,sent:0,skipped:0};
+  }
   const list = await listMessages(settings.query, settings.maxPerRun);
   let checked=0,sent=0,skipped=0;
   for (const item of list) {
@@ -315,8 +343,11 @@ async function autoProcessInternal() {
     checked++;
     try {
       const message = await fetchMessage(item.id);
-      const ai = await generateAiDraft(message);
-      await mailStore().setJSON(`drafts/${item.id}`,{...ai,generatedAt:new Date().toISOString()});
+      let ai=await store.get(`drafts/${item.id}`,{type:'json'}).catch(()=>null);
+      if (!ai?.replyBody) {
+        ai = await generateAiDraft(message);
+        await store.setJSON(`drafts/${item.id}`,{...ai,generatedAt:new Date().toISOString()});
+      }
       if (ai.autoEligible) {
         const prequote=ai.prequote?.complete && settings.autoPrequote ? ai.prequote : null;
         await sendReply(message,prequote?prequoteText(prequote):ai.prequote?.complete?'Merci pour votre demande. Nous avons reçu les informations nécessaires et préparons votre pré-devis. Nous reviendrons vers vous rapidement.':ai.replyBody,ai.replySubject,'semi-auto',prequote);
@@ -325,6 +356,11 @@ async function autoProcessInternal() {
     } catch(e) {
       console.error('gmail-auto-item',item.id,e);
       skipped++;
+      if (e.code === 'GEMINI_QUOTA') {
+        const until=new Date(Date.now()+Math.max(30*60*1000,(e.retryAfterSeconds+5)*1000)).toISOString();
+        await store.setJSON('gemini-quota-cooldown',{until,reason:'Gemini 429'});
+        break;
+      }
     }
   }
   const result={enabled:true,connected:true,checked,sent,skipped,ranAt:new Date().toISOString()};
@@ -355,9 +391,11 @@ export default async function handler(req) {
     if (action === 'get') return json(200,{message:await fetchMessage(String(body.messageId||''))});
     if (action === 'draft') {
       const message=await fetchMessage(String(body.messageId||''));
+      const cached=body.force ? null : await mailStore().get(`drafts/${message.id}`,{type:'json',consistency:'strong'}).catch(()=>null);
+      if (cached?.replyBody) return json(200,{message,draft:cached,cached:true});
       const draft=await generateAiDraft(message);
       await mailStore().setJSON(`drafts/${message.id}`,{...draft,generatedAt:new Date().toISOString()});
-      return json(200,{message,draft});
+      return json(200,{message,draft,cached:false});
     }
     if (action === 'send') {
       const message=await fetchMessage(String(body.messageId||''));

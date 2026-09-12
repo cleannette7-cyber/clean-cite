@@ -3,10 +3,19 @@ import assert from 'node:assert/strict';
 import pricing from '../assets/pricing.js';
 import { quoteFromAnalysis, prequotePdf } from '../netlify/functions/_prequote.mjs';
 import { dueStage } from '../netlify/functions/_quote-followups.mjs';
+import { geminiQuotaError } from '../netlify/functions/gmail-mail-ai.mjs';
 import { PDFDocument } from 'pdf-lib';
 
 const officeMessage = {subject:'Demande de devis bureaux',body:'Bonjour, nettoyage ponctuel de nos bureaux de 100 m² à Bobigny.'};
 const officeFacts = {quoteData:{service:'bureaux',surface:100,frequency:'unique',city:'Bobigny'},quoteEvidence:{service:'bureaux',surface:'100 m²',frequency:'ponctuel',city:'Bobigny'}};
+
+test('un refus de quota Gemini donne un délai clair sans exposer le message technique', () => {
+  const error=geminiQuotaError({status:429},{error:{message:'Quota exceeded. Please retry in 56.146100323s.',details:[{'@type':'type.googleapis.com/google.rpc.RetryInfo',retryDelay:'56s'}]}});
+  assert.equal(error.code,'GEMINI_QUOTA');
+  assert.equal(error.retryAfterSeconds,56);
+  assert.match(error.message,/Limite Gemini atteinte/);
+  assert.equal(geminiQuotaError({status:400},{error:{message:'Mauvaise requête'}}),null);
+});
 
 test('la grille partagée applique le minimum ponctuel, pas au contrat régulier', () => {
   assert.equal(pricing.estimate({service:'bureaux',surface:100,frequency:'unique'}).amount,150);
