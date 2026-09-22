@@ -4,6 +4,7 @@ import pricing from '../assets/pricing.js';
 import { quoteFromAnalysis, prequotePdf } from '../netlify/functions/_prequote.mjs';
 import { dueStage } from '../netlify/functions/_quote-followups.mjs';
 import { geminiQuotaError } from '../netlify/functions/gmail-mail-ai.mjs';
+import { extractPublicEmails, isGenericBusinessEmail, prospectDue, renderProspectTemplate } from '../netlify/functions/_prospecting-core.mjs';
 import { PDFDocument } from 'pdf-lib';
 
 const officeMessage = {subject:'Demande de devis bureaux',body:'Bonjour, nettoyage ponctuel de nos bureaux de 100 m² à Bobigny.'};
@@ -53,4 +54,27 @@ test('relances à J+7 puis sept jours après la première, jamais après répons
   assert.equal(dueStage({...quote,stage:1,lastFollowupAt:'2026-09-08T09:00:00Z'},new Date('2026-09-15T09:00:00Z')),2);
   assert.equal(dueStage({...quote,status:'replied'},new Date('2026-09-15T09:00:00Z')),0);
   assert.equal(dueStage({...quote,stage:2},new Date('2026-09-30T09:00:00Z')),0);
+});
+
+test('la détection privilégie les e-mails professionnels publics sans doublon', () => {
+  const html='<a href="mailto:contact@conciergerie.fr">Nous écrire</a> contact@conciergerie.fr <span>direction [at] conciergerie [dot] fr</span> noreply@conciergerie.fr';
+  const emails=extractPublicEmails(html,'https://conciergerie.fr/contact');
+  assert.deepEqual(emails.map(item=>item.email).sort(),['contact@conciergerie.fr','direction@conciergerie.fr']);
+  assert.equal(isGenericBusinessEmail('contact@conciergerie.fr'),true);
+  assert.equal(isGenericBusinessEmail('marie@conciergerie.fr'),false);
+});
+
+test('les variables du message de prospection sont remplacées sans invention', () => {
+  const rendered=renderProspectTemplate('Bonjour {{entreprise}} à {{ville}} — {{site}}',{
+    companyName:'Maison Hôte',location:'Paris',website:'https://maison-hote.fr'
+  });
+  assert.equal(rendered,'Bonjour Maison Hôte à Paris — https://maison-hote.fr');
+});
+
+test('la prospection prévoit une seule relance à J+7', () => {
+  const prospect={status:'contacted',followupStage:0,sentAt:'2026-09-01T09:00:00Z',followupDueAt:'2026-09-08T09:00:00Z'};
+  assert.equal(prospectDue(prospect,new Date('2026-09-08T08:59:59Z')),false);
+  assert.equal(prospectDue(prospect,new Date('2026-09-08T09:00:00Z')),true);
+  assert.equal(prospectDue({...prospect,followupStage:1},new Date('2026-09-20T09:00:00Z')),false);
+  assert.equal(prospectDue({...prospect,status:'replied'},new Date('2026-09-20T09:00:00Z')),false);
 });

@@ -13,7 +13,7 @@ export function gmailConfig() {
     clientId: String(process.env.GOOGLE_GMAIL_CLIENT_ID || '').trim(),
     clientSecret: String(process.env.GOOGLE_GMAIL_CLIENT_SECRET || '').trim(),
     redirectUri: String(process.env.GMAIL_OAUTH_REDIRECT_URI || DEFAULT_REDIRECT_URI).trim(),
-    allowedEmail: String(process.env.GMAIL_ALLOWED_EMAIL || '').trim().toLowerCase(),
+    allowedEmail: String(process.env.GMAIL_ALLOWED_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase(),
   };
 }
 
