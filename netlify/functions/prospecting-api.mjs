@@ -1,6 +1,7 @@
 import { getUser } from '@netlify/identity';
 import { getConnection } from './_gmail-common.mjs';
 import {
+  PROSPECT_CATEGORIES,
   getProspectingJob,
   getProspect,
   getProspectingSettings,
@@ -46,6 +47,7 @@ export default async function handler(request) {
       const gmailMatches = !!gmail?.refreshToken && String(gmail?.email || '').trim().toLowerCase() === expectedSender;
       return json(200, {
         settings,
+        categories: Object.entries(PROSPECT_CATEGORIES).map(([key, value]) => ({ key, label: value.label, keyword: value.keyword })),
         stats: prospectStats(prospects),
         gmailConnected: gmailMatches,
         gmailAccountConnected: !!gmail?.refreshToken,

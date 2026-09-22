@@ -4,7 +4,7 @@ import pricing from '../assets/pricing.js';
 import { quoteFromAnalysis, prequotePdf } from '../netlify/functions/_prequote.mjs';
 import { dueStage } from '../netlify/functions/_quote-followups.mjs';
 import { geminiQuotaError } from '../netlify/functions/gmail-mail-ai.mjs';
-import { extractPublicEmails, isGenericBusinessEmail, prospectDue, renderProspectTemplate } from '../netlify/functions/_prospecting-core.mjs';
+import { DEFAULT_PROSPECTING_SETTINGS, PROSPECT_CATEGORIES, extractPublicEmails, isGenericBusinessEmail, normalizeProspectingSettings, prospectDue, prospectMessageTemplate, renderProspectTemplate } from '../netlify/functions/_prospecting-core.mjs';
 import { PDFDocument } from 'pdf-lib';
 
 const officeMessage = {subject:'Demande de devis bureaux',body:'Bonjour, nettoyage ponctuel de nos bureaux de 100 m² à Bobigny.'};
@@ -69,6 +69,28 @@ test('les variables du message de prospection sont remplacées sans invention', 
     companyName:'Maison Hôte',location:'Paris',website:'https://maison-hote.fr'
   });
   assert.equal(rendered,'Bonjour Maison Hôte à Paris — https://maison-hote.fr');
+});
+
+test('la prospection propose cinq activités avec un message dédié', () => {
+  assert.deepEqual(Object.keys(PROSPECT_CATEGORIES),['airbnb','syndic','gestionnaire_copropriete','administrateur_biens','agence_immobiliere']);
+  const syndic=prospectMessageTemplate(DEFAULT_PROSPECTING_SETTINGS,'syndic');
+  const agence=prospectMessageTemplate(DEFAULT_PROSPECTING_SETTINGS,'agence_immobiliere');
+  assert.match(syndic.initialBody,/parties communes/i);
+  assert.doesNotMatch(syndic.initialBody,/Airbnb/i);
+  assert.match(agence.initialBody,/avant location ou vente/i);
+  assert.doesNotMatch(agence.followupBody,/locations courte durée/i);
+});
+
+test('les anciens réglages Airbnb sont migrés sans perdre le message personnalisé', () => {
+  const settings=normalizeProspectingSettings({version:1,keyword:'conciergerie Airbnb',initialSubject:'Objet personnalisé',initialBody:'Corps personnalisé',followupBody:'Relance personnalisée'});
+  assert.equal(settings.version,2);
+  assert.equal(settings.selectedCategory,'airbnb');
+  assert.equal(settings.templates.airbnb.initialSubject,'Objet personnalisé');
+  assert.match(settings.templates.syndic.initialBody,/syndics/i);
+  const afterManualSyndicSearch=normalizeProspectingSettings({version:1,keyword:'syndic de copropriété',initialSubject:'Objet Airbnb conservé'});
+  assert.equal(afterManualSyndicSearch.selectedCategory,'syndic');
+  assert.equal(afterManualSyndicSearch.templates.airbnb.initialSubject,'Objet Airbnb conservé');
+  assert.match(afterManualSyndicSearch.templates.syndic.initialSubject,/parties communes/i);
 });
 
 test('la prospection prévoit une seule relance à J+7', () => {

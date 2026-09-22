@@ -14,15 +14,12 @@ const COMPANY = {
   email: 'cleannette7@gmail.com',
 };
 
-export const DEFAULT_PROSPECTING_SETTINGS = {
-  version: 1,
-  keyword: 'conciergerie Airbnb',
-  defaultLocation: 'Île-de-France',
-  searchLimit: 20,
-  dailySendLimit: 20,
-  autoFollowup: true,
-  initialSubject: 'Partenariat nettoyage Airbnb à {{ville}} — Clean-Cité',
-  initialBody: `Bonjour,
+export const PROSPECT_CATEGORIES = Object.freeze({
+  airbnb: {
+    label: 'Conciergeries Airbnb',
+    keyword: 'conciergerie Airbnb',
+    initialSubject: 'Partenariat nettoyage Airbnb à {{ville}} — Clean-Cité',
+    initialBody: `Bonjour,
 
 Je me permets de vous contacter car votre activité concerne la gestion de locations courte durée à {{ville}}.
 
@@ -34,7 +31,7 @@ Bien cordialement,
 L’équipe Clean-Cité
 07 66 53 61 54
 https://clean-cite.org`,
-  followupBody: `Bonjour,
+    followupBody: `Bonjour,
 
 Je me permets de revenir vers vous au sujet de notre proposition de nettoyage pour vos locations courte durée à {{ville}}.
 
@@ -44,12 +41,173 @@ Bien cordialement,
 L’équipe Clean-Cité
 07 66 53 61 54
 https://clean-cite.org`,
+  },
+  syndic: {
+    label: 'Syndics de copropriété',
+    keyword: 'syndic de copropriété',
+    initialSubject: 'Entretien des parties communes à {{ville}} — Clean-Cité',
+    initialBody: `Bonjour,
+
+Je me permets de vous contacter au sujet des copropriétés que vous gérez à {{ville}}.
+
+Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny, accompagne les syndics pour l’entretien régulier ou ponctuel des parties communes : halls, escaliers, couloirs, ascenseurs et locaux poubelles.
+
+Recherchez-vous actuellement un prestataire fiable pour une résidence ou un immeuble ? Nous serions ravis d’étudier votre cahier des charges et de vous proposer une organisation adaptée.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+    followupBody: `Bonjour,
+
+Je me permets de revenir vers vous au sujet de l’entretien des copropriétés que vous gérez à {{ville}}.
+
+Si vous recherchez un prestataire pour des parties communes, un local poubelles ou un besoin ponctuel, nous pouvons échanger rapidement sur votre cahier des charges.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+  },
+  gestionnaire_copropriete: {
+    label: 'Gestionnaires de copropriété',
+    keyword: 'gestionnaire de copropriété',
+    initialSubject: 'Nettoyage pour vos copropriétés à {{ville}} — Clean-Cité',
+    initialBody: `Bonjour,
+
+Je me permets de vous contacter au sujet de votre activité de gestion de copropriétés à {{ville}}.
+
+Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny, intervient pour l’entretien régulier ou ponctuel des halls, escaliers, couloirs, ascenseurs et locaux poubelles.
+
+Avez-vous actuellement un immeuble de votre portefeuille pour lequel vous recherchez un prestataire ? Nous pouvons étudier vos besoins et adapter les passages au cahier des charges de chaque résidence.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+    followupBody: `Bonjour,
+
+Je me permets de revenir vers vous au sujet de nos prestations de nettoyage pour les copropriétés que vous gérez à {{ville}}.
+
+Si un immeuble de votre portefeuille nécessite un entretien régulier, un remplacement ou une intervention ponctuelle, nous pouvons échanger rapidement.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+  },
+  administrateur_biens: {
+    label: 'Administrateurs de biens',
+    keyword: 'administrateur de biens',
+    initialSubject: 'Nettoyage des biens que vous administrez à {{ville}} — Clean-Cité',
+    initialBody: `Bonjour,
+
+Je me permets de vous contacter au sujet des biens immobiliers que vous administrez à {{ville}}.
+
+Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny, propose l’entretien des parties communes ainsi que des interventions ponctuelles de remise en état avant location, après travaux ou entre deux occupants.
+
+Avez-vous actuellement besoin d’un prestataire fiable pour l’un de vos immeubles ou logements ? Nous serions ravis d’échanger sur vos besoins et vos délais.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+    followupBody: `Bonjour,
+
+Je me permets de revenir vers vous au sujet de nos prestations pour les biens que vous administrez à {{ville}}.
+
+Nous pouvons intervenir pour l’entretien de parties communes ou une remise en état ponctuelle. Je reste disponible pour étudier un besoin actuel ou à venir.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+  },
+  agence_immobiliere: {
+    label: 'Agences immobilières',
+    keyword: 'agence immobilière',
+    initialSubject: 'Prestations de nettoyage immobilier à {{ville}} — Clean-Cité',
+    initialBody: `Bonjour,
+
+Je me permets de vous contacter au sujet de votre activité immobilière à {{ville}}.
+
+Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny, intervient pour les remises en état avant location ou vente, les sorties locatives, les fins de travaux ainsi que l’entretien de bureaux et de parties communes.
+
+Avez-vous actuellement un bien ou des locaux nécessitant une intervention de nettoyage ? Nous serions ravis d’échanger avec vous et de vous proposer une solution adaptée.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+    followupBody: `Bonjour,
+
+Je me permets de revenir vers vous au sujet de nos prestations de nettoyage immobilier à {{ville}}.
+
+Si vous avez un bien à remettre en état avant une mise en location ou une vente, ou un besoin d’entretien régulier, nous pouvons étudier rapidement votre demande.
+
+Bien cordialement,
+L’équipe Clean-Cité
+07 66 53 61 54
+https://clean-cite.org`,
+  },
+});
+
+const defaultTemplates = () => Object.fromEntries(Object.entries(PROSPECT_CATEGORIES).map(([key, value]) => [key, {
+  initialSubject: value.initialSubject,
+  initialBody: value.initialBody,
+  followupBody: value.followupBody,
+}]));
+
+export const DEFAULT_PROSPECTING_SETTINGS = {
+  version: 2,
+  selectedCategory: 'airbnb',
+  keyword: PROSPECT_CATEGORIES.airbnb.keyword,
+  defaultLocation: 'Île-de-France',
+  searchLimit: 20,
+  dailySendLimit: 20,
+  autoFollowup: true,
+  templates: defaultTemplates(),
 };
 
 const clean = (value, max = 1000) => String(value ?? '').trim().slice(0, max);
 const nowIso = () => new Date().toISOString();
 const emailHash = (email) => createHash('sha256').update(String(email || '').trim().toLowerCase()).digest('hex');
 const prospectId = (value) => `p-${createHash('sha256').update(String(value)).digest('hex').slice(0, 32)}`;
+const CATEGORY_KEYS = new Set(Object.keys(PROSPECT_CATEGORIES));
+const CONTACTED_STATUSES = new Set(['contacted', 'followed_up', 'replied', 'paused', 'sending', 'send_uncertain', 'unsubscribed']);
+
+export function normalizeProspectCategory(value, fallback = '') {
+  const category = String(value || '').trim();
+  return CATEGORY_KEYS.has(category) ? category : fallback;
+}
+
+function inferCategoryFromText(value) {
+  const text = String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  if (/gestionnaire.{0,30}copro|gestion.{0,30}copro/.test(text)) return 'gestionnaire_copropriete';
+  if (/administrateur.{0,20}bien/.test(text)) return 'administrateur_biens';
+  if (/syndic|copropriet/.test(text)) return 'syndic';
+  if (/agence.{0,20}immobili|agence.{0,20}immo/.test(text)) return 'agence_immobiliere';
+  if (/concierger|airbnb|location.{0,20}courte|guest|host/.test(text)) return 'airbnb';
+  return '';
+}
+
+function categoryForProspect(prospect = {}) {
+  const saved = normalizeProspectCategory(prospect.category);
+  if (saved) return saved;
+  const inferred = inferCategoryFromText(`${prospect.searchKeyword || ''} ${prospect.companyName || ''} ${prospect.website || ''}`);
+  if (inferred) return inferred;
+  return CONTACTED_STATUSES.has(prospect.status) ? 'airbnb' : 'unclassified';
+}
+
+function normalizeProspectRecord(prospect) {
+  if (!prospect) return prospect;
+  const category = categoryForProspect(prospect);
+  return {
+    ...prospect,
+    category,
+    categoryLabel: PROSPECT_CATEGORIES[category]?.label || 'À classer',
+  };
+}
 
 export function prospectStore() {
   return getStore({ name: 'clean-cite-airbnb-prospects', consistency: 'strong' });
@@ -207,7 +365,7 @@ function siteName(html, url) {
   if (og) return og;
   const title = stripTags(String(html || '').match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '');
   if (title) return clean(title.split(/\s+[|–—-]\s+/)[0], 160);
-  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return 'Conciergerie'; }
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return 'Entreprise'; }
 }
 
 function contactLinks(html, pageUrl) {
@@ -256,7 +414,7 @@ export async function discoverWebsite(website) {
 
 export function renderProspectTemplate(template, prospect) {
   const replacements = {
-    entreprise: prospect.companyName || 'votre conciergerie',
+    entreprise: prospect.companyName || 'votre entreprise',
     ville: prospect.location || 'votre secteur',
     site: prospect.website || '',
     source: prospect.emailSourceUrl || prospect.website || '',
@@ -269,28 +427,55 @@ function complianceFooter(prospect) {
   return `\n\n—\nPourquoi cet e-mail ? Vos coordonnées professionnelles ont été trouvées sur une source publique liée à votre activité (${prospect.emailSourceUrl || prospect.website || 'site professionnel'}). Clean-Cité les utilise pour vous présenter une prestation en lien avec votre activité, sur la base de son intérêt légitime. Pour ne plus recevoir de sollicitations : ${unsubscribe}\nPolitique de confidentialité : ${SITE_ORIGIN}/confidentialite.html`;
 }
 
-function normalizeSettings(input = {}) {
+function normalizeMessageTemplate(input = {}, defaults) {
   return {
-    version: 1,
-    keyword: clean(input.keyword || DEFAULT_PROSPECTING_SETTINGS.keyword, 120),
+    initialSubject: clean(input.initialSubject || defaults.initialSubject, 240),
+    initialBody: clean(input.initialBody || defaults.initialBody, 8_000),
+    followupBody: clean(input.followupBody || defaults.followupBody, 8_000),
+  };
+}
+
+export function normalizeProspectingSettings(input = {}) {
+  const inferredCategory = inferCategoryFromText(input.keyword);
+  const selectedCategory = normalizeProspectCategory(input.selectedCategory, inferredCategory || 'airbnb');
+  const templates = {};
+  for (const [category, defaults] of Object.entries(PROSPECT_CATEGORIES)) {
+    const legacy = category === 'airbnb' ? {
+      initialSubject: input.initialSubject,
+      initialBody: input.initialBody,
+      followupBody: input.followupBody,
+    } : {};
+    templates[category] = normalizeMessageTemplate({ ...legacy, ...(input.templates?.[category] || {}) }, defaults);
+  }
+  return {
+    version: 2,
+    selectedCategory,
+    keyword: PROSPECT_CATEGORIES[selectedCategory].keyword,
     defaultLocation: clean(input.defaultLocation || DEFAULT_PROSPECTING_SETTINGS.defaultLocation, 160),
     searchLimit: Math.max(1, Math.min(40, Number(input.searchLimit) || DEFAULT_PROSPECTING_SETTINGS.searchLimit)),
     dailySendLimit: Math.max(1, Math.min(50, Number(input.dailySendLimit) || DEFAULT_PROSPECTING_SETTINGS.dailySendLimit)),
     autoFollowup: input.autoFollowup !== false,
-    initialSubject: clean(input.initialSubject || DEFAULT_PROSPECTING_SETTINGS.initialSubject, 240),
-    initialBody: clean(input.initialBody || DEFAULT_PROSPECTING_SETTINGS.initialBody, 8_000),
-    followupBody: clean(input.followupBody || DEFAULT_PROSPECTING_SETTINGS.followupBody, 8_000),
+    templates,
+    // Compatibilité avec les réglages enregistrés par l'interface V1.
+    initialSubject: templates.airbnb.initialSubject,
+    initialBody: templates.airbnb.initialBody,
+    followupBody: templates.airbnb.followupBody,
     updatedAt: nowIso(),
   };
 }
 
+export function prospectMessageTemplate(settings, category) {
+  const safeCategory = normalizeProspectCategory(category, 'airbnb');
+  return normalizeMessageTemplate(settings?.templates?.[safeCategory] || {}, PROSPECT_CATEGORIES[safeCategory]);
+}
+
 export async function getProspectingSettings() {
   const saved = await prospectStore().get('settings', { type: 'json', consistency: 'strong' }).catch(() => null);
-  return normalizeSettings({ ...DEFAULT_PROSPECTING_SETTINGS, ...(saved || {}) });
+  return normalizeProspectingSettings(saved || {});
 }
 
 export async function saveProspectingSettings(input) {
-  const settings = normalizeSettings(input);
+  const settings = normalizeProspectingSettings(input);
   await prospectStore().setJSON('settings', settings);
   return settings;
 }
@@ -299,15 +484,16 @@ export async function listProspects(limit = 500) {
   const store = prospectStore();
   const { blobs } = await store.list({ prefix: 'prospects/' });
   const rows = await Promise.all((blobs || []).slice(0, Math.max(1, Math.min(1000, limit))).map((blob) => store.get(blob.key, { type: 'json', consistency: 'strong' }).catch(() => null)));
-  return rows.filter(Boolean).sort((a, b) => String(b.updatedAt || b.collectedAt || '').localeCompare(String(a.updatedAt || a.collectedAt || '')));
+  return rows.filter(Boolean).map(normalizeProspectRecord).sort((a, b) => String(b.updatedAt || b.collectedAt || '').localeCompare(String(a.updatedAt || a.collectedAt || '')));
 }
 
 export async function getProspect(id) {
   if (!/^p-[a-f0-9]{32}$/.test(String(id || ''))) return null;
-  return prospectStore().get(`prospects/${id}`, { type: 'json', consistency: 'strong' }).catch(() => null);
+  const prospect = await prospectStore().get(`prospects/${id}`, { type: 'json', consistency: 'strong' }).catch(() => null);
+  return normalizeProspectRecord(prospect);
 }
 
-async function upsertDiscoveredProspect({ googlePlaceId, location, discovered }) {
+async function upsertDiscoveredProspect({ googlePlaceId, category, location, discovered }) {
   const store = prospectStore();
   const websiteHost = new URL(discovered.website).hostname.replace(/^www\./, '').toLowerCase();
   const id = prospectId(googlePlaceId || discovered.website);
@@ -316,6 +502,9 @@ async function upsertDiscoveredProspect({ googlePlaceId, location, discovered })
   const primary = discovered.emails[0] || null;
   const at = nowIso();
   const base = existing?.data || {};
+  const requestedCategory = normalizeProspectCategory(category, 'airbnb');
+  const savedCategory = normalizeProspectCategory(base.category);
+  const recordCategory = savedCategory || (CONTACTED_STATUSES.has(base.status) ? categoryForProspect(base) : requestedCategory);
   const email = base.email || primary?.email || '';
   const generic = email ? isGenericBusinessEmail(email) : false;
   const previouslyConfirmed = !!base.email && base.emailReviewRequired === false;
@@ -326,6 +515,8 @@ async function upsertDiscoveredProspect({ googlePlaceId, location, discovered })
     ...base,
     id,
     googlePlaceId: clean(googlePlaceId, 200),
+    category: recordCategory,
+    searchKeyword: base.searchKeyword || PROSPECT_CATEGORIES[recordCategory]?.keyword || PROSPECT_CATEGORIES[requestedCategory].keyword,
     companyName: base.companyName || clean(discovered.companyName || websiteHost, 180),
     location: base.location || clean(location, 160),
     website: clean(discovered.website, 1000),
@@ -380,10 +571,11 @@ async function inBatches(items, concurrency, worker) {
   return results;
 }
 
-export async function discoverProspects({ keyword, location, limit }) {
+export async function discoverProspects({ category, keyword, location, limit }) {
   const apiKey = clean(process.env.GOOGLE_PLACES_API_KEY, 500);
   if (!apiKey) throw new Error('La clé Google Places n’est pas encore configurée dans Netlify.');
-  const safeKeyword = clean(keyword || DEFAULT_PROSPECTING_SETTINGS.keyword, 120);
+  const safeCategory = normalizeProspectCategory(category, inferCategoryFromText(keyword) || 'airbnb');
+  const safeKeyword = PROSPECT_CATEGORIES[safeCategory].keyword;
   const safeLocation = clean(location, 160);
   const wanted = Math.max(1, Math.min(40, Number(limit) || 20));
   if (!safeLocation) throw new Error('Indique une ville, un département ou une région.');
@@ -403,7 +595,7 @@ export async function discoverProspects({ keyword, location, limit }) {
     if (!place.websiteUri) { withoutWebsite++; return null; }
     try {
       const discovered = await discoverWebsite(place.websiteUri);
-      const result = await upsertDiscoveredProspect({ googlePlaceId: place.id, location: safeLocation, discovered });
+      const result = await upsertDiscoveredProspect({ googlePlaceId: place.id, category: safeCategory, location: safeLocation, discovered });
       if (result.created) created++; else updated++;
       return result.record;
     } catch (error) {
@@ -412,21 +604,23 @@ export async function discoverProspects({ keyword, location, limit }) {
       return null;
     }
   });
-  return { found: places.length, saved: saved.filter(Boolean).length, created, updated, withoutWebsite, crawlErrors };
+  return { category: safeCategory, found: places.length, saved: saved.filter(Boolean).length, created, updated, withoutWebsite, crawlErrors };
 }
 
 function validJobId(value) {
   return /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(String(value || ''));
 }
 
-export async function queueProspectingJob({ jobId, keyword, location, limit }) {
+export async function queueProspectingJob({ jobId, category, keyword, location, limit }) {
   if (!validJobId(jobId)) throw new Error('Identifiant de recherche invalide.');
   const settings = await getProspectingSettings();
+  const safeCategory = normalizeProspectCategory(category, inferCategoryFromText(keyword) || settings.selectedCategory);
   const job = {
     id: jobId,
     runToken: randomBytes(24).toString('hex'),
     status: 'queued',
-    keyword: clean(keyword || settings.keyword, 120),
+    category: safeCategory,
+    keyword: PROSPECT_CATEGORIES[safeCategory].keyword,
     location: clean(location || settings.defaultLocation, 160),
     limit: Math.max(1, Math.min(40, Number(limit) || settings.searchLimit)),
     createdAt: nowIso(),
@@ -469,16 +663,28 @@ export async function updateProspect(input) {
   const key = `prospects/${id}`;
   const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
   if (!current?.data) throw new Error('Prospect introuvable.');
+  const currentProspect = normalizeProspectRecord(current.data);
   if (['contacted', 'followed_up', 'replied', 'unsubscribed'].includes(current.data.status) && input.email && normalizeEmail(input.email) !== current.data.email) {
     throw new Error('L’adresse d’un prospect déjà contacté ne peut pas être remplacée.');
   }
   const email = input.email === undefined ? current.data.email : normalizeEmail(input.email);
   if (input.email !== undefined && !email) throw new Error('Adresse e-mail invalide.');
+  let category = currentProspect.category;
+  if (input.category !== undefined) {
+    const requestedCategory = normalizeProspectCategory(input.category);
+    if (!requestedCategory) throw new Error('Choisis une activité valide pour ce prospect.');
+    if (CONTACTED_STATUSES.has(current.data.status) && requestedCategory !== currentProspect.category) {
+      throw new Error('L’activité d’un prospect déjà contacté ne peut plus être modifiée.');
+    }
+    category = requestedCategory;
+  }
   const allowedStatus = new Set(['ready', 'review', 'missing_email', 'contacted', 'paused', 'replied', 'unsubscribed']);
   let status = allowedStatus.has(input.status) ? input.status : current.data.status;
   if (input.email !== undefined && input.confirmEmail) status = 'ready';
   const record = {
     ...current.data,
+    category,
+    searchKeyword: PROSPECT_CATEGORIES[category]?.keyword || current.data.searchKeyword || '',
     companyName: input.companyName === undefined ? current.data.companyName : clean(input.companyName, 180),
     location: input.location === undefined ? current.data.location : clean(input.location, 160),
     email,
@@ -492,7 +698,7 @@ export async function updateProspect(input) {
   };
   const result = await store.setJSON(key, record, { onlyIfMatch: current.etag });
   if (!result.modified) throw new Error('Le prospect a été modifié entre-temps. Recharge la liste.');
-  return record;
+  return normalizeProspectRecord(record);
 }
 
 async function isSuppressed(email) {
@@ -525,9 +731,10 @@ export async function sendInitialProspects(ids, now = new Date()) {
     try {
       const key = `prospects/${id}`;
       const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
-      const prospect = current?.data;
+      const prospect = normalizeProspectRecord(current?.data);
       if (!prospect) throw new Error('Prospect introuvable.');
       if (prospect.status !== 'ready') throw new Error('Ce prospect n’est pas prêt à être contacté.');
+      if (!normalizeProspectCategory(prospect.category)) throw new Error('Classe d’abord ce prospect dans une activité.');
       if (prospect.emailReviewRequired) throw new Error('Valide d’abord l’adresse e-mail détectée.');
       if (!normalizeEmail(prospect.email)) throw new Error('Adresse e-mail manquante ou invalide.');
       if (await isSuppressed(prospect.email)) throw new Error('Cette adresse figure dans la liste de désinscription.');
@@ -535,8 +742,9 @@ export async function sendInitialProspects(ids, now = new Date()) {
       if (!claim.modified) throw new Error('Un envoi ou une tentative existe déjà pour ce prospect.');
       const locked = await store.setJSON(key, { ...prospect, status: 'sending', updatedAt: now.toISOString() }, { onlyIfMatch: current.etag });
       if (!locked.modified) throw new Error('Le prospect a été modifié entre-temps.');
-      const subject = renderProspectTemplate(settings.initialSubject, prospect);
-      const body = renderProspectTemplate(settings.initialBody, prospect) + complianceFooter(prospect);
+      const template = prospectMessageTemplate(settings, prospect.category);
+      const subject = renderProspectTemplate(template.initialSubject, prospect);
+      const body = renderProspectTemplate(template.initialBody, prospect) + complianceFooter(prospect);
       const sent = await sendGmailMail({ to: prospect.email, subject, body });
       const updated = {
         ...prospect,
@@ -623,38 +831,40 @@ export async function runProspectFollowups(now = new Date()) {
       const key = `prospects/${prospect.id}`;
       const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
       if (!current?.data || !prospectDue(current.data, now)) continue;
-      if (await isSuppressed(current.data.email)) {
-        await store.setJSON(key, { ...current.data, status: 'unsubscribed', updatedAt: now.toISOString() }, { onlyIfMatch: current.etag });
+      const currentProspect = normalizeProspectRecord(current.data);
+      if (await isSuppressed(currentProspect.email)) {
+        await store.setJSON(key, { ...currentProspect, status: 'unsubscribed', updatedAt: now.toISOString() }, { onlyIfMatch: current.etag });
         continue;
       }
-      if (await hasProspectReplied(current.data)) {
-        const changed = await store.setJSON(key, { ...current.data, status: 'replied', repliedAt: now.toISOString(), updatedAt: now.toISOString() }, { onlyIfMatch: current.etag });
+      if (await hasProspectReplied(currentProspect)) {
+        const changed = await store.setJSON(key, { ...currentProspect, status: 'replied', repliedAt: now.toISOString(), updatedAt: now.toISOString() }, { onlyIfMatch: current.etag });
         if (changed.modified) replied++;
         continue;
       }
       const claim = await store.setJSON(`claims/followup/${prospect.id}`, { at: now.toISOString() }, { onlyIfNew: true });
       if (!claim.modified) continue;
       let messageIdHeader = '';
-      if (current.data.sentMessageId) {
-        const previous = await gmailFetch(`/messages/${encodeURIComponent(current.data.sentMessageId)}?format=metadata&metadataHeaders=Message-ID`);
+      if (currentProspect.sentMessageId) {
+        const previous = await gmailFetch(`/messages/${encodeURIComponent(currentProspect.sentMessageId)}?format=metadata&metadataHeaders=Message-ID`);
         messageIdHeader = headerMap(previous.payload?.headers)['message-id'] || '';
       }
-      const body = renderProspectTemplate(settings.followupBody, current.data) + complianceFooter(current.data);
+      const template = prospectMessageTemplate(settings, currentProspect.category);
+      const body = renderProspectTemplate(template.followupBody, currentProspect) + complianceFooter(currentProspect);
       const message = await sendGmailMail({
-        to: current.data.email,
-        subject: current.data.subject || renderProspectTemplate(settings.initialSubject, current.data),
+        to: currentProspect.email,
+        subject: currentProspect.subject || renderProspectTemplate(template.initialSubject, currentProspect),
         body,
-        threadId: messageIdHeader ? current.data.threadId : undefined,
+        threadId: messageIdHeader ? currentProspect.threadId : undefined,
         inReplyTo: messageIdHeader,
         references: messageIdHeader,
       });
       await store.setJSON(key, {
-        ...current.data,
+        ...currentProspect,
         status: 'followed_up',
         followupStage: 1,
         followupSentAt: now.toISOString(),
         followupMessageId: message.id || '',
-        threadId: message.threadId || current.data.threadId,
+        threadId: message.threadId || currentProspect.threadId,
         updatedAt: now.toISOString(),
       });
       sent++;

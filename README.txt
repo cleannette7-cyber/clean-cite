@@ -1,14 +1,14 @@
 MISE À JOUR COMPLÈTE CLEAN-CITÉ
 
-Cette archive contient le site complet avec le module « Prospection Airbnb »
+Cette archive contient le site complet avec le module « Prospection commerciale »
 déjà intégré dans le tableau de bord administrateur.
 
 Dézipper l'archive, puis utiliser le contenu complet pour mettre à jour le dépôt
 GitHub Clean-Cité existant. Après validation de la mise à jour sur GitHub,
 Netlify redéploiera automatiquement le site.
 
-Lire README-PROSPECTION-AIRBNB-V13.txt pour les étapes précises et l'activation
-de la clé Google Places.
+Lire README-PROSPECTION-MULTI-ACTIVITES.txt pour les étapes précises, la liste des
+activités disponibles et l'activation de la clé Google Places.
 
 Site Clean-Cité corrigé avec :
 - index.html : accueil
