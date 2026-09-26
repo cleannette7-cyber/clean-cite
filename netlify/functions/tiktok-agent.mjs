@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 import { getUser } from '@netlify/identity';
+import { captionWithTags } from '../../assets/tiktok-caption.mjs';
 
 const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -111,7 +112,7 @@ export function photoPostInput(post, channelId, scheduleAt, siteUrl = 'https://c
   if (!Number.isFinite(when.getTime()) || when.getTime() < Date.now() + 10 * 60_000 || when.getTime() > Date.now() + 365 * 86400_000) {
     throw new Error('Choisis une date et une heure entre 10 minutes et un an dans le futur.');
   }
-  return { channelId, text: [post.caption, ...(post.hashtags || []).map(tag => tag.startsWith('#') ? tag : `#${tag.replace(/^#+/, '')}`)].filter(Boolean).join(' ').trim(),
+  return { channelId, text: captionWithTags(post),
     schedulingType: 'automatic', mode: 'customScheduled', dueAt: when.toISOString(),
     assets: photos.map(url => ({ image: { url } })), metadata: { tiktok: { title: clean(post.title, 90) } } };
 }
@@ -183,7 +184,7 @@ export default async function handler(req) {
       const service = clean(input.service, 100);
       const goal = clean(input.goal, 100);
       const format = allowed(input.format, [...FORMATS, 'au choix'], 'au choix');
-      const prompt = `Prépare exactement ${count} proposition(s) de contenu TikTok pour Clean-Cité. Service : ${service || 'nettoyage professionnel'}. Objectif : ${goal || 'demandes de devis'}. Format : ${format}. Notes factuelles sur le chantier ou l'idée : ${brief || 'Aucune réalisation précise fournie.'}. Pour chaque proposition, fournis une accroche courte, une légende prête à relire, quelques hashtags pertinents, un scénario vertical ou des prises de vue à réaliser, et une note sur les visuels nécessaires. Si trois propositions sont demandées, varie les angles. N'affirme pas que des images, résultats ou autorisations existent si cela n'est pas dit. Réponds uniquement avec le JSON demandé.`;
+      const prompt = `Prépare exactement ${count} proposition(s) de contenu TikTok pour Clean-Cité. Service : ${service || 'nettoyage professionnel'}. Objectif : ${goal || 'demandes de devis'}. Format : ${format}. Notes factuelles sur le chantier ou l'idée : ${brief || 'Aucune réalisation précise fournie.'}. Pour chaque proposition, fournis un titre interne simple, une accroche courte, une légende claire et concise de 2 à 4 phrases (400 caractères maximum), sans hashtags, puis 3 à 5 hashtags pertinents uniquement dans le champ hashtags. Fournis aussi un scénario ou des prises de vue à réaliser et une note sur les visuels nécessaires. Si trois propositions sont demandées, varie les angles. N'affirme pas que des images, résultats ou autorisations existent si cela n'est pas dit. Réponds uniquement avec le JSON demandé.`;
       const result = await askGemini(prompt, POST_SCHEMA);
       const posts = (Array.isArray(result.posts) ? result.posts : []).slice(0, count).map(p => normalizePost({
         ...p, platform: 'TikTok',

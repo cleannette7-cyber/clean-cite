@@ -10,7 +10,18 @@ Tous les fichiers de cette base sont présents. Les seules modifications du site
 - admin/tiktok.html : agent, import de photos et programmation après validation ;
 - netlify/functions/tiktok-agent.mjs : brouillons, connexion Buffer et programmation ;
 - netlify/functions/tiktok-media.mjs : hébergement HTTPS des photos importées ;
+- assets/tiktok-caption.mjs : légende et hashtags sans répétition ;
 - version.txt : identification de cette version.
+
+CORRECTIF DE LISIBILITÉ — 26/09/2026
+- Les étapes de connexion Buffer disparaissent quand le compte TikTok est reconnu.
+- Le format Photo est sélectionné par défaut ; le format Vidéo prépare seulement
+  un texte à copier, car la programmation automatique de cet écran porte sur les photos.
+- Une proposition montre un seul texte à publier : les hashtags déjà présents dans
+  la légende ne sont pas répétés, y compris au moment de l'envoi dans Buffer.
+- On enregistre d'abord le texte, puis on ajoute des photos au brouillon et on
+  choisit la date et l'heure de publication. Les champs facultatifs sont rangés
+  dans « Autres options ». La confirmation valide le brouillon avant programmation.
 
 Les fonctions de devis, factures, Mail IA, prospection, SEO et les pages publiques
 proviennent de la même archive de base. Aucun changement manuel de code n'est
@@ -36,9 +47,10 @@ LIAISON TIKTOK, ÉTAPE PAR ÉTAPE
 4. Dans /admin/tiktok.html, cliquer sur « Actualiser la connexion » ; sélectionner
    le compte TikTok trouvé. La clé ne s'affiche jamais dans la page.
 5. Créer/enregistrer un brouillon au format Photo ou Carrousel, ajouter 1 à 10
-   photos réelles (ou un lien HTTPS direct), relire la légende, passer le suivi à
-   « validé », choisir une date et une heure, cocher l'accord, puis cliquer sur
-   « Programmer dans Buffer ». Vérifier ensuite la file de publication Buffer.
+   photos réelles (ou un lien HTTPS direct dans « Autres options »), relire le
+   texte, choisir une date et une heure, confirmer que les photos peuvent être
+   diffusées, puis cliquer sur « Programmer ces photos ». Vérifier ensuite la
+   file de publication Buffer.
 
 Les fichiers JPG, PNG et WebP sont convertis en JPEG et réduits par le navigateur
 avant d'être envoyés dans Netlify Blobs. Chaque photo importée reçoit une URL

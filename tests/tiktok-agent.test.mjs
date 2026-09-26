@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { photoPostInput } from '../netlify/functions/tiktok-agent.mjs';
+import { captionWithTags } from '../assets/tiktok-caption.mjs';
 
 const future = () => new Date(Date.now() + 2 * 86400_000).toISOString();
 const post = { format: 'carrousel', title: 'Avant et après le nettoyage', caption: 'Chantier terminé avec accord du client.',
@@ -23,4 +24,10 @@ test('la programmation refuse les vidéos, les images non publiques et les dates
   assert.throws(() => photoPostInput({ ...post, mediaUrl: 'http://localhost/photo.jpg' }, 'id', future()), /URL HTTPS publique/);
   assert.throws(() => photoPostInput(post, 'id', new Date(Date.now() + 1000).toISOString()), /10 minutes/);
   assert.throws(() => photoPostInput({ ...post, mediaUrls: Array.from({ length: 10 }, (_, i) => `https://example.com/${i}.jpg`) }, 'id', future()), /maximum 10 photos/);
+});
+
+test('le texte copié et la publication Buffer évitent les hashtags répétés par une ancienne proposition IA', () => {
+  const withEmbeddedTags = { ...post, caption: 'Nettoyage terminé #CleanCite #Nettoyage', hashtags: ['#cleancite', '#Nettoyage', '#Bobigny', '#Bobigny'] };
+  assert.equal(captionWithTags(withEmbeddedTags), 'Nettoyage terminé #CleanCite #Nettoyage\n\n#Bobigny');
+  assert.equal(photoPostInput(withEmbeddedTags, 'channel-123', future()).text, captionWithTags(withEmbeddedTags));
 });
