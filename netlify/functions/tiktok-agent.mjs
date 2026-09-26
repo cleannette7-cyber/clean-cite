@@ -5,7 +5,7 @@ import { getUser } from '@netlify/identity';
 const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const PLATFORMS = ['TikTok'];
-const STATUSES = ['brouillon', 'validé', 'publié'];
+const STATUSES = ['brouillon', 'validé', 'programmé', 'publié'];
 const FORMATS = ['vidéo', 'photo', 'carrousel'];
 const COMPANY_CONTEXT = `Tu es l'agent éditorial de Clean-Cité, entreprise de nettoyage professionnel basée à Bobigny et active en Île-de-France.
 Services : bureaux, résidences et parties communes, chantiers en cours, fins de chantier, remises en état, locations courte durée, vitrerie et sortie/rentrée de poubelles.
@@ -35,9 +35,15 @@ function normalizePost(value = {}) {
   if (date && (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date + 'T12:00:00Z')))) {
     throw new Error('Date de publication souhaitée invalide.');
   }
-  const mediaUrl = clean(value.mediaUrl, 1000);
-  if (mediaUrl && !/^https:\/\//i.test(mediaUrl) && !/^\/images\/[\w./-]+$/i.test(mediaUrl)) {
-    throw new Error('Le visuel doit avoir une URL HTTPS ou provenir des images du site.');
+  const mediaUrls = [...new Set([clean(value.mediaUrl, 1000), ...list(value.mediaUrls, 1000, 10)].filter(Boolean))];
+  if (mediaUrls.length > 10) throw new Error('TikTok accepte au maximum 10 photos par publication.');
+  for (const url of mediaUrls) {
+    if (/^\/images\/[\w./-]+$/.test(url) && !url.includes('..')) continue;
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === 'https:' && parsed.hostname && !parsed.username && !parsed.password && !/^(localhost|127\.|10\.|192\.168\.|169\.254\.)/i.test(parsed.hostname)) continue;
+    } catch { /* URL invalide */ }
+    throw new Error('Chaque photo doit avoir une URL HTTPS publique ou provenir des images du site.');
   }
   const post = {
     platform: 'TikTok',
@@ -48,7 +54,8 @@ function normalizePost(value = {}) {
     hashtags: list(value.hashtags, 70, 10),
     shots: list(value.shots, 400, 8),
     mediaNotes: clean(value.mediaNotes, 800),
-    mediaUrl,
+    mediaUrl: mediaUrls[0] || '',
+    mediaUrls,
     date,
     status: allowed(value.status, STATUSES, 'brouillon'),
     source: clean(value.source, 700),
@@ -57,6 +64,56 @@ function normalizePost(value = {}) {
   if (!post.title || !post.caption) throw new Error('Le titre et la légende sont obligatoires.');
   if (post.publishedUrl && !/^https:\/\//i.test(post.publishedUrl)) throw new Error('Le lien de publication doit utiliser HTTPS.');
   return post;
+}
+
+const BUFFER_API = 'https://api.buffer.com';
+class BufferError extends Error {
+  constructor(message, definitive = false) { super(message); this.definitive = definitive; }
+}
+
+async function bufferGraphql(query, variables = {}) {
+  const key = process.env.BUFFER_API_KEY?.trim();
+  if (!key) throw new BufferError('La clé BUFFER_API_KEY manque dans Netlify.', true);
+  const response = await fetch(BUFFER_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+    body: JSON.stringify({ query, variables }),
+    signal: AbortSignal.timeout(15000),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new BufferError(response.status === 401 || response.status === 403
+      ? 'Clé Buffer refusée : vérifie BUFFER_API_KEY dans Netlify.'
+      : response.status === 429 ? 'Buffer limite les requêtes pour le moment. Réessaie plus tard.'
+        : `Buffer est indisponible (HTTP ${response.status}).`, response.status >= 400 && response.status < 500);
+  }
+  if (result.errors?.length) throw new BufferError(clean(result.errors[0].message, 240) || 'Erreur Buffer.', true);
+  return result.data || {};
+}
+
+async function bufferChannels() {
+  const data = await bufferGraphql('query { account { organizations { id name } } }');
+  const orgs = data.account?.organizations || [];
+  const lists = await Promise.all(orgs.map(async org => {
+    const result = await bufferGraphql(`query { channels(input: { organizationId: ${JSON.stringify(org.id)} }) { id name displayName service isDisconnected isLocked } }`);
+    return (result.channels || []).filter(channel => String(channel.service).toLowerCase() === 'tiktok')
+      .map(channel => ({ id: channel.id, name: channel.displayName || channel.name || 'Compte TikTok',
+        disconnected: !!channel.isDisconnected, locked: !!channel.isLocked }));
+  }));
+  return lists.flat();
+}
+
+export function photoPostInput(post, channelId, scheduleAt, siteUrl = 'https://clean-cite.org') {
+  const photos = normalizePost(post).mediaUrls.map(url => url.startsWith('/') ? new URL(url, siteUrl).href : url);
+  if (photos.length < 1 || photos.length > 10) throw new Error('Ajoute entre 1 et 10 photos avant de programmer.');
+  if (!['photo', 'carrousel'].includes(post.format)) throw new Error('Sélectionne le format Photo ou Carrousel.');
+  const when = new Date(scheduleAt);
+  if (!Number.isFinite(when.getTime()) || when.getTime() < Date.now() + 10 * 60_000 || when.getTime() > Date.now() + 365 * 86400_000) {
+    throw new Error('Choisis une date et une heure entre 10 minutes et un an dans le futur.');
+  }
+  return { channelId, text: [post.caption, ...(post.hashtags || []).map(tag => tag.startsWith('#') ? tag : `#${tag.replace(/^#+/, '')}`)].filter(Boolean).join(' ').trim(),
+    schedulingType: 'automatic', mode: 'customScheduled', dueAt: when.toISOString(),
+    assets: photos.map(url => ({ image: { url } })), metadata: { tiktok: { title: clean(post.title, 90) } } };
 }
 
 const POST_SCHEMA = {
@@ -145,6 +202,10 @@ export default async function handler(req) {
     }
 
     const store = getStore({ name: 'clean-cite-social', consistency: 'strong' });
+    if (action === 'bufferStatus') {
+      if (!process.env.BUFFER_API_KEY?.trim()) return json(200, { configured: false, channels: [] });
+      return json(200, { configured: true, channels: await bufferChannels() });
+    }
     if (action === 'list') {
       const { blobs } = await store.list({ prefix: 'posts/' });
       const posts = (await Promise.all(blobs.slice(0, 200).map(async b => store.get(b.key, { type: 'json', consistency: 'strong' })))).filter(Boolean);
@@ -153,6 +214,7 @@ export default async function handler(req) {
     }
     if (action === 'save') {
       const post = normalizePost(input.post || {});
+      if (post.status === 'programmé') return json(400, { error: 'Une publication programmée se modifie dans Buffer.' });
       const id = clean(input.post?.id, 40);
       const now = new Date().toISOString();
       if (id) {
@@ -160,6 +222,9 @@ export default async function handler(req) {
         const key = `posts/${id}`;
         const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
         if (!current?.data) return json(404, { error: 'Publication introuvable.' });
+        if (['sending', 'uncertain', 'scheduled'].includes(current.data.buffer?.state)) {
+          return json(409, { error: 'Cette publication a été envoyée à Buffer. Vérifie son état dans Buffer avant toute modification.' });
+        }
         if (Number(input.post?.revision) !== Number(current.data.revision)) return json(409, { error: 'Ce brouillon a changé. Recharge la page.' });
         const updated = { ...post, id, createdAt: current.data.createdAt, updatedAt: now, revision: (current.data.revision || 1) + 1 };
         const saved = await store.setJSON(key, updated, { onlyIfMatch: current.etag });
@@ -172,10 +237,70 @@ export default async function handler(req) {
       if (!saved.modified) throw new Error('Impossible de créer le brouillon. Réessaie.');
       return json(200, { post: created });
     }
+    if (action === 'queuePhoto') {
+      const id = clean(input.postId, 40);
+      if (!/^[0-9a-f-]{36}$/.test(id)) return json(400, { error: 'Publication introuvable.' });
+      if (input.confirm !== true) return json(400, { error: 'Confirme la programmation et les droits sur les photos.' });
+      const key = `posts/${id}`;
+      const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
+      if (!current?.data) return json(404, { error: 'Publication introuvable.' });
+      if (Number(input.revision) !== Number(current.data.revision)) return json(409, { error: 'Le brouillon a changé. Recharge la page.' });
+      if (current.data.status !== 'validé') return json(409, { error: 'Valide d’abord le brouillon avant de le programmer.' });
+      if (['sending', 'uncertain', 'scheduled'].includes(current.data.buffer?.state)) {
+        return json(409, { error: 'Un envoi vers Buffer existe déjà : vérifie Buffer pour éviter un doublon.' });
+      }
+      const channel = (await bufferChannels()).find(c => c.id === input.channelId && !c.disconnected && !c.locked);
+      if (!channel) return json(400, { error: 'Connecte un compte TikTok actif à Buffer et sélectionne-le.' });
+      const postInput = photoPostInput(current.data, channel.id, input.scheduleAt);
+      const sending = { ...current.data, revision: current.data.revision + 1, updatedAt: new Date().toISOString(),
+        buffer: { state: 'sending', channelId: channel.id, channelName: channel.name, dueAt: postInput.dueAt } };
+      const reserved = await store.setJSON(key, sending, { onlyIfMatch: current.etag });
+      if (!reserved.modified) return json(409, { error: 'Le brouillon a changé. Recharge la page.' });
+      try {
+        const query = `mutation CreatePhotoPost($input: CreatePostInput!) {
+          createPost(input: $input) {
+            ... on PostActionSuccess { post { id dueAt } }
+            ... on MutationError { message }
+          }
+        }`;
+        const result = (await bufferGraphql(query, { input: postInput })).createPost;
+        if (!result?.post?.id) throw new BufferError(clean(result?.message, 250) || 'Buffer n’a pas confirmé la création.', !!result?.message);
+        const scheduled = { ...sending, status: 'programmé', revision: sending.revision + 1,
+          updatedAt: new Date().toISOString(), buffer: { ...sending.buffer, state: 'scheduled', id: result.post.id,
+            dueAt: result.post.dueAt || postInput.dueAt } };
+        const written = await store.setJSON(key, scheduled, { onlyIfMatch: reserved.etag });
+        if (!written.modified) throw new Error('La publication a été créée dans Buffer, mais le suivi local n’a pas été mis à jour. Vérifie Buffer.');
+        return json(200, { post: scheduled });
+      } catch (error) {
+        const definitive = error instanceof BufferError && error.definitive;
+        const failed = { ...sending, revision: sending.revision + 1, updatedAt: new Date().toISOString(),
+          buffer: { ...sending.buffer, state: definitive ? 'rejected' : 'uncertain', error: clean(error?.message, 250) } };
+        try { await store.setJSON(key, failed, { onlyIfMatch: reserved.etag }); } catch (writeError) { console.error('tiktok-agent tracking:', writeError); }
+        return json(definitive ? 422 : 503, { error: definitive ? `Buffer a refusé la publication : ${failed.buffer.error}`
+          : 'Envoi incertain : vérifie dans Buffer avant tout nouvel essai pour éviter un doublon.' });
+      }
+    }
+    if (action === 'markPublished') {
+      const id = clean(input.postId, 40);
+      if (!/^[0-9a-f-]{36}$/.test(id)) return json(400, { error: 'Publication introuvable.' });
+      const key = `posts/${id}`;
+      const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
+      if (!current?.data) return json(404, { error: 'Publication introuvable.' });
+      if (current.data.buffer?.state !== 'scheduled' || current.data.status !== 'programmé') {
+        return json(409, { error: 'Cette publication n’est pas programmée dans Buffer.' });
+      }
+      const publishedUrl = clean(input.publishedUrl, 1000);
+      if (publishedUrl && !/^https:\/\/(www\.)?tiktok\.com\//i.test(publishedUrl)) return json(400, { error: 'Ajoute un lien de publication TikTok valide.' });
+      const updated = { ...current.data, status: 'publié', publishedUrl, updatedAt: new Date().toISOString(), revision: current.data.revision + 1 };
+      const written = await store.setJSON(key, updated, { onlyIfMatch: current.etag });
+      if (!written.modified) return json(409, { error: 'Publication modifiée : recharge la page.' });
+      return json(200, { post: updated });
+    }
     return json(400, { error: 'Action inconnue.' });
   } catch (error) {
     const message = clean(error?.message, 300) || 'Erreur serveur.';
-    if (/Date de publication|visuel|titre et la légende|lien de publication/.test(message)) return json(400, { error: message });
+    if (/Date de publication|visuel|photo|Titre|titre et la légende|lien de publication|Sélectionne le format|Choisis une date|TikTok accepte/.test(message)) return json(400, { error: message });
+    if (error instanceof BufferError) return json(503, { error: message });
     console.error('tiktok-agent:', error);
     return json(503, { error: message });
   }
