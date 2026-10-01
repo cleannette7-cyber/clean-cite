@@ -17,12 +17,13 @@ function createAdminContext(){
   };
   const storage=new Map();
   const localStorage={getItem:key=>storage.has(key)?storage.get(key):null,setItem:(key,value)=>storage.set(key,String(value))};
+  const printDocument={written:'',open(){this.written=''},write(value){this.written+=String(value)},close(){}};
   const context=vm.createContext({
     console,Intl,Date,Math,JSON,Number,String,Array,Object,RegExp,
     document:{getElementById:element,querySelectorAll:()=>[],querySelector:()=>null},
     localStorage,sessionStorage:{setItem(){},getItem(){return null}},
     location:{origin:'https://clean-cite.org',href:''},
-    window:{open(){return null}},
+    window:{open(){return{document:printDocument}}},
     confirm:()=>true,alert(){},scrollTo(){},requestAnimationFrame:fn=>fn(),setTimeout,
   });
   vm.runInContext(adminScript,context,{filename:'admin/devis.html'});
@@ -39,7 +40,7 @@ function createAdminContext(){
   Object.assign(element('deposit'),{value:'0'});
   Object.assign(element('quoteNotes'),{value:''});
   Object.assign(element('paymentTerms'),{value:'Règlement à réception.'});
-  return{context,elements,localStorage};
+  return{context,elements,localStorage,printDocument};
 }
 
 const calculationDetail=`Sur la base de 6 jours par semaine :
@@ -75,13 +76,17 @@ test('création, ajout, sauvegarde, rechargement et suppression du détail du ca
   assert.equal(vm.runInContext('lines[0].detailOpen',context),true);
   assert.match(elements.get('linesBody').innerHTML,/Supprimer détail du calcul/);
 
+  context.updatedDetail=`${calculationDetail}\n\nMontant validé après vérification.`;
+  vm.runInContext('updateCalculationDetail(lines[0].id,updatedDetail)',context);
+  assert.equal(vm.runInContext('buildPayload().lines[0].calculationDetail',context),context.updatedDetail);
+
   vm.runInContext('removeCalculationDetail(lines[0].id)',context);
   assert.equal(vm.runInContext('buildPayload().lines[0].calculationDetail',context),'');
   assert.match(elements.get('linesBody').innerHTML,/Ajouter détail du calcul/);
 });
 
 test('le document PDF conserve les lignes, les puces et masque les détails vides',()=>{
-  const{context}=createAdminContext();
+  const{context,localStorage,printDocument}=createAdminContext();
   context.quote={
     quoteNumber:'D-2026-TEST',quoteDate:'2026-10-01',validUntil:'2026-10-31',
     client:{name:'Client test',email:'',phone:'0612345678',city:'Bobigny',address:'1 rue du Test'},
@@ -96,7 +101,14 @@ test('le document PDF conserve les lignes, les puces et masque les détails vide
   assert.match(html,/• Par jour : 4 h × 26 € = 104 € HT/);
   assert.match(html,/• Par mois moyen : 26 jours × 104 € = 2 704 € HT/);
   assert.match(html,/white-space:pre-wrap/);
+  assert.match(html,/window\.print\(\)/);
   assert.equal((html.match(/<tr class="calculation-pdf-row">/g)||[]).length,1);
+
+  context.printLines=context.quote.lines;
+  vm.runInContext('lines=printLines.map(l=>({...l,id:uid()}));printQuote()',context);
+  assert.match(printDocument.written,/Détail du calcul :/);
+  assert.match(printDocument.written,/window\.print\(\)/);
+  assert.equal(JSON.parse(localStorage.getItem('cleanCiteAdminQuotesV1')).length,1);
 
   context.emptyQuote={...context.quote,lines:[context.quote.lines[1]]};
   const emptyHtml=vm.runInContext('quoteRowsHtml(emptyQuote)',context);
