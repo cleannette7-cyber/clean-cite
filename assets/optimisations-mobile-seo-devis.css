@@ -66,3 +66,19 @@
   body:not(.clean-cite-home) .nav-right .dd-menu { padding: 10px 12px; }
   .clean-cite-zone-contact a { width: 100%; text-align: center; }
 }
+
+/* 2026-10-21 v2 : empêcher le menu Services de sortir par le bord GAUCHE sur ordinateur. */
+@media (min-width: 861px) {
+  body.clean-cite-home .dd-wrap > .dd-menu {
+    left: 0 !important;
+    right: auto !important;
+    max-width: calc(100vw - 24px);
+  }
+}
+@media (min-width: 981px) {
+  body:not(.clean-cite-home) .dd-wrap > .dd-menu {
+    left: 0 !important;
+    right: auto !important;
+    max-width: calc(100vw - 24px);
+  }
+}

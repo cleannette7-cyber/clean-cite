@@ -1,0 +1,31 @@
+CLEAN-CITÉ — Correctif du menu Services tronqué à gauche (21/10/2026)
+
+PROBLÈME : sur ordinateur, le sous-menu « Services » s'ouvrait vers la gauche.
+La largeur du menu dépassait alors le bord gauche de la fenêtre.
+
+CORRECTION : le menu s'ouvre maintenant à droite du bouton Services, sans sortir de l'écran.
+Le correctif est intégré dans les HTML ET dans la feuille de style pour protéger
+la page d'accueil et les pages locales. Aucun fichier de l'administration, aucun
+devis, aucune facture, aucune fonction Netlify n'a été touché.
+
+INSTALLATION SUR GITHUB :
+1. Ouvrir le bon dépôt GitHub relié au site Netlify « clean-cite.org ».
+2. À la RACINE du dépôt, vérifier qu'il existe un fichier « index.html ».
+3. Remplacer le fichier « index.html » PAR celui contenu à la racine de ce ZIP.
+   Il ne faut PAS créer un sous-dossier « Clean-Cite-Correctif-Menu » ou « clean-cite-main ».
+4. Remplacer également les fichiers HTML des pages de service indiquées dans le ZIP,
+   puis « assets/optimisations-mobile-seo-devis.css » dans le dossier assets existant.
+   Les dossiers sont conservés dans le ZIP; NE PAS envoyer le ZIP non décompressé.
+5. Valider avec « Commit changes ». Attendre « Published » sur Netlify.
+6. Ctrl + Maj + R dans Chrome pour rafraîchir en ignorant le cache.
+
+VÉRIFICATION INDISPENSABLE :
+- Sur GitHub > racine > index.html, rechercher « left:0;right:auto;max-width ».
+- Vérifier sur clean-cite.org que le menu Services s'ouvre à DROITE et reste entier.
+- Vérifier l'affichage du contact : nettoyage-pro@clean-cite.org.
+  Si l'ancienne adresse reste affichée, c'est très probablement que GitHub/Netlify
+  sert toujours un autre fichier index.html : confirmer la branche et le Publish Directory.
+- Attention : l'adresse e-mail administrateur interne n'est volontairement pas modifiée.
+
+REMARQUE : si vous souhaitez uniquement corriger la PAGE D'ACCUEIL, vous pouvez
+commencer par mettre à jour le seul fichier index.html, directement à la racine.
