@@ -1,4 +1,4 @@
-const DEFAULT_EMAIL = process.env.CLEAN_CITE_EMAIL || "cleannette7@gmail.com";
+const DEFAULT_EMAIL = process.env.CLEAN_CITE_EMAIL || "nettoyage-pro@clean-cite.org";
 const DEFAULT_PHONE = "07 66 53 61 54";
 
 function json(statusCode, body) {

@@ -6,7 +6,7 @@ const COMPANY = {
   name: "Clean-Cité",
   address: "149 rue de Paris, 93000 Bobigny",
   phone: "07 66 53 61 54",
-  email: "cleannette7@gmail.com",
+  email: "nettoyage-pro@clean-cite.org",
   siret: "989 248 554 00010",
   siren: "989248554",
 };

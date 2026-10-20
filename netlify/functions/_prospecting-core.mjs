@@ -11,7 +11,7 @@ const COMPANY = {
   name: 'Clean-Cité',
   address: '149 rue de Paris, 93000 Bobigny',
   phone: '07 66 53 61 54',
-  email: 'cleannette7@gmail.com',
+  email: 'nettoyage-pro@clean-cite.org',
 };
 
 export const PROSPECT_CATEGORIES = Object.freeze({

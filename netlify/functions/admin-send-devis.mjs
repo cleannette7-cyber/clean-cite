@@ -2,7 +2,7 @@ import { getUser } from "@netlify/identity";
 import { quoteId, recordQuote } from './_quote-followups.mjs';
 
 const ADMIN_EMAIL = (process.env.CLEAN_CITE_ADMIN_EMAIL || "cleannette7@gmail.com").toLowerCase();
-const COMPANY_EMAIL = process.env.CLEAN_CITE_EMAIL || "cleannette7@gmail.com";
+const COMPANY_EMAIL = process.env.CLEAN_CITE_EMAIL || "nettoyage-pro@clean-cite.org";
 const COMPANY_PHONE = "07 66 53 61 54";
 
 function json(statusCode, body) {

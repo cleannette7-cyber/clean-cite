@@ -12,9 +12,9 @@ export default async function handler(request) {
     const ok = await unsubscribeProspect(url.searchParams.get('id'), url.searchParams.get('token'));
     return ok
       ? page('Désinscription confirmée', 'Votre opposition a bien été enregistrée. Vous ne recevrez plus d’e-mails de prospection de Clean-Cité.')
-      : page('Lien invalide ou expiré', 'Nous n’avons pas pu identifier cette demande. Vous pouvez écrire à cleannette7@gmail.com pour exercer votre droit d’opposition.', 400);
+      : page('Lien invalide ou expiré', 'Nous n’avons pas pu identifier cette demande. Vous pouvez écrire à nettoyage-pro@clean-cite.org pour exercer votre droit d’opposition.', 400);
   } catch (error) {
     console.error('prospecting-unsubscribe', error);
-    return page('Désinscription indisponible', 'Veuillez écrire à cleannette7@gmail.com afin que nous enregistrions votre opposition.', 500);
+    return page('Désinscription indisponible', 'Veuillez écrire à nettoyage-pro@clean-cite.org afin que nous enregistrions votre opposition.', 500);
   }
 }

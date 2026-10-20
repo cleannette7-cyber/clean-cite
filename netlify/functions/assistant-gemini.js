@@ -12,7 +12,7 @@ Identité Clean-Cité :
 - Responsable : TRAORE FOUSSEYNI
 - Adresse : 149 rue de Paris, 93000 Bobigny
 - Téléphone : 07 66 53 61 54
-- Email principal : cleannette7@gmail.com
+- Email principal : nettoyage-pro@clean-cite.org
 - Site : https://clean-cite.org
 - Zone : Bobigny, Seine-Saint-Denis, Paris et Île-de-France (92, 93, 94, 95, 77, 91)
 
