@@ -1,0 +1,68 @@
+/* Clean-Cité — correctif menu mobile et accès devis | 21 octobre 2026 */
+/* Les deux modèles de navigation existants utilisent .open (accueil) ou .show (pages services). */
+.clean-cite-contact-email { color: inherit; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.clean-cite-quick-actions {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 11px 16px;
+  margin-top: 20px; padding: 15px 17px; border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.07);
+  color: #fff; font-size: .9rem; line-height: 1.5;
+}
+.clean-cite-quick-actions strong { font-weight: 800; }
+.clean-cite-quick-actions a {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 100px; padding: 8px 13px; font-weight: 800;
+  color: #0B2447; background: #fff; text-decoration: none;
+  transition: background .2s;
+}
+.clean-cite-quick-actions a:hover, .clean-cite-quick-actions a:focus-visible { background: #f5dcb5; }
+.clean-cite-zone-contact {
+  margin: 30px auto 0; padding: 20px 24px; background: #fcf7f0;
+  border: 1px solid #e8ded1; border-radius: 18px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px;
+}
+.clean-cite-zone-contact p { flex: 1 1 230px; line-height: 1.5; margin: 0; }
+.clean-cite-zone-contact a {
+  display: inline-block; border-radius: 50px; padding: 12px 18px;
+  background: #0B2447; color: #fff; font-weight: 800; text-decoration: none;
+}
+@media (max-width: 860px) {
+  body.clean-cite-home .nav-right.open {
+    max-height: calc(100dvh - 70px); overflow-y: auto; overscroll-behavior: contain;
+  }
+  body.clean-cite-home .nav-right.open:has(.dd-menu.open) { overflow: visible; }
+  body.clean-cite-home .dd-wrap { position: static; }
+  body.clean-cite-home .dd-menu {
+    position: absolute; top: 62px; left: 5%; right: auto;
+    width: 90vw; min-width: 0; max-width: 90%;
+    max-height: min(65dvh, 490px); overflow-y: auto;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    flex-direction: column; gap: 0; padding: 14px 16px;
+    margin: 0; border: 1px solid #e8ded1; border-top: 3px solid #9a681f;
+    border-radius: 14px; background: #fff;
+    box-shadow: 0 15px 40px rgba(0,0,0,.2); z-index: 50;
+  }
+  body.clean-cite-home .dd-menu a { white-space: normal; overflow-wrap: anywhere; }
+  body.clean-cite-home .dd-col { min-width: 0; }
+  .clean-cite-quick-actions { gap: 9px; }
+  .clean-cite-quick-actions a { flex: 1 1 auto; }
+}
+@media (max-width: 980px) {
+  body:not(.clean-cite-home) .nav-right.show { max-height: calc(100dvh - 74px); overflow-y: auto; overscroll-behavior: contain; }
+  body:not(.clean-cite-home) .nav-right.show:has(.dd-menu.show) { overflow: visible; }
+  body:not(.clean-cite-home) .dd-wrap { position: static; }
+  body:not(.clean-cite-home) .nav-right .dd-menu {
+    position: absolute; top: 70px; left: 5%; right: auto;
+    width: 90vw; min-width: 0; max-width: 90%;
+    max-height: min(65dvh, 490px); overflow-y: auto;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    padding: 12px 18px; border-radius: 14px;
+    background: #fff; box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    border: 1px solid #e8ded1; z-index: 50;
+  }
+  body:not(.clean-cite-home) .nav-right .dd-menu a { white-space: normal; overflow-wrap: anywhere; }
+}
+@media (max-width: 390px) {
+  body.clean-cite-home .dd-menu,
+  body:not(.clean-cite-home) .nav-right .dd-menu { padding: 10px 12px; }
+  .clean-cite-zone-contact a { width: 100%; text-align: center; }
+}

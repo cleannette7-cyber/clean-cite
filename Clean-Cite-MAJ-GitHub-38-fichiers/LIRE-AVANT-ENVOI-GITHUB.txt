@@ -1,0 +1,22 @@
+MISE À JOUR PARTIELLE CLEAN-CITÉ - GITHUB - 21/10/2026
+
+CE ZIP CONTIENT UNIQUEMENT LES FICHIERS AJOUTÉS OU MODIFIÉS.
+Il y a 38 fichiers du site (et cette notice) : pas plus de 100 fichiers à envoyer.
+
+INSTALLATION :
+1. Faire une sauvegarde de la version actuelle de votre dépôt GitHub.
+2. DÉCOMPRESSER ce fichier ZIP sur votre ordinateur (ne pas téléverser le ZIP directement dans GitHub).
+3. Dans GitHub, à la RACINE du dépôt Clean-Cité : Add file > Upload files.
+4. Glisser-déposer les FICHIERS ET DOSSIERS obtenus en décompressant
+   (index.html, assets/, admin/, netlify/, pages HTML, etc.).
+   Important : NE PAS créer un sous-dossier 'clean-cite-main' dans le dépôt.
+5. GitHub doit remplacer les fichiers existants de même chemin et ajouter les nouveaux.
+6. Cliquer 'Commit changes' ; attendre le déploiement Netlify.
+7. Tester menu Services sur mobile, pré-devis, contact et connexion administrateur.
+
+AUCUNE SUPPRESSION : ne supprimer aucun fichier déjà présent sur GitHub.
+IMPORTANT : vérifier que nettoyage-pro@clean-cite.org reçoit les mails et
+contrôler les variables d'environnement ainsi que les notifications Netlify.
+L'identifiant de connexion admin reste inchangé.
+
+En cas de doute : nous montrer une capture de l'écran GitHub avant validation.
