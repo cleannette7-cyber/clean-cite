@@ -645,6 +645,7 @@ button{
 <meta name="twitter:description" content="Nettoyage de vitres et vitrines à Bobigny, Paris et en Île-de-France : dès 4 €/m², très sale dès 6,50 €/m². Accès difficiles et hauteur sur devis.">
 <meta name="twitter:image" content="https://clean-cite.org/images/logo-clean-cite.png">
   <!-- CLEAN-CITE DEPLOY VERSION: AIRBNB-JIMMY-V8-2026-08-31 -->
+<link rel="stylesheet" href="/assets/conversion-devis.css?v=20261022">
 </head>
 <body>
   <header class="topbar">
@@ -713,6 +714,8 @@ button{
         </div>
       </div>
     </section>
+<section class="cc-quick-lead" aria-label="Demande de devis rapide"><div class="cc-quick-inner"><div><span class="cc-lead-label">Votre devis de nettoyage</span><h2>Un devis pour vitres ou vitrines ?</h2><p>Un commerce, des bureaux ou une habitation ? Donnez la ville et une idée de la surface vitrée.</p></div><div class="cc-quick-actions"><a class="cc-gold" href="#contact">Demander un devis</a><a class="cc-phone" href="tel:+33766536154">Appeler Clean-Cité</a></div></div></section>
+
 
     <section class="section" id="services">
       <div class="container">
@@ -804,14 +807,16 @@ button{
             <a href="index.html#contact" class="btn-outline">Formulaire principal</a>
           </div>
         </div>
-        <form class="panel" name="pre-devis-clean-cite" method="POST" data-netlify="true">
+        <form action="/merci.html" class="panel" name="pre-devis-clean-cite" method="POST" data-netlify="true">
           <input type="hidden" name="form-name" value="pre-devis-clean-cite">
+<input type="hidden" name="page_origine" value="nettoyage-vitrines.html">
+<input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="utm_term" value=""><input type="hidden" name="utm_content" value="">
           <input type="hidden" name="page-service" value="Nettoyage de vitrines">
           <div class="form-grid">
             <input name="nom" placeholder="Nom / Société" required>
             <input name="telephone" placeholder="Téléphone" required>
             <input name="email" type="email" placeholder="Email">
-            <input name="ville" placeholder="Ville">
+            <input name="ville" placeholder="Ville" required>
             <select name="service" required>
               <option value="Nettoyage de vitrines">Nettoyage de vitrines</option>
               <option value="Nettoyage fin de chantier">Nettoyage fin de chantier</option>
@@ -823,8 +828,10 @@ button{
 <option value="Autre demande">Autre demande</option>
             </select>
             <input name="surface" placeholder="Surface approximative">
-            <textarea class="full" name="message" placeholder="Expliquez votre besoin : type de local, fréquence, état actuel, urgence..." required></textarea>
-            <button class="btn-primary full" type="submit">Envoyer ma demande</button>
+            <select class="full" name="type_vitrage" aria-label="Type de vitres"><option value="">Type de vitrage (facultatif)</option><option>Vitrine de commerce</option><option>Fenêtres de bureaux</option><option>Baies vitrées</option><option>Autre vitrage</option></select>
+<select class="full" name="frequence_souhaitee" aria-label="Fréquence souhaitée"><option value="">Fréquence souhaitée (facultatif)</option><option>Intervention unique</option><option>Hebdomadaire</option><option>Mensuelle</option></select>
+<textarea class="full" name="message" placeholder="Facultatif : nombre de vitres, hauteur, accès, fréquence..."></textarea>
+            <p class="cc-form-hint full">Vos coordonnées servent uniquement à vous recontacter au sujet de ce devis. <a href="/confidentialite.html">Confidentialité</a>.</p><button class="btn-primary full" type="submit">Envoyer ma demande</button>
           </div>
         </form>
       </div>
@@ -875,5 +882,7 @@ button{
 
 <!-- Assistant IA Clean-Cité Gemini -->
 <script defer src="/assets/assistant-gemini.js?v=10"></script>
+<div class="cc-mobile-action" aria-label="Actions rapides"><a href="#contact">Devis gratuit</a><a href="tel:+33766536154">Appeler</a></div>
+<script defer src="/assets/conversion-devis.js?v=20261022"></script>
 </body>
 </html>

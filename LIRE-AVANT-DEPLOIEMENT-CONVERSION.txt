@@ -1,0 +1,26 @@
+CLEAN-CITÉ – CONVERSION DEVIS / PRÉPARATION GOOGLE ADS – 22/10/2026
+
+CONTENU
+- 6 pages de prestations existantes : CTA rapide sous le bandeau, bouton devis visible sur mobile, champs adaptés au service, ville obligatoire, message et e-mail facultatifs (téléphone obligatoire).
+- 1 nouvelle page : nettoyage-parkings-garages.html.
+- index.html : lien vers le service parkings / garages + lien SEO interne.
+- sitemap.xml : nouvelle page.
+- assets/conversion-devis.css + assets/conversion-devis.js : style et récupération des paramètres UTM sans cookies.
+
+MISE À JOUR GITHUB
+- À la racine du dépôt : déposer index.html, sitemap.xml, la nouvelle page et les 6 pages existantes.
+- Dans assets/ : les deux fichiers conversion-devis.css et conversion-devis.js.
+- Conserver tous les autres fichiers du site ; ne pas remplacer les dossiers admin et netlify/functions.
+- Commit changes puis attendre Netlify Published.
+- Faire un test de formulaire avec son propre numéro + vérifier Netlify > Forms > demande-devis et pre-devis-clean-cite.
+- Vérifier la redirection sur /merci.html après soumission ; vérifier la réception des notifications. Ces notifications sont un réglage Netlify séparé.
+- IMPORTANT : ne pas démarrer les campagnes Google Ads tant que le test du formulaire et le suivi de conversion ne sont pas vérifiés.
+
+SÉCURITÉ ET DONNÉES
+- Pas de modification des comptes administrateurs, fonctions Gmail, Supabase, factures ou prospection.
+- Les formulaires existants sont conservés et complétés ; la nouvelle page utilise le formulaire demande-devis Netlify.
+- Aucun compte Google Ads n'a été créé, aucune dépense publicitaire n'a été engagée.
+- Prévoir politique de confidentialité et consentement si ajout ultérieur de balises de mesure et cookies (la collecte UTM dans formulaire ne charge aucune balise tierce).
+- Le ZIP reprend la dernière base transmise avant les dernières mises à jour de messagerie ; seuls des fichiers publics non liés à ces mises à jour sont inclus. Si le dépôt GitHub a changé ces mêmes fichiers depuis, comparer avant d'écraser.
+
+Fichier Google-Ads-Plan-Clean-Cite.txt : stratégie et annonces prêtes à saisir manuellement.

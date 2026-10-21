@@ -421,6 +421,7 @@ footer p{opacity:.9;margin:6px 0}
 <meta content="https://clean-cite.org/images/logo-clean-cite.png" name="twitter:image"/>
   <!-- CLEAN-CITE DEPLOY VERSION: AIRBNB-JIMMY-V8-2026-08-31 -->
 <link rel="stylesheet" href="/assets/optimisations-mobile-seo-devis.css?v=20261021-menu2">
+<link rel="stylesheet" href="/assets/conversion-devis.css?v=20261022">
 </head>
 <body>
 <nav aria-label="Navigation principale">
@@ -485,6 +486,8 @@ footer p{opacity:.9;margin:6px 0}
 </div>
 </div>
 </section>
+<section class="cc-quick-lead" aria-label="Demande de devis rapide"><div class="cc-quick-inner"><div><span class="cc-lead-label">Votre devis de nettoyage</span><h2>Un devis pour terrasse, balcon ou cour ?</h2><p>Dites-nous la surface et la ville. Nous vous proposerons un devis adapté au revêtement et à l’état du sol.</p></div><div class="cc-quick-actions"><a class="cc-gold" href="#contact">Demander un devis</a><a class="cc-phone" href="tel:+33766536154">Appeler Clean-Cité</a></div></div></section>
+
 <section class="services" id="services">
 <span class="section-label">Nettoyage extérieur à Bobigny et en Île-de-France</span>
 <h2 class="section-title">UNE TERRASSE PROPRE, NETTE ET PLUS ACCUEILLANTE</h2>
@@ -653,6 +656,8 @@ footer p{opacity:.9;margin:6px 0}
 </div>
 <form action="/merci.html" class="cform" data-netlify="true" method="POST" name="demande-devis">
 <input name="form-name" type="hidden" value="demande-devis"/>
+<input type="hidden" name="page_origine" value="nettoyage-terrasses.html">
+<input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="utm_term" value=""><input type="hidden" name="utm_content" value="">
 <input name="subject" type="hidden" value="Demande de devis - Nettoyage terrasses Clean-Cité"/>
 <h3>DEMANDE DE DEVIS TERRASSE</h3>
 <div class="form-group">
@@ -665,7 +670,7 @@ footer p{opacity:.9;margin:6px 0}
 </div>
 <div class="form-group">
 <label>Email</label>
-<input name="email" placeholder="votre@email.com" required="" type="email"/>
+<input name="email" placeholder="votre@email.com" type="email"/>
 </div>
 <div class="form-group">
 <label>Type de service</label>
@@ -683,11 +688,14 @@ footer p{opacity:.9;margin:6px 0}
 <option>Autre</option>
 </select>
 </div>
+<div class="form-group"><label for="cc-ville-terrasse">Ville d’intervention *</label><input id="cc-ville-terrasse" name="ville" type="text" placeholder="Ex. : Bobigny, Pantin..." required></div>
+<div class="form-group"><label for="cc-surface-terrasse">Surface approximative (m²)</label><input id="cc-surface-terrasse" name="surface_estimee" type="number" min="1" placeholder="Ex. : 45"></div>
+<div class="form-group"><label for="cc-sol-terrasse">Revêtement</label><select id="cc-sol-terrasse" name="revetement"><option value="">Je ne sais pas</option><option>Carrelage</option><option>Béton</option><option>Dalles</option><option>Pierre</option><option>Bois</option><option>Autre</option></select></div>
 <div class="form-group">
-<label>Message</label>
-<textarea name="message" placeholder="Ex : terrasse de 45 m² à Bobigny, surface très sale, accès à l’eau disponible, besoin d’un démoussage..." required=""></textarea>
+<label>Précisions (facultatif)</label>
+<textarea name="message" placeholder="Facultatif : état de la terrasse, mousse, arrivée d’eau, accessibilité..."></textarea>
 </div>
-<button class="btn-submit" type="submit">ENVOYER MA DEMANDE</button>
+<p class="cc-form-hint">Vos coordonnées servent uniquement à vous recontacter pour ce devis. <a href="/confidentialite.html">Confidentialité</a>.</p><button class="btn-submit" type="submit">ENVOYER MA DEMANDE</button>
 </form>
 </div>
 </section>
@@ -763,5 +771,7 @@ Merci.`;
 </script>
 <!-- Assistant IA Clean-Cité Gemini -->
 <script defer="" src="/assets/assistant-gemini.js?v=10"></script>
+<div class="cc-mobile-action" aria-label="Actions rapides"><a href="#contact">Devis gratuit</a><a href="tel:+33766536154">Appeler</a></div>
+<script defer src="/assets/conversion-devis.js?v=20261022"></script>
 </body>
 </html>

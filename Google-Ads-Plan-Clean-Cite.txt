@@ -1,0 +1,127 @@
+CLEAN-CITÉ — PLAN DE LANCEMENT GOOGLE ADS (22/10/2026)
+STATUT : PROPOSITION / NON PUBLIÉE / AUCUNE DÉPENSE ENGAGÉE
+OBJECTIF : DEMANDES DE DEVIS QUALIFIÉES (pas visites ni candidatures)
+
+1) PRÉPARATION REQUISE AVANT DÉPENSE
+- Publier les pages et tester une soumission par prestation dans Netlify Forms.
+- Vérifier que notification e-mail des nouveaux devis arrive sur nettoyage-pro@clean-cite.org.
+- Dans Google Ads > Objectifs > Conversions, créer une conversion « Devis envoyé » pour la page /merci.html.
+- Installer et tester la balise Google Ads correspondant à votre compte (numéro AW-... + libellé), OU Google Tag Manager avec déclenchement sur la page de remerciement ; ne pas inventer de balise.
+- Ne PAS considérer « clic bouton » seul comme devis acquis ; c'est un indicateur secondaire.
+- Contrôler la politique de confidentialité et la gestion du consentement avant pose de cookies publicitaires.
+
+2) CAMPAGNE TEST SUGGÉRÉE
+Type : Réseau de Recherche (Search) uniquement ; pas de Réseau Display associé au départ.
+Nom : CC | Devis nettoyage | 93-Paris | Test
+Objectif : prospects / formulaires, optimisation progressive selon volume de données.
+Zone géographique : Bobigny + communes réellement desservies (Pantin, Drancy, Bondy, Montreuil, Aubervilliers) ; étendre ensuite selon les résultats.
+Options de localisation : Présence — personnes situées dans les zones ou qui s'y rendent régulièrement (pour éviter les clics très éloignés). Le ciblage Google n'est jamais exact à 100 %.
+Langue : français ; horaires de diffusion uniquement lorsque vous pouvez répondre aux appels, formulaires accessibles en continu.
+Budget TEST facultatif : 10 € / jour pendant 14 jours avec date de fin, à valider par vous. Le budget journalier Google Ads est une moyenne ; certaines journées peuvent dépasser cette valeur. Aucun résultat garanti.
+Ne pas lancer sans budget approuvé ; s'il n'y a pas de marge pour le test, privilégier pages et prospection B2B.
+
+3) GROUPES D'ANNONCES PRIORITAIRES
+GROUPE A : Fin de chantier
+Page : https://clean-cite.org/nettoyage-fin-de-chantier.html
+Mots clés de départ (expression / exacts) :
+"nettoyage fin de chantier 93"
+"entreprise nettoyage après travaux"
+"devis nettoyage fin chantier"
+[nettoyage fin de chantier bobigny]
+[entreprise nettoyage fin chantier]
+
+GROUPE B : Vitres / vitrines
+Page : https://clean-cite.org/nettoyage-vitrines.html
+"nettoyage vitrine commerce"
+"entreprise nettoyage vitres 93"
+"devis nettoyage vitrine"
+[nettoyage vitrine bobigny]
+[nettoyage vitres professionnel]
+
+APRÈS PREMIÈRE PÉRIODE DE TEST (si pertinente)
+GROUPE C : Terrasses et extérieurs
+Page : https://clean-cite.org/nettoyage-terrasses.html
+"nettoyage terrasse 93"
+"devis nettoyage terrasse"
+[nettoyage terrasse bobigny]
+
+GROUPE D : Canapés
+Page : https://clean-cite.org/nettoyage-tapis-canapes.html
+"nettoyage canapé à domicile 93"
+"devis nettoyage canapé"
+[nettoyage canapé bobigny]
+
+GROUPE E : Parkings et garages
+Page : https://clean-cite.org/nettoyage-parkings-garages.html
+"nettoyage parking copropriété"
+"entreprise nettoyage parking sous sol"
+[nettoyage parking 93]
+
+4) LISTE DE MOTS CLÉS À EXCLURE (au niveau de la campagne)
+emploi
+emplois
+recrutement
+recruter
+cv
+curriculum vitae
+candidature
+stage
+stages
+alternance
+apprentissage
+formation
+formations
+salaire
+salaires
+france travail
+pole emploi
+pôle emploi
+job
+jobs
+travailler
+recherche emploi
+offre emploi
+fiche métier
+cours nettoyage
+comment nettoyer
+recette maison
+produit nettoyant
+location shampouineuse
+machine nettoyage à vendre
+(Ajouter des variantes si elles apparaissent dans le rapport « Termes de recherche ». Ne pas exclure « devis gratuit », qui peut être une recherche cliente légitime.)
+
+5) ANNONCES PRÉPARÉES (assets de RSA, longueur à revérifier lors de saisie)
+GROUPE A — TITRES
+Nettoyage Fin De Chantier
+Devis Nettoyage Rapide
+Entreprise À Bobigny 93
+Nettoyage Après Travaux
+Locaux Prêts À Livrer
+Demandez Votre Devis
+
+DESCRIPTIONS
+Nettoyage après travaux pour professionnels à Bobigny et en Île-de-France. Sur devis.
+Surface, état des lieux, accès : demandez une proposition adaptée à votre chantier.
+
+GROUPE B — TITRES
+Nettoyage De Vitrines 93
+Vitres Pour Commerces
+Demandez Votre Devis
+Entreprise À Bobigny 93
+Passage Ponctuel Ou Régulier
+
+DESCRIPTIONS
+Vitrines, baies et surfaces vitrées accessibles. Nettoyage adapté à vos locaux.
+Décrivez vos vitrines et votre commune. Clean-Cité prépare une estimation sur devis.
+
+Éviter toute promesse de délai (« sous 24h ») tant qu’elle n’est pas garantie.
+
+6) MESURES DE QUALITÉ
+Suivre chaque semaine : dépenses / clics / formulaires reçus / appels qualifiés / devis envoyés / contrats signés.
+CPA réel = dépenses Ads / nombre de demandes de devis qualifiées (pas nombre de clics).
+Surveiller le rapport « Termes de recherche » et exclure les requêtes recrutement et tutoriels.
+Créer une ligne distincte dans le suivi pour les demandes sans prestation identifiable (à exclure de l'optimisation de campagne).
+
+7) ORDRE VALIDÉ
+B. Amélioration des pages et formulaires -> D. Préparation Google Ads et pose du suivi, puis campagne TEST sur validation budget -> Ensuite Google Search Console pour examiner les impressions/requêtes/CTR.
+Aucune campagne n'a été créée automatiquement dans votre compte Google Ads.

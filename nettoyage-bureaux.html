@@ -645,6 +645,7 @@ button{
 <meta name="twitter:description" content="Nettoyage de bureaux à Bobigny, Paris et en Île-de-France : entretien ponctuel dès 1,50 €/m² et régulier dès 1 €/m² par passage. Devis rapide.">
 <meta name="twitter:image" content="https://clean-cite.org/images/logo-clean-cite.png">
   <!-- CLEAN-CITE DEPLOY VERSION: AIRBNB-JIMMY-V8-2026-08-31 -->
+<link rel="stylesheet" href="/assets/conversion-devis.css?v=20261022">
 </head>
 <body>
   <header class="topbar">
@@ -711,6 +712,8 @@ button{
         </div>
       </div>
     </section>
+<section class="cc-quick-lead" aria-label="Demande de devis rapide"><div class="cc-quick-inner"><div><span class="cc-lead-label">Votre devis de nettoyage</span><h2>Un devis pour nettoyage de bureaux ?</h2><p>Indiquez la surface, la ville et la fréquence souhaitée pour recevoir une proposition d’entretien.</p></div><div class="cc-quick-actions"><a class="cc-gold" href="#contact">Demander un devis</a><a class="cc-phone" href="tel:+33766536154">Appeler Clean-Cité</a></div></div></section>
+
 
     <section class="section" id="services">
       <div class="container">
@@ -802,14 +805,16 @@ button{
             <a href="index.html#contact" class="btn-outline">Formulaire principal</a>
           </div>
         </div>
-        <form class="panel" name="pre-devis-clean-cite" method="POST" data-netlify="true">
+        <form action="/merci.html" class="panel" name="pre-devis-clean-cite" method="POST" data-netlify="true">
           <input type="hidden" name="form-name" value="pre-devis-clean-cite">
+<input type="hidden" name="page_origine" value="nettoyage-bureaux.html">
+<input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="utm_term" value=""><input type="hidden" name="utm_content" value="">
           <input type="hidden" name="page-service" value="Nettoyage de bureaux">
           <div class="form-grid">
             <input name="nom" placeholder="Nom / Société" required>
             <input name="telephone" placeholder="Téléphone" required>
             <input name="email" type="email" placeholder="Email">
-            <input name="ville" placeholder="Ville">
+            <input name="ville" placeholder="Ville" required>
             <select name="service" required>
               <option value="Nettoyage de bureaux">Nettoyage de bureaux</option>
 <option value="Airbnb / location courte durée">Airbnb / location courte durée</option>
@@ -822,8 +827,9 @@ button{
 <option value="Autre demande">Autre demande</option>
             </select>
             <input name="surface" placeholder="Surface approximative">
-            <textarea class="full" name="message" placeholder="Expliquez votre besoin : type de local, fréquence, état actuel, urgence..." required></textarea>
-            <button class="btn-primary full" type="submit">Envoyer ma demande</button>
+            <select class="full" name="frequence_souhaitee" aria-label="Fréquence souhaitée"><option value="">Fréquence souhaitée (facultatif)</option><option>Ponctuelle</option><option>1 fois par semaine</option><option>2 à 3 fois par semaine</option><option>Quotidienne</option></select>
+<textarea class="full" name="message" placeholder="Facultatif : horaires d’accès, sanitaires, salles de réunion..."></textarea>
+            <p class="cc-form-hint full">Vos coordonnées servent uniquement à vous recontacter au sujet de ce devis. <a href="/confidentialite.html">Confidentialité</a>.</p><button class="btn-primary full" type="submit">Envoyer ma demande</button>
           </div>
         </form>
       </div>
@@ -874,5 +880,7 @@ button{
 
 <!-- Assistant IA Clean-Cité Gemini -->
 <script defer src="/assets/assistant-gemini.js?v=10"></script>
+<div class="cc-mobile-action" aria-label="Actions rapides"><a href="#contact">Devis gratuit</a><a href="tel:+33766536154">Appeler</a></div>
+<script defer src="/assets/conversion-devis.js?v=20261022"></script>
 </body>
 </html>
