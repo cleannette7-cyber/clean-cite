@@ -12,6 +12,7 @@ import {
   toB64url,
   extractEmail,
   sendGmailMail,
+  resolveMailboxId, withMailbox,
 } from './_gmail-common.mjs';
 import { quoteFromAnalysis, prequoteText, prequotePdf, newMessageText } from './_prequote.mjs';
 import { quoteId, quoteStatusList, recordQuote, runFollowups, setQuotePaused } from './_quote-followups.mjs';
@@ -376,6 +377,7 @@ export default async function handler(req) {
   if (!auth.ok) return auth.response;
   try {
     const body = await req.json().catch(()=>({}));
+    return await withMailbox(resolveMailboxId(body.mailbox), async () => {
     const action = String(body.action||'status');
     const conn = await getConnection().catch(()=>null);
     if (!conn?.refreshToken && !['status','settings_get','settings_save'].includes(action)) return json(400,{error:'Gmail n’est pas encore connecté.'});
@@ -414,6 +416,7 @@ export default async function handler(req) {
     if (action === 'quote_pause') return json(200,{quote:await setQuotePaused(String(body.id||''),!!body.paused)});
     if (action === 'followups_run') return json(200,{result:await runFollowups()});
     return json(400,{error:'Action inconnue.'});
+    });
   } catch(e) {
     console.error('gmail-mail-ai',e);
     return json(500,{error:e.message||'Erreur Mail IA.'});

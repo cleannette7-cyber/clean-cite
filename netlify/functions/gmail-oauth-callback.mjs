@@ -1,8 +1,8 @@
-import { authStore, assertGmailConfig, gmailFetch, getConnection, saveConnection } from './_gmail-common.mjs';
+import { authStore, assertGmailConfig, getConnection, saveConnection, resolveMailboxId, withMailbox } from './_gmail-common.mjs';
 
-function html(status, title, text, redirect=true) {
+function html(status, title, text, mailbox='legacy', redirect=true) {
   const safe = String(text||'').replace(/[<>&]/g, m=>({ '<':'&lt;','>':'&gt;','&':'&amp;' }[m]));
-  return new Response(`<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><body style="font-family:Arial;background:#eef3f8;padding:40px;color:#0B2447"><div style="max-width:620px;margin:auto;background:white;padding:30px;border-radius:18px"><h1>${title}</h1><p>${safe}</p><a href="/admin/mail-ia.html">Retour au Mail IA</a></div>${redirect?'<script>setTimeout(()=>location.href="/admin/mail-ia.html?gmail=connected",1600)</script>':''}</body></html>`, { status, headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'} });
+  return new Response(`<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><body style="font-family:Arial;background:#eef3f8;padding:40px;color:#0B2447"><div style="max-width:620px;margin:auto;background:white;padding:30px;border-radius:18px"><h1>${title}</h1><p>${safe}</p><a href="/admin/mail-ia.html">Retour au Mail IA</a></div>${redirect?`<script>setTimeout(()=>location.href="/admin/mail-ia.html?gmail=connected&mailbox=${mailbox}",1600)</script>`:''}</body></html>`, { status, headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'} });
 }
 
 export default async function handler(req) {
@@ -11,15 +11,16 @@ export default async function handler(req) {
     const code = url.searchParams.get('code') || '';
     const state = url.searchParams.get('state') || '';
     const oauthError = url.searchParams.get('error') || '';
-    if (oauthError) return html(400,'Connexion Gmail annulée',oauthError,false);
-    if (!code || !state) return html(400,'Connexion Gmail impossible','Code ou état OAuth manquant.',false);
+    if (oauthError) return html(400,'Connexion Gmail annulée',oauthError,'legacy',false);
+    if (!code || !state) return html(400,'Connexion Gmail impossible','Code ou état OAuth manquant.','legacy',false);
 
     const store = authStore();
     const stateKey = `oauth-state/${state}`;
     const saved = await store.get(stateKey,{type:'json',consistency:'strong'});
     await store.delete(stateKey).catch(()=>{});
-    if (!saved || Number(saved.expiresAt||0) < Date.now()) return html(400,'Connexion Gmail expirée','Relance la connexion depuis le tableau de bord.',false);
+    if (!saved || Number(saved.expiresAt||0) < Date.now()) return html(400,'Connexion Gmail expirée','Relance la connexion depuis le tableau de bord.','legacy',false);
 
+    return await withMailbox(resolveMailboxId(saved.mailbox), async () => {
     const cfg = assertGmailConfig();
     const tokenBody = new URLSearchParams({
       client_id: cfg.clientId,
@@ -41,9 +42,10 @@ export default async function handler(req) {
     const existing = await getConnection().catch(()=>null);
     const refresh = tokens.refresh_token || (existing?.refreshToken ? null : '');
     await saveConnection({ refreshToken: refresh, email, scope: tokens.scope });
-    return html(200,'Gmail connecté',`La boîte ${email} est maintenant reliée à Clean-Cité.`);
+    return html(200,'Gmail connecté',`La boîte ${email} est maintenant reliée à Clean-Cité.`,resolveMailboxId(saved.mailbox),true);
+    });
   } catch(e) {
     console.error('gmail-oauth-callback',e);
-    return html(500,'Erreur de connexion Gmail',e.message||'Erreur inconnue.',false);
+    return html(500,'Erreur de connexion Gmail',e.message||'Erreur inconnue.','legacy',false);
   }
 }

@@ -1,7 +1,7 @@
 import { isAdminEmail } from './_admin-access.mjs';
 import { randomBytes } from 'node:crypto';
 import { getUser } from '@netlify/identity';
-import { authStore, assertGmailConfig, disconnectGmail, getConnection, GMAIL_SCOPES } from './_gmail-common.mjs';
+import { authStore, assertGmailConfig, disconnectGmail, getConnection, GMAIL_SCOPES, resolveMailboxId, withMailbox } from './_gmail-common.mjs';
 
 const json = (status, data) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store' } });
 
@@ -18,6 +18,7 @@ export default async function handler(req) {
   if (!auth.ok) return auth.response;
   try {
     const body = await req.json().catch(()=>({}));
+    return await withMailbox(resolveMailboxId(body.mailbox), async () => {
     const action = String(body.action||'status');
     const cfg = (()=>{ try { return assertGmailConfig(); } catch(e) { return null; } })();
     if (action === 'status') {
@@ -37,6 +38,7 @@ export default async function handler(req) {
         createdAt: new Date().toISOString(),
         expiresAt: Date.now() + 10*60*1000,
         admin: String(auth.user.email||'').toLowerCase(),
+        mailbox: resolveMailboxId(body.mailbox),
       });
       const q = new URLSearchParams({
         client_id: cfg.clientId,
@@ -56,6 +58,7 @@ export default async function handler(req) {
       return json(200,{ok:true});
     }
     return json(400,{error:'Action inconnue.'});
+    });
   } catch(e) {
     console.error('gmail-oauth', e);
     return json(500,{error:e.message||'Erreur OAuth Gmail.'});

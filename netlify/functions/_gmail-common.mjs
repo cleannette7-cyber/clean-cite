@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 
@@ -8,12 +9,28 @@ export const GMAIL_SCOPES = [
 
 export const DEFAULT_REDIRECT_URI = 'https://clean-cite.org/.netlify/functions/gmail-oauth-callback';
 
+// Les données de la boîte historique gardent exactement les mêmes clés.
+// Chaque requête Mail IA choisit une boîte via un contexte asynchrone isolé.
+const mailboxContext = new AsyncLocalStorage();
+export const MAILBOXES = Object.freeze(['legacy', 'workspace']);
+export function resolveMailboxId(value='legacy') {
+  const id = String(value || 'legacy').trim().toLowerCase();
+  if (!MAILBOXES.includes(id)) throw new Error('Boîte Gmail inconnue.');
+  return id;
+}
+export function activeMailbox() { return mailboxContext.getStore() || 'legacy'; }
+export function withMailbox(mailbox, fn) { return mailboxContext.run(resolveMailboxId(mailbox), fn); }
+function connectionKey() { return activeMailbox() === 'workspace' ? 'connection/workspace' : 'connection'; }
+function mailboxStoreName(base) { return activeMailbox() === 'workspace' ? `${base}-workspace` : base; }
+
 export function gmailConfig() {
   return {
     clientId: String(process.env.GOOGLE_GMAIL_CLIENT_ID || '').trim(),
     clientSecret: String(process.env.GOOGLE_GMAIL_CLIENT_SECRET || '').trim(),
     redirectUri: String(process.env.GMAIL_OAUTH_REDIRECT_URI || DEFAULT_REDIRECT_URI).trim(),
-    allowedEmail: String(process.env.GMAIL_ALLOWED_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase(),
+    allowedEmail: activeMailbox() === 'workspace'
+      ? 'nettoyage-pro@clean-cite.org'
+      : String(process.env.GMAIL_ALLOWED_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase(),
   };
 }
 
@@ -57,15 +74,15 @@ export function authStore() {
 }
 
 export function mailStore() {
-  return getStore({ name: 'clean-cite-gmail-mail', consistency: 'strong' });
+  return getStore({ name: mailboxStoreName('clean-cite-gmail-mail'), consistency: 'strong' });
 }
 
 export function quoteStore() {
-  return getStore({ name: 'clean-cite-gmail-quotes', consistency: 'strong' });
+  return getStore({ name: mailboxStoreName('clean-cite-gmail-quotes'), consistency: 'strong' });
 }
 
 export async function getConnection() {
-  return await authStore().get('connection', { type: 'json', consistency: 'strong' });
+  return await authStore().get(connectionKey(), { type: 'json', consistency: 'strong' });
 }
 
 export async function saveConnection({ refreshToken, email, scope }) {
@@ -79,12 +96,12 @@ export async function saveConnection({ refreshToken, email, scope }) {
     connectedAt: existing?.connectedAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-  await authStore().setJSON('connection', record);
+  await authStore().setJSON(connectionKey(), record);
   return record;
 }
 
 export async function disconnectGmail() {
-  await authStore().delete('connection');
+  await authStore().delete(connectionKey());
 }
 
 export async function getAccessToken() {
@@ -284,25 +301,28 @@ export const DEFAULT_SETTINGS = {
 };
 
 export async function getSettings() {
+  const defaults = activeMailbox() === 'workspace'
+    ? { ...DEFAULT_SETTINGS, mode:'draft', autoSimple:false, autoPrequote:false, autoFollowups:false }
+    : DEFAULT_SETTINGS;
   const s = await mailStore().get('settings', { type: 'json', consistency: 'strong' });
   // La v3 ajoute des envois nouveaux, désactivés jusqu'à activation par l'admin.
   if (!s || Number(s.version || 0) < SETTINGS_VERSION) {
     const migrated = {
-      ...DEFAULT_SETTINGS,
+      ...defaults,
       ...(s || {}),
       version: SETTINGS_VERSION,
-      mode: s?.mode === 'draft' ? 'draft' : DEFAULT_SETTINGS.mode,
-      autoSimple: typeof s?.autoSimple === 'boolean' ? s.autoSimple : DEFAULT_SETTINGS.autoSimple,
+      mode: s?.mode === 'draft' ? 'draft' : defaults.mode,
+      autoSimple: typeof s?.autoSimple === 'boolean' ? s.autoSimple : defaults.autoSimple,
       autoPrequote: false,
       autoFollowups: false,
-      query: String(s?.query || DEFAULT_SETTINGS.query),
+      query: String(s?.query || defaults.query),
       maxPerRun: Math.max(1, Math.min(5, Number(s?.maxPerRun) || 5)),
       migratedAt: new Date().toISOString(),
     };
     await mailStore().setJSON('settings', migrated);
     return migrated;
   }
-  return { ...DEFAULT_SETTINGS, ...s };
+  return { ...defaults, ...s };
 }
 
 export async function saveSettings(input = {}) {
