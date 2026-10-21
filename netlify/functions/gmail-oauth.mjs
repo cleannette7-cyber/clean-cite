@@ -1,14 +1,14 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { randomBytes } from 'node:crypto';
 import { getUser } from '@netlify/identity';
 import { authStore, assertGmailConfig, disconnectGmail, getConnection, GMAIL_SCOPES } from './_gmail-common.mjs';
 
-const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const json = (status, data) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store' } });
 
 async function requireAdmin() {
   const u = await getUser();
   if (!u) return { ok:false, response:json(401,{error:'Connexion administrateur requise.'}) };
-  if (String(u.email||'').trim().toLowerCase() !== ADMIN_EMAIL) return { ok:false, response:json(403,{error:'Accès administrateur refusé.'}) };
+  if (!isAdminEmail(u.email)) return { ok:false, response:json(403,{error:'Accès administrateur refusé.'}) };
   return { ok:true, user:u };
 }
 

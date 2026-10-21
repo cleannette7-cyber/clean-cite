@@ -38,14 +38,14 @@
   </div>
 
   <script>
-    window.CLEAN_CITE_ADMIN_EMAIL = "cleannette7@gmail.com";
+    window.CLEAN_CITE_ADMIN_EMAILS = ["cleannette7@gmail.com", "nettoyage-pro@clean-cite.org"];
 
     function normalizeEmail(value) {
       return String(value || "").trim().toLowerCase();
     }
 
     function isCleanCiteAdmin(user) {
-      return !!user && normalizeEmail(user.email) === window.CLEAN_CITE_ADMIN_EMAIL;
+      return !!user && window.CLEAN_CITE_ADMIN_EMAILS.includes(normalizeEmail(user.email));
     }
 
     function setAdminMessage(html, error) {
@@ -71,7 +71,7 @@
       if (shortcut) shortcut.classList.add("show");
       if (decapAlreadyLoaded) return;
       decapAlreadyLoaded = true;
-      setAdminMessage("Accès confirmé pour " + window.CLEAN_CITE_ADMIN_EMAIL + ". Chargement de l'administration...");
+      setAdminMessage("Accès confirmé. Chargement de l'administration...");
       setAdminActions("");
       const script = document.createElement("script");
       script.src = "https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js";
@@ -87,7 +87,7 @@
 
     function denyAccess(user) {
       const email = user && user.email ? user.email : "ce compte";
-      setAdminMessage("Accès refusé : " + email + " n'est pas autorisé comme administrateur Clean-Cité. Seul " + window.CLEAN_CITE_ADMIN_EMAIL + " peut accéder à cette zone.", true);
+      setAdminMessage("Accès refusé : " + email + " n'est pas autorisé comme administrateur Clean-Cité.", true);
       setAdminActions('<a class="btn btn-secondary" href="/espace-client.html">Retour à l’espace client</a><button class="btn btn-primary" id="admin-logout-btn">Déconnexion</button>');
       setTimeout(function () {
         const btn = document.getElementById("admin-logout-btn");
@@ -101,7 +101,7 @@
     }
 
     function openAdminLogin() {
-      setAdminMessage("Connectez-vous avec le compte administrateur Clean-Cité : " + window.CLEAN_CITE_ADMIN_EMAIL + ".");
+      setAdminMessage("Connectez-vous avec l’un des comptes administrateurs Clean-Cité.");
       setAdminActions('<button class="btn btn-primary" id="admin-login-btn">Se connecter</button><a class="btn btn-secondary" href="/">Retour au site</a>');
       setTimeout(function () {
         const btn = document.getElementById("admin-login-btn");

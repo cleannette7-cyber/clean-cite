@@ -472,7 +472,7 @@
 </footer>
 
 <script>
-  const ADMIN_EMAIL = "cleannette7@gmail.com";
+  const ADMIN_EMAILS = new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
   const loginBox = document.getElementById("login-box");
   const dashboard = document.getElementById("dashboard");
   const clientEmail = document.getElementById("client-email");
@@ -486,7 +486,7 @@
   }
 
   function isAdminUser(user) {
-    return !!user && normalizeEmail(user.email) === ADMIN_EMAIL;
+    return !!user && ADMIN_EMAILS.has(normalizeEmail(user.email));
   }
 
   function hasIdentityToken() {

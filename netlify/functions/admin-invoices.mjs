@@ -1,7 +1,7 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { getStore } from "@netlify/blobs";
 import { getUser } from "@netlify/identity";
 
-const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || "cleannette7@gmail.com").trim().toLowerCase();
 const COMPANY = {
   name: "Clean-Cité",
   address: "149 rue de Paris, 93000 Bobigny",
@@ -34,7 +34,7 @@ async function requireAdmin() {
   const user = await getUser();
   if (!user) return { ok: false, response: json(401, { error: "Connexion administrateur requise." }) };
   const email = String(user.email || "").trim().toLowerCase();
-  if (email !== ADMIN_EMAIL) return { ok: false, response: json(403, { error: "Accès administrateur refusé." }) };
+  if (!isAdminEmail(email)) return { ok: false, response: json(403, { error: "Accès administrateur refusé." }) };
   return { ok: true, user };
 }
 
@@ -189,7 +189,7 @@ export default async function handler(req) {
       const year = (p.invoiceDate || new Date().toISOString()).slice(0, 4);
       p.invoiceNumber = await nextNumber(store, year);
       p.createdAt = new Date().toISOString();
-      p.createdBy = ADMIN_EMAIL;
+      p.createdBy = String(authorization.user.email || "").trim().toLowerCase();
       const wr = await store.setJSON(`invoices/${p.invoiceNumber}`, p, { onlyIfNew: true });
       if (!wr.modified) throw new Error("Numéro de facture déjà utilisé.");
       return json(200, { invoice: p });
@@ -210,9 +210,9 @@ export default async function handler(req) {
       await store.setJSON(snapshotKey, current.data);
       requested.invoiceNumber = n;
       requested.createdAt = current.data.createdAt || now;
-      requested.createdBy = current.data.createdBy || ADMIN_EMAIL;
+      requested.createdBy = current.data.createdBy || String(authorization.user.email || "").trim().toLowerCase();
       requested.updatedAt = now;
-      requested.updatedBy = ADMIN_EMAIL;
+      requested.updatedBy = String(authorization.user.email || "").trim().toLowerCase();
       requested.revision = (Number(current.data.revision) || 0) + 1;
       requested.lastSentAt = current.data.lastSentAt || null;
       requested.sentCount = Number(current.data.sentCount) || 0;

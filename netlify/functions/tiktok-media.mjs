@@ -1,8 +1,8 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { randomUUID } from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 import { getUser } from '@netlify/identity';
 
-const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const MAX_BYTES = 3_000_000;
 const store = () => getStore({ name: 'clean-cite-tiktok-photos', consistency: 'strong' });
 const json = (status, data) => new Response(JSON.stringify(data), {
@@ -23,7 +23,7 @@ export default async function handler(req) {
   if (req.method !== 'POST') return json(405, { error: 'Méthode non autorisée.' });
   const user = await getUser();
   if (!user) return json(401, { error: 'Connexion administrateur requise.' });
-  if (String(user.email || '').trim().toLowerCase() !== ADMIN_EMAIL) return json(403, { error: 'Accès administrateur refusé.' });
+  if (!isAdminEmail(user.email)) return json(403, { error: 'Accès administrateur refusé.' });
   if (Number(req.headers.get('content-length') || 0) > MAX_BYTES + 10000) return json(413, { error: 'Photo trop volumineuse (3 Mo maximum).' });
   try {
     const form = await req.formData();

@@ -1,3 +1,4 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { getUser } from '@netlify/identity';
 import { getConnection } from './_gmail-common.mjs';
 import {
@@ -16,7 +17,6 @@ import {
   updateProspect,
 } from './_prospecting-core.mjs';
 
-const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const json = (status, data) => new Response(JSON.stringify(data), {
   status,
   headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
@@ -25,7 +25,7 @@ const json = (status, data) => new Response(JSON.stringify(data), {
 async function requireAdmin() {
   const user = await getUser();
   if (!user) return { ok: false, response: json(401, { error: 'Connexion administrateur requise.' }) };
-  if (String(user.email || '').trim().toLowerCase() !== ADMIN_EMAIL) return { ok: false, response: json(403, { error: 'Accès administrateur refusé.' }) };
+  if (!isAdminEmail(user.email)) return { ok: false, response: json(403, { error: 'Accès administrateur refusé.' }) };
   return { ok: true, user };
 }
 

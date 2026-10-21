@@ -1,4 +1,4 @@
-const ADMIN_EMAIL = (process.env.CLEAN_CITE_ADMIN_EMAIL || "cleannette7@gmail.com").toLowerCase();
+const ADMIN_EMAILS = new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 const COMPANY_EMAIL = process.env.CLEAN_CITE_EMAIL || "nettoyage-pro@clean-cite.org";
 const COMPANY_PHONE = "07 66 53 61 54";
 
@@ -59,6 +59,6 @@ async function sendBrevo(p){
 exports.handler=async function(event){
   if(event.httpMethod==="OPTIONS") return json(200,{ok:true});
   if(event.httpMethod!=="POST") return json(405,{error:"Méthode non autorisée."});
-  const email=authUser(event);if(!email||email!==ADMIN_EMAIL)return json(403,{error:"Accès administrateur requis pour envoyer un devis."});
+  const email=authUser(event);if(!email||(!ADMIN_EMAILS.has(email)))return json(403,{error:"Accès administrateur requis pour envoyer un devis."});
   let raw={};try{raw=JSON.parse(event.body||"{}");const problem=validate(raw);if(problem)return json(400,{error:problem});const p=normalize(raw);if(!process.env.BREVO_API_KEY)return json(200,{sent:false,fallback:true,message:"Brevo n'est pas configuré.",mailto:mailto(p)});const result=await sendBrevo(p);return json(200,{sent:true,message:`Devis ${p.quoteNumber} envoyé à ${p.client.email}.`,messageId:result.messageId||null});}catch(e){return json(e.status||500,{error:e.message||"Erreur lors de l'envoi du devis.",details:e.details||null});}
 };

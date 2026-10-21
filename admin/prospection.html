@@ -74,7 +74,7 @@
   <div id="toast" class="toast hidden"></div>
 
 <script>
-const ADMIN_EMAIL='cleannette7@gmail.com';
+const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 const $=id=>document.getElementById(id);
 const categoryDefs={airbnb:{label:'Conciergeries Airbnb'},syndic:{label:'Syndics de copropriété'},gestionnaire_copropriete:{label:'Gestionnaires de copropriété'},administrateur_biens:{label:'Administrateurs de biens'},agence_immobiliere:{label:'Agences immobilières'}};
 const state={prospects:[],settings:null,filter:'all',activityFilter:'all',currentCategory:'airbnb',selected:new Set(),placesConfigured:false,gmailConnected:false};
@@ -82,7 +82,7 @@ const statusLabels={ready:'Prêt',review:'E-mail à vérifier',missing_email:'E-
 const filterDefs=[['all','Tous'],['ready','À contacter'],['contacted','Envoyés'],['followed_up','Relancés'],['replied','Réponses'],['missing_email','Sans e-mail']];
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function normalizeEmail(v){return String(v||'').trim().toLowerCase()}
-function isAdmin(u){return !!u&&normalizeEmail(u.email)===ADMIN_EMAIL}
+function isAdmin(u){return !!u&&ADMIN_EMAILS.has(normalizeEmail(u.email))}
 function toast(message){$('toast').textContent=message;$('toast').classList.remove('hidden');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),5500)}
 async function jwt(){const user=window.netlifyIdentity?.currentUser();if(!user)throw new Error('Session administrateur absente.');return user.jwt()}
 async function api(body){const token=await jwt();const response=await fetch('/.netlify/functions/prospecting-api',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body||{})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Erreur serveur.');return data}

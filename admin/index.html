@@ -104,10 +104,10 @@
   </div>
 
 <script>
-const ADMIN_EMAIL='cleannette7@gmail.com';
+const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 const $=id=>document.getElementById(id);
 function normalizeEmail(v){return String(v||'').trim().toLowerCase()}
-function isAdmin(u){return !!u&&normalizeEmail(u.email)===ADMIN_EMAIL}
+function isAdmin(u){return !!u&&ADMIN_EMAILS.has(normalizeEmail(u.email))}
 function gate(msg,buttons=''){$('gateMessage').innerHTML=msg;$('gateActions').innerHTML=buttons}
 function showDashboard(u){$('authGate').classList.add('hidden');$('app').classList.remove('hidden');$('userPill').textContent='✓ Administrateur connecté · '+u.email}
 async function logout(){if(window.netlifyIdentity)await window.netlifyIdentity.logout();location.href='/espace-client.html'}

@@ -1,9 +1,9 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { randomUUID } from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 import { getUser } from '@netlify/identity';
 import { captionWithTags } from '../../assets/tiktok-caption.mjs';
 
-const ADMIN_EMAIL = String(process.env.CLEAN_CITE_ADMIN_EMAIL || 'cleannette7@gmail.com').trim().toLowerCase();
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const PLATFORMS = ['TikTok'];
 const STATUSES = ['brouillon', 'validé', 'programmé', 'publié'];
@@ -27,7 +27,7 @@ function json(status, data) {
 async function requireAdmin() {
   const user = await getUser();
   if (!user) return json(401, { error: 'Connexion administrateur requise.' });
-  if (clean(user.email, 254).toLowerCase() !== ADMIN_EMAIL) return json(403, { error: 'Accès administrateur refusé.' });
+  if (!isAdminEmail(user.email)) return json(403, { error: 'Accès administrateur refusé.' });
   return null;
 }
 

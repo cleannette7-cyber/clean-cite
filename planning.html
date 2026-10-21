@@ -143,7 +143,7 @@
 </footer>
 
 <script>
-const ADMIN_EMAIL = "cleannette7@gmail.com";
+const ADMIN_EMAILS = new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 let currentUser = null;
 let allPlanning = [];
 let isAdmin = false;
@@ -167,7 +167,7 @@ function showPlanningShell(user) {
   document.getElementById("planning-panel").classList.remove("hidden");
   document.getElementById("loading").classList.remove("hidden");
   document.getElementById("planning-content").classList.add("hidden");
-  document.getElementById("planning-title").textContent = normalizeEmail(user.email) === ADMIN_EMAIL ? "Planning général administrateur" : "Mon planning client";
+  document.getElementById("planning-title").textContent = ADMIN_EMAILS.has(normalizeEmail(user.email)) ? "Planning général administrateur" : "Mon planning client";
   document.getElementById("planning-subtitle").textContent = "Compte connecté : " + (user.email || "");
 }
 

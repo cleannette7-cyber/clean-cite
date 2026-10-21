@@ -1,0 +1,49 @@
+CLEAN-CITÉ — MISE À JOUR DOUBLE ADMINISTRATEUR — 21/10/2026
+
+OBJECTIF
+Permettre à deux comptes Netlify Identity déjà dotés du rôle Admin d'accéder à l'administration :
+- cleannette7@gmail.com (conservé)
+- nettoyage-pro@clean-cite.org (ajouté)
+
+FICHIERS
+Ce ZIP contient uniquement les 43 fichiers ajoutés/modifiés, avec leurs chemins d'origine.
+Cela évite la limite d'import de 100 fichiers de GitHub. Il ne contient PAS la base de données ni les mots de passe.
+Ne pas déposer le ZIP lui-même sur GitHub : le décompresser, puis envoyer les éléments contenus dans le dossier décompressé.
+
+MISE EN LIGNE
+1. Vérifier sur Netlify Identity > Users que les deux comptes portent le rôle Admin (déjà confirmé sur la capture fournie).
+2. Télécharger une sauvegarde du dépôt GitHub (Code > Download ZIP) AVANT la mise à jour.
+3. Décompresser ce ZIP.
+4. Sur GitHub, à la RACINE du dépôt Clean-Cité, choisir Add file > Upload files.
+5. Glisser le CONTENU du dossier décompressé (fichiers HTML + dossiers admin, netlify, tests),
+   sans créer de dossier de niveau supérieur. Conserver précisément les chemins de sous-dossiers.
+6. Vérifier les chemins et valider avec Commit changes.
+7. Netlify > Deploys : attendre l'état Published (vérifier que le bon dépôt/branche est utilisé).
+8. Sur clean-cite.org, rafraîchir les pages (Ctrl + Maj + R) et tester les deux connexions,
+   l'accès à /admin/, /admin/devis.html, /admin/factures.html, /admin/prospection.html, /planning.html.
+9. Contrôler le fonctionnement réel : ouverture des devis/factures existants, création brouillon et récupération planning.
+   Éviter d'envoyer un vrai devis de test à un client.
+
+NETLIFY ENVIRONMENT VARIABLES
+Ne pas remplacer CLEAN_CITE_EMAIL, BREVO_SENDER_EMAIL ou GMAIL_ALLOWED_EMAIL sans configuration de la boîte et vérification de l'envoi.
+CLEAN_CITE_ADMIN_EMAIL (si elle existe) n'est plus utilisée comme contrôle unique d'accès :
+les deux adresses autorisées sont définies dans les fichiers mis à jour.
+Ne pas supprimer l'ancien compte Netlify Identity pendant la transition.
+
+SUPABASE
+Le ZIP initial fourni ne contient PAS d'appel Supabase ni de variable SUPABASE : les modules visibles utilisent Netlify Identity,
+Netlify Functions, des fichiers ou Netlify Blobs. La modification SQL n'est donc PAS nécessaire
+pour débloquer les pages admin présentes dans ce ZIP.
+Un script SQL facultatif est fourni séparément, à exécuter uniquement si d'autres modules utilisent la table public.clients.
+Ce script ne remplace pas les anciennes adresses des clients et ne migre aucun historique.
+
+VALIDATIONS RÉALISÉES
+- Contrôle syntaxique Node.js de 9 fonctions et de 55 scripts HTML intégrés.
+- Vérification des autorisations des 2 comptes et du refus des comptes ordinaires.
+- 3 tests dédiés exécutés avec succès.
+- Les tests complets du dépôt n'ont pas pu être exécutés : les dépendances npm ne se sont pas entièrement installées dans l'environnement de préparation.
+- Tests du site public et des services Netlify non exécutés : nécessaires après déploiement.
+
+RETOUR ARRIÈRE
+En cas de problème, revenir au commit GitHub précédent; Netlify redéploiera l'ancienne version.
+Les données Netlify Blobs et Supabase n'ont pas été supprimées par ce correctif.

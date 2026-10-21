@@ -1,7 +1,7 @@
+import { isAdminEmail } from './_admin-access.mjs';
 import { getUser } from "@netlify/identity";
 import { quoteId, recordQuote } from './_quote-followups.mjs';
 
-const ADMIN_EMAIL = (process.env.CLEAN_CITE_ADMIN_EMAIL || "cleannette7@gmail.com").toLowerCase();
 const COMPANY_EMAIL = process.env.CLEAN_CITE_EMAIL || "nettoyage-pro@clean-cite.org";
 const COMPANY_PHONE = "07 66 53 61 54";
 
@@ -65,7 +65,7 @@ async function requireAdmin() {
   const user = await getUser();
   if (!user) return { ok: false, response: json(401, { error: "Connexion administrateur requise. Recharge la page puis reconnecte-toi si nécessaire." }) };
   const email = String(user.email || "").trim().toLowerCase();
-  if (email !== ADMIN_EMAIL) return { ok: false, response: json(403, { error: "Accès administrateur refusé pour ce compte." }) };
+  if (!isAdminEmail(email)) return { ok: false, response: json(403, { error: "Accès administrateur refusé pour ce compte." }) };
   return { ok: true, user };
 }
 

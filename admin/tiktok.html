@@ -54,7 +54,7 @@
   <script type="module">
     import { captionWithTags } from '/assets/tiktok-caption.mjs?v=3';
     const $=id=>document.getElementById(id);
-    const ADMIN_EMAIL='cleannette7@gmail.com';
+    const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
     let savedPosts=[];
     let connectedChannels=[];
     let currentReply='';
@@ -189,7 +189,7 @@
     $('refreshBuffer').addEventListener('click',refreshBuffer);
     $('draftReply').addEventListener('click',async()=>{const b=$('draftReply');b.disabled=true;b.textContent='Préparation…';try{const r=await api({action:'reply',channel:$('replyChannel').value,message:$('incoming').value});currentReply=r.reply;$('replyResult').textContent=(r.needsHuman?'À relire personnellement : '+r.reason+'\n\n':'')+r.reply;$('replyBox').classList.remove('hidden')}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Préparer une réponse'}});
     $('copyReply').addEventListener('click',()=>copy(currentReply));$('logout').addEventListener('click',logout);
-    function init(){if(!window.netlifyIdentity){gate('La connexion est indisponible.',[button('Retour au site',()=>location.href='/')]);return}const onUser=user=>{if(user?.email?.toLowerCase()===ADMIN_EMAIL){$('authGate').classList.add('hidden');$('app').classList.remove('hidden');loadPosts();refreshBuffer()}else if(user){gate('Accès réservé à l’administrateur Clean-Cité.',[button('Déconnexion',logout)])}else{gate('Connecte-toi avec le compte administrateur Clean-Cité.',[button('Se connecter',()=>window.netlifyIdentity.open('login'),'btn')])}};window.netlifyIdentity.on('init',onUser);window.netlifyIdentity.on('login',user=>{window.netlifyIdentity.close();onUser(user)});window.netlifyIdentity.on('logout',()=>location.href='/espace-client.html');window.netlifyIdentity.init()}
+    function init(){if(!window.netlifyIdentity){gate('La connexion est indisponible.',[button('Retour au site',()=>location.href='/')]);return}const onUser=user=>{if(ADMIN_EMAILS.has(String(user?.email||'').trim().toLowerCase())){$('authGate').classList.add('hidden');$('app').classList.remove('hidden');loadPosts();refreshBuffer()}else if(user){gate('Accès réservé à l’administrateur Clean-Cité.',[button('Déconnexion',logout)])}else{gate('Connecte-toi avec le compte administrateur Clean-Cité.',[button('Se connecter',()=>window.netlifyIdentity.open('login'),'btn')])}};window.netlifyIdentity.on('init',onUser);window.netlifyIdentity.on('login',user=>{window.netlifyIdentity.close();onUser(user)});window.netlifyIdentity.on('logout',()=>location.href='/espace-client.html');window.netlifyIdentity.init()}
     init();
   </script>
 </body>

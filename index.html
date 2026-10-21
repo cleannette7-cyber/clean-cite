@@ -2055,14 +2055,14 @@ if('IntersectionObserver' in window){ const obs=new IntersectionObserver(entries
 /* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
 (function(){
   if(!/(?:invite|confirmation|recovery)_token=/.test(window.location.hash || '')) return;
-  const ADMIN_EMAIL='cleannette7@gmail.com', ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
+  const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']), ADMIN_URL='/admin/', CLIENT_URL='/espace-client.html';
   const script=document.createElement('script');
   script.src='https://identity.netlify.com/v1/netlify-identity-widget.js';
   script.async=true;
   script.onload=function(){
     if(!window.netlifyIdentity) return;
     const normalize=v=>String(v||'').trim().toLowerCase();
-    const redirect=user=>{ window.location.href=(user && normalize(user.email)===ADMIN_EMAIL)?ADMIN_URL:CLIENT_URL; };
+    const redirect=user=>{ window.location.href=(user && ADMIN_EMAILS.has(normalize(user.email)))?ADMIN_URL:CLIENT_URL; };
     window.netlifyIdentity.on('init',function(user){
       window.netlifyIdentity.open();
       if(!user){ window.netlifyIdentity.on('login',function(loggedUser){ window.netlifyIdentity.close(); redirect(loggedUser); }); }

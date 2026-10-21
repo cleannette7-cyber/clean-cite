@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const ADMIN_EMAIL = "cleannette7@gmail.com";
+const ADMIN_EMAILS = new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
@@ -57,7 +57,7 @@ exports.handler = async function (event, context) {
     }
 
     const email = normalizeEmail(user.email);
-    const isAdmin = email === ADMIN_EMAIL;
+    const isAdmin = ADMIN_EMAILS.has(email);
     const allItems = loadPlanningFile()
       .filter(item => item && item.publier !== false)
       .map(item => ({

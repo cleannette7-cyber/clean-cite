@@ -170,7 +170,7 @@
   </div>
 
 <script>
-const ADMIN_EMAIL='cleannette7@gmail.com';
+const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 let currentUser=null;
 let lines=[];
 const $=id=>document.getElementById(id);
@@ -178,7 +178,7 @@ const money=n=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 function normalizeEmail(v){return String(v||'').trim().toLowerCase()}
-function isAdmin(u){return !!u&&normalizeEmail(u.email)===ADMIN_EMAIL}
+function isAdmin(u){return !!u&&ADMIN_EMAILS.has(normalizeEmail(u.email))}
 function defaultQuoteNumber(){const d=new Date();const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `CC-${y}${m}${day}-${String(Math.floor(Math.random()*900)+100)}`}
 function isoToday(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 function showApp(u){currentUser=u;$('authGate').classList.add('hidden');$('app').classList.remove('hidden');$('quoteDate').value=isoToday();$('quoteNumber').value=defaultQuoteNumber();updatePresetFields();renderLines();renderHistory()}
