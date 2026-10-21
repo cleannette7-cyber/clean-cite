@@ -1,6 +1,6 @@
 import { isAdminEmail } from './_admin-access.mjs';
 import { getUser } from '@netlify/identity';
-import { getConnection } from './_gmail-common.mjs';
+import { getConnection, resolveMailboxId, withMailbox } from './_gmail-common.mjs';
 import {
   PROSPECT_CATEGORIES,
   getProspectingJob,
@@ -38,15 +38,17 @@ export default async function handler(request) {
     const action = String(body.action || 'status');
 
     if (action === 'status') {
+      const mailbox = resolveMailboxId(body.mailbox);
       const [settings, prospects, gmail] = await Promise.all([
         getProspectingSettings(),
         listProspects(),
-        getConnection().catch(() => null),
+        withMailbox(mailbox, () => getConnection()).catch(() => null),
       ]);
-      const expectedSender = expectedProspectingSender();
+      const expectedSender = await withMailbox(mailbox, () => expectedProspectingSender());
       const gmailMatches = !!gmail?.refreshToken && String(gmail?.email || '').trim().toLowerCase() === expectedSender;
       return json(200, {
         settings,
+        mailbox,
         categories: Object.entries(PROSPECT_CATEGORIES).map(([key, value]) => ({ key, label: value.label, keyword: value.keyword })),
         stats: prospectStats(prospects),
         gmailConnected: gmailMatches,
@@ -74,10 +76,10 @@ export default async function handler(request) {
       return json(200, { prospect: await updateProspect(body.prospect || {}) });
     }
     if (action === 'send') {
-      return json(200, { result: await sendInitialProspects(body.ids) });
+      return json(200, { result: await withMailbox(resolveMailboxId(body.mailbox), () => sendInitialProspects(body.ids)) });
     }
     if (action === 'followups_run') {
-      return json(200, { result: await runProspectFollowups() });
+      return json(200, { result: await withMailbox(resolveMailboxId(body.mailbox), () => runProspectFollowups()) });
     }
     if (action === 'unsubscribe') {
       const prospect = await getProspect(String(body.id || ''));

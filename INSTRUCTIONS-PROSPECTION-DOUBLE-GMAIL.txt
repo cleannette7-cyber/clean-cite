@@ -1,0 +1,71 @@
+CLEAN-CITÉ — CORRECTION PROSPECTION + DEUX MESSAGERIES
+21 octobre 2026
+
+PROBLÈME REPÉRÉ
+Le module Mail IA sait utiliser deux boîtes Gmail, mais le module Prospection
+continuait à lire uniquement la connexion de l'ancienne boîte et à la comparer
+à l'adresse professionnelle. Résultat : il indiquait « Gmail non connecté »
+alors que cleannette7@gmail.com était bien connecté.
+
+CORRECTION
+- Ajout d'un sélecteur d'expéditeur dans Administration > Prospection.
+- cleannette7@gmail.com (ancienne boîte) et nettoyage-pro@clean-cite.org
+  (Google Workspace) peuvent être utilisées SÉPARÉMENT pour les campagnes.
+- La connexion d'une boîte n'efface plus l'autre.
+- La prospection utilise le jeton Gmail de la boîte sélectionnée.
+- La boîte d'origine est enregistrée pour chaque nouveau premier e-mail envoyé.
+- Les relances (manuelles et planifiées) des nouveaux envois sont traitées dans
+  la même boîte que le premier envoi. La limite quotidienne reste GLOBALE.
+- Les prospects, messages et dossiers historiques ne sont pas supprimés.
+- Les anciens contacts sans information fiable sur la boîte d'origine ne sont
+  PAS relancés automatiquement (pour éviter un envoi depuis une mauvaise boîte).
+
+FICHIERS À METTRE À JOUR SUR GITHUB (à leurs EMPLACEMENTS d'origine)
+ admin/prospection.html
+ admin/mail-ia.html
+ netlify/functions/_prospecting-core.mjs
+ netlify/functions/prospecting-api.mjs
+ netlify/functions/prospecting-followups.mjs
+ netlify/functions/_gmail-common.mjs
+ netlify/functions/gmail-oauth.mjs
+ netlify/functions/gmail-oauth-callback.mjs
+ netlify/functions/gmail-mail-ai.mjs
+ tests/mail-dual-boites.test.mjs (optionnel)
+ tests/prospection-double-boite.test.mjs (optionnel)
+
+INSTALLATION
+1. Faire une sauvegarde/identifier le commit GitHub actuel.
+2. Décompresser le ZIP.
+3. Glisser le contenu des dossiers admin et netlify à la RACINE du dépôt
+   GitHub (sans créer un dossier supplémentaire nommé « mise à jour »).
+4. « Commit changes », puis attendre « Published » sur Netlify.
+5. Actualiser la page avec Ctrl+Maj+R.
+6. Dans /admin/prospection, utiliser « Messagerie utilisée pour la prospection ».
+   - Choisir Ancien Gmail : si déjà lié au Mail IA, il devrait être reconnu.
+   - Choisir Professionnel : si non lié, aller dans Mail IA, sélectionner
+     « Professionnel », cliquer « Connecter cette boîte » et terminer l'écran
+     de consentement Google.
+7. Vérifier l'envoi d'UN e-mail de test vers une adresse qui vous appartient
+   avant d'envoyer une campagne aux prospects.
+8. Pendant les essais, désactiver les relances automatiques dans Prospection
+   si vous ne souhaitez pas d'envois planifiés.
+
+VARIABLES NETLIFY — NE PAS MODIFIER À CE STADE
+ - GMAIL_ALLOWED_EMAIL reste cleannette7@gmail.com (ancienne boîte).
+ - GOOGLE_GMAIL_CLIENT_ID, GOOGLE_GMAIL_CLIENT_SECRET et
+   GMAIL_OAUTH_REDIRECT_URI restent inchangés si l'ancien Gmail fonctionne.
+ - Aucune modification SQL/Supabase requise.
+ - PROSPECTING_SENDER_EMAIL n'est plus utilisée pour imposer un seul expéditeur
+   dans le module Prospection ; l'expéditeur dépend du sélecteur contrôlé
+   côté serveur.
+
+SI GOOGLE WORKSPACE NE SE CONNECTE PAS
+Noter le message EXACT montré par Google ou par la page de retour Netlify.
+Vérifier l'URL de redirection OAuth et les autorisations / utilisateurs de test
+Google Cloud seulement si le message le demande. Ne jamais partager de secret.
+
+VALIDATION EFFECTUÉE HORS LIGNE
+- Syntaxe des fichiers JS côté serveur et du JS embarqué dans les pages HTML.
+- Tests ciblés des deux boîtes et d'une simulation de statut Prospection API.
+Les véritables autorisations Google, envois et tâches Netlify devront être
+validés après publication ; aucun e-mail réel n'a été envoyé par ces tests.

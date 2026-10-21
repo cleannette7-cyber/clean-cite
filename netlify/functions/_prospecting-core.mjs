@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 import { getStore } from '@netlify/blobs';
-import { extractEmail, getConnection, gmailFetch, headerMap, sendGmailMail } from './_gmail-common.mjs';
+import { activeMailbox, extractEmail, getConnection, gmailFetch, headerMap, sendGmailMail } from './_gmail-common.mjs';
 
 const DAY = 86_400_000;
 const THREE_YEARS = 3 * 365 * DAY;
@@ -213,8 +213,21 @@ export function prospectStore() {
   return getStore({ name: 'clean-cite-airbnb-prospects', consistency: 'strong' });
 }
 
+// L'expéditeur de prospection suit la boîte Gmail sélectionnée dans l'admin.
+// Ne pas utiliser une seule variable PROSPECTING_SENDER_EMAIL pour les deux comptes.
 export function expectedProspectingSender() {
-  return normalizeEmail(process.env.PROSPECTING_SENDER_EMAIL || COMPANY.email);
+  return activeMailbox() === 'workspace'
+    ? 'nettoyage-pro@clean-cite.org'
+    : 'cleannette7@gmail.com';
+}
+
+// La relance est toujours envoyée par la boîte qui a réalisé le premier envoi.
+// Pour les dossiers historiques sans origine enregistrée, on ne devine pas le compte.
+function belongsToActiveMailbox(prospect) {
+  if (prospect.senderMailbox === 'legacy' || prospect.senderMailbox === 'workspace') {
+    return prospect.senderMailbox === activeMailbox();
+  }
+  return !!prospect.senderEmail && normalizeEmail(prospect.senderEmail) === expectedProspectingSender();
 }
 
 export function normalizeEmail(value) {
@@ -751,6 +764,8 @@ export async function sendInitialProspects(ids, now = new Date()) {
         status: 'contacted',
         subject,
         sentAt: now.toISOString(),
+        senderMailbox: activeMailbox(),
+        senderEmail: expectedProspectingSender(),
         sentMessageId: sent.id || '',
         threadId: sent.threadId || '',
         followupDueAt: new Date(now.getTime() + 7 * DAY).toISOString(),
@@ -805,13 +820,13 @@ export async function runProspectFollowups(now = new Date()) {
   if (normalizeEmail(connection.email) !== expectedProspectingSender()) return { enabled: true, connected: false, senderMismatch: true, email: connection.email || '', checked: 0, sent: 0, replied: 0 };
   let remaining = Math.max(0, settings.dailySendLimit - await sentToday(now));
   const allProspects = await listProspects(1000);
-  const due = allProspects.filter((prospect) => prospectDue(prospect, now));
+  const due = allProspects.filter((prospect) => belongsToActiveMailbox(prospect) && prospectDue(prospect, now));
   const store = prospectStore();
   let checked = 0;
   let sent = 0;
   let replied = 0;
   let errors = 0;
-  for (const prospect of allProspects.filter((item) => item.status === 'followed_up').slice(0, 20)) {
+  for (const prospect of allProspects.filter((item) => belongsToActiveMailbox(item) && item.status === 'followed_up').slice(0, 20)) {
     try {
       if (!await hasProspectReplied(prospect)) continue;
       const key = `prospects/${prospect.id}`;

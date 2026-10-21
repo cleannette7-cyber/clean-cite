@@ -33,6 +33,13 @@
 
       <section class="panel">
         <h2>1. Rechercher des entreprises</h2>
+        <div class="field" style="max-width:460px;margin:14px 0">
+          <label for="prospectingMailbox">Messagerie utilisée pour la prospection</label>
+          <select id="prospectingMailbox">
+            <option value="legacy">Ancien Gmail — cleannette7@gmail.com</option>
+            <option value="workspace">Professionnel — nettoyage-pro@clean-cite.org</option>
+          </select>
+        </div>
         <div id="setupNotice" class="notice hidden"></div>
         <div class="searchgrid">
           <div class="field"><label for="category">Type de prospect</label><select id="category"><option value="airbnb">Conciergeries Airbnb</option><option value="syndic">Syndics de copropriété</option><option value="gestionnaire_copropriete">Gestionnaires de copropriété</option><option value="administrateur_biens">Administrateurs de biens</option><option value="agence_immobiliere">Agences immobilières</option></select></div>
@@ -77,6 +84,8 @@
 const ADMIN_EMAILS=new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
 const $=id=>document.getElementById(id);
 const categoryDefs={airbnb:{label:'Conciergeries Airbnb'},syndic:{label:'Syndics de copropriété'},gestionnaire_copropriete:{label:'Gestionnaires de copropriété'},administrateur_biens:{label:'Administrateurs de biens'},agence_immobiliere:{label:'Agences immobilières'}};
+const savedProspectingMailbox=localStorage.getItem('clean-cite-prospecting-mailbox');
+let prospectingMailbox=savedProspectingMailbox==='legacy'?'legacy':'workspace';
 const state={prospects:[],settings:null,filter:'all',activityFilter:'all',currentCategory:'airbnb',selected:new Set(),placesConfigured:false,gmailConnected:false};
 const statusLabels={ready:'Prêt',review:'E-mail à vérifier',missing_email:'E-mail introuvable',contacted:'Premier e-mail envoyé',followed_up:'Relancé à J+7',replied:'Réponse reçue',unsubscribed:'Désinscrit',paused:'Suspendu',sending:'Envoi en cours',send_uncertain:'Envoi à vérifier'};
 const filterDefs=[['all','Tous'],['ready','À contacter'],['contacted','Envoyés'],['followed_up','Relancés'],['replied','Réponses'],['missing_email','Sans e-mail']];
@@ -126,23 +135,48 @@ function syncCurrentTemplate(){if(!state.settings||!validCategory(state.currentC
 function showCurrentTemplate(){const template=state.settings?.templates?.[state.currentCategory]||{};$('templateCategoryLabel').textContent=categoryLabel(state.currentCategory);$('initialSubject').value=template.initialSubject||'';$('initialBody').value=template.initialBody||'';$('followupBody').value=template.followupBody||''}
 function switchCategory(category){if(!validCategory(category))return;syncCurrentTemplate();state.currentCategory=category;$('category').value=category;showCurrentTemplate()}
 function applySettings(settings){state.settings={...settings,templates:{...(settings.templates||{})}};state.currentCategory=validCategory(settings.selectedCategory)?settings.selectedCategory:'airbnb';$('category').value=state.currentCategory;$('location').value=settings.defaultLocation||'Île-de-France';$('searchLimit').value=String(settings.searchLimit||20);$('dailyLimit').value=String(settings.dailySendLimit||20);$('autoFollowup').checked=settings.autoFollowup!==false;showCurrentTemplate()}
-function renderSetup(status){state.placesConfigured=status.placesConfigured;state.gmailConnected=status.gmailConnected;$('gmailPill').className='pill '+(status.gmailConnected?'ok':'warn');$('gmailPill').textContent=status.gmailConnected?'✓ Gmail '+status.gmailEmail:(status.gmailAccountConnected?'⚠ Mauvaise boîte Gmail':'⚠ Gmail non connecté');$('placesPill').className='pill '+(status.placesConfigured?'ok':'warn');$('placesPill').textContent=status.placesConfigured?'✓ Recherche activée':'⚠ Recherche à configurer';$('searchBtn').disabled=!status.placesConfigured;const messages=[];if(!status.gmailConnected)messages.push(status.gmailAccountConnected?`La boîte <b>${esc(status.gmailEmail)}</b> est connectée. Déconnecte-la puis relie <b>${esc(status.expectedSender)}</b> depuis <a href="/admin/mail-ia.html">Mail IA</a>.`:'Connecte la boîte Clean-Cité depuis <a href="/admin/mail-ia.html">Mail IA</a> avant tout envoi.');if(!status.placesConfigured)messages.push('Ajoute la variable <b>GOOGLE_PLACES_API_KEY</b> dans Netlify après avoir activé Places API (New).');$('setupNotice').innerHTML=messages.join('<br>');$('setupNotice').classList.toggle('hidden',!messages.length)}
-async function loadAll(){try{const status=await api({action:'status'});renderSetup(status);applySettings(status.settings);renderStats(status.stats);const list=await api({action:'list'});state.prospects=list.prospects||[];renderStats(list.stats);renderFilters();renderProspects()}catch(error){toast(error.message)}}
+function renderSetup(status){
+  state.placesConfigured=status.placesConfigured;
+  state.gmailConnected=status.gmailConnected;
+  $('gmailPill').className='pill '+(status.gmailConnected?'ok':'warn');
+  $('gmailPill').textContent=status.gmailConnected?'✓ Gmail '+status.gmailEmail:(status.gmailAccountConnected?'⚠ Mauvaise boîte Gmail':'⚠ Gmail non connecté');
+  $('placesPill').className='pill '+(status.placesConfigured?'ok':'warn');
+  $('placesPill').textContent=status.placesConfigured?'✓ Recherche activée':'⚠ Recherche à configurer';
+  $('searchBtn').disabled=!status.placesConfigured;
+  const messages=[];
+  if(!status.gmailConnected){
+    const url='/admin/mail-ia.html?mailbox='+encodeURIComponent(prospectingMailbox);
+    messages.push(status.gmailAccountConnected
+      ?`La boîte connectée (${esc(status.gmailEmail)}) ne correspond pas à ${esc(status.expectedSender)}. Vérifie cette boîte dans <a href="${url}">Mail IA</a>.`
+      :`La boîte <b>${esc(status.expectedSender)}</b> n’est pas encore reliée à la prospection. Ouvre <a href="${url}">Mail IA</a>, sélectionne cette boîte puis clique sur « Connecter cette boîte ». Ne déconnecte pas l’autre boîte.`);
+  }
+  if(!status.placesConfigured) messages.push('Ajoute la variable <b>GOOGLE_PLACES_API_KEY</b> dans Netlify après avoir activé Places API (New).');
+  $('setupNotice').innerHTML=messages.join('<br>');
+  $('setupNotice').classList.toggle('hidden',!messages.length);
+}
+async function refreshGmailStatus(){
+  const selected=prospectingMailbox;
+  try {
+    const status=await api({action:'status',mailbox:selected});
+    if(selected===prospectingMailbox)renderSetup(status);
+  } catch(error){toast(error.message)}
+}
+async function loadAll(){try{$('prospectingMailbox').value=prospectingMailbox;const status=await api({action:'status',mailbox:prospectingMailbox});renderSetup(status);applySettings(status.settings);renderStats(status.stats);const list=await api({action:'list'});state.prospects=list.prospects||[];renderStats(list.stats);renderFilters();renderProspects()}catch(error){toast(error.message)}}
 async function search(){const location=$('location').value.trim();const category=$('category').value;if(!location)return toast('Indique une zone de recherche.');if(!validCategory(category))return toast('Choisis un type de prospect.');if(!confirm(`Rechercher des ${categoryLabel(category).toLowerCase()} autour de « ${location} » ?`))return;try{$('searchBtn').disabled=true;$('searchBtn').textContent='Préparation de la recherche…';const jobId=newJobId();const prepared=await api({action:'search_prepare',jobId,category,location,limit:Number($('searchLimit').value)});await backgroundApi({jobId,runToken:prepared.job.runToken});const r=await waitForJob(jobId);state.activityFilter=category;$('activityFilter').value=category;await refreshList();toast(`${r.created} nouveau(x) prospect(s), ${r.updated} mis à jour, ${r.crawlErrors+r.withoutWebsite} sans coordonnées exploitables.`)}catch(error){toast(error.message)}finally{$('searchBtn').disabled=!state.placesConfigured;$('searchBtn').textContent='🔎 Lancer la recherche'}}
 async function saveEmail(id){const input=$('email-'+id);try{const data=await api({action:'update',prospect:{id,email:input.value,confirmEmail:true}});const index=state.prospects.findIndex(p=>p.id===id);if(index>=0)state.prospects[index]=data.prospect;renderProspects();toast('Adresse e-mail validée.')}catch(error){toast(error.message)}}
 async function changeProspectCategory(id,category){if(!validCategory(category))return;try{const data=await api({action:'update',prospect:{id,category}});const index=state.prospects.findIndex(p=>p.id===id);if(index>=0)state.prospects[index]=data.prospect;renderProspects();toast(`Prospect classé : ${categoryLabel(category)}.`)}catch(error){await refreshList();toast(error.message)}}
 async function suppress(id){if(!confirm('Ajouter ce prospect à la liste « Ne plus contacter » ?'))return;try{await api({action:'unsubscribe',id});state.selected.delete(id);await refreshList();toast('Prospect ajouté à la liste d’exclusion.')}catch(error){toast(error.message)}}
 async function setStatus(id,status){const labels={paused:'Relance suspendue.',contacted:'Relance réactivée.',replied:'Prospect marqué comme ayant répondu.'};try{await api({action:'update',prospect:{id,status}});await refreshList();toast(labels[status]||'Statut mis à jour.')}catch(error){toast(error.message)}}
 async function refreshList(){const data=await api({action:'list'});state.prospects=data.prospects||[];renderStats(data.stats);renderProspects()}
-async function sendSelected(){const ids=[...state.selected];if(!ids.length)return toast('Sélectionne au moins un prospect prêt.');if(!state.gmailConnected)return toast('Connecte d’abord Gmail depuis le module Mail IA.');if(!confirm(`Envoyer le premier e-mail Clean-Cité à ${ids.length} prospect(s) ?`))return;try{$('sendBtn').disabled=true;const data=await api({action:'send',ids});state.selected.clear();await refreshList();toast(`${data.result.sent} e-mail(s) envoyé(s)${data.result.failed?`, ${data.result.failed} non envoyé(s)`:''}.`)}catch(error){toast(error.message)}finally{$('sendBtn').disabled=false}}
-async function runFollowups(){if(!confirm('Vérifier les réponses et envoyer les relances arrivées à J+7 ?'))return;try{$('followupsBtn').disabled=true;const data=await api({action:'followups_run'});await refreshList();const r=data.result;toast(r.enabled===false?'Les relances automatiques sont désactivées.':r.senderMismatch?'La boîte Gmail connectée n’est pas celle de Clean-Cité.':r.connected===false?'Connecte d’abord la boîte Gmail Clean-Cité.':`${r.sent||0} relance(s) envoyée(s), ${r.replied||0} réponse(s) détectée(s).`)}catch(error){toast(error.message)}finally{$('followupsBtn').disabled=false}}
+async function sendSelected(){const ids=[...state.selected];if(!ids.length)return toast('Sélectionne au moins un prospect prêt.');if(!state.gmailConnected)return toast('Connecte d’abord Gmail depuis le module Mail IA.');if(!confirm(`Envoyer ${ids.length} premier(s) e-mail(s) depuis ${prospectingMailbox==='workspace'?'nettoyage-pro@clean-cite.org':'cleannette7@gmail.com'} ?`))return;try{$('sendBtn').disabled=true;$('prospectingMailbox').disabled=true;const data=await api({action:'send',ids,mailbox:prospectingMailbox});state.selected.clear();await refreshList();toast(`${data.result.sent} e-mail(s) envoyé(s)${data.result.failed?`, ${data.result.failed} non envoyé(s)`:''}.`)}catch(error){toast(error.message)}finally{$('sendBtn').disabled=false;$('prospectingMailbox').disabled=false}}
+async function runFollowups(){if(!confirm('Vérifier les réponses et envoyer les relances à J+7 pour la boîte sélectionnée ?'))return;try{$('followupsBtn').disabled=true;$('prospectingMailbox').disabled=true;const data=await api({action:'followups_run',mailbox:prospectingMailbox});await refreshList();const r=data.result;toast(r.enabled===false?'Les relances automatiques sont désactivées.':r.senderMismatch?'La boîte Gmail connectée n’est pas celle de Clean-Cité.':r.connected===false?'Connecte d’abord la boîte Gmail Clean-Cité.':`${r.sent||0} relance(s) envoyée(s), ${r.replied||0} réponse(s) détectée(s).`)}catch(error){toast(error.message)}finally{$('followupsBtn').disabled=false;$('prospectingMailbox').disabled=false}}
 async function saveSettings(){try{$('saveSettingsBtn').disabled=true;syncCurrentTemplate();const settings={selectedCategory:state.currentCategory,defaultLocation:$('location').value,searchLimit:Number($('searchLimit').value),dailySendLimit:Number($('dailyLimit').value),autoFollowup:$('autoFollowup').checked,templates:state.settings.templates};const data=await api({action:'settings_save',settings});applySettings(data.settings);toast('Les messages des cinq activités et les réglages sont enregistrés.')}catch(error){toast(error.message)}finally{$('saveSettingsBtn').disabled=false}}
 function selectAll(){const rows=filteredProspects().filter(p=>p.status==='ready'&&validCategory(p.category));const every=rows.length&&rows.every(p=>state.selected.has(p.id));for(const p of rows)every?state.selected.delete(p.id):state.selected.add(p.id);renderProspects()}
 async function logout(){if(window.netlifyIdentity)await window.netlifyIdentity.logout();location.href='/espace-client.html'}
 function gate(message,buttons=''){$('gateMessage').innerHTML=message;$('gateActions').innerHTML=buttons}
 function showApp(){$('authGate').classList.add('hidden');$('app').classList.remove('hidden');loadAll()}
 function initIdentity(){if(!window.netlifyIdentity){gate('Connexion indisponible.','<a class="btn light" href="/">Retour au site</a>');return}window.netlifyIdentity.on('init',user=>{if(isAdmin(user))showApp();else if(user)gate('Accès réservé à l’administrateur Clean-Cité.','<button class="btn primary" onclick="logout()">Déconnexion</button>');else gate('Connecte-toi avec le compte administrateur Clean-Cité.','<button class="btn primary" onclick="netlifyIdentity.open(\'login\')">Se connecter</button>')});window.netlifyIdentity.on('login',user=>{window.netlifyIdentity.close();if(isAdmin(user))showApp();else gate('Accès refusé.','<button class="btn primary" onclick="logout()">Déconnexion</button>')});window.netlifyIdentity.on('logout',()=>location.href='/espace-client.html');window.netlifyIdentity.init()}
-$('category').onchange=()=>switchCategory($('category').value);$('activityFilter').onchange=()=>{state.activityFilter=$('activityFilter').value;state.selected.clear();renderProspects()};$('searchBtn').onclick=search;$('sendBtn').onclick=sendSelected;$('followupsBtn').onclick=runFollowups;$('saveSettingsBtn').onclick=saveSettings;$('selectAllBtn').onclick=selectAll;$('logoutBtn').onclick=logout;initIdentity();
+$('prospectingMailbox').onchange=()=>{prospectingMailbox=$('prospectingMailbox').value;localStorage.setItem('clean-cite-prospecting-mailbox',prospectingMailbox);state.gmailConnected=false;refreshGmailStatus()};$('category').onchange=()=>switchCategory($('category').value);$('activityFilter').onchange=()=>{state.activityFilter=$('activityFilter').value;state.selected.clear();renderProspects()};$('searchBtn').onclick=search;$('sendBtn').onclick=sendSelected;$('followupsBtn').onclick=runFollowups;$('saveSettingsBtn').onclick=saveSettings;$('selectAllBtn').onclick=selectAll;$('logoutBtn').onclick=logout;initIdentity();
 </script>
 </body>
 </html>
