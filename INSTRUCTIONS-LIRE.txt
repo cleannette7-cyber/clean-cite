@@ -1,0 +1,27 @@
+CLEAN-CITÉ — CORRECTION DU PRÉ-DEVIS AUTOMATIQUE ET DU DEVIS AIRBNB
+22 octobre 2026 — Modification ciblée, 2 fichiers HTML.
+
+PROBLÈME CONSTATÉ
+Le bouton « Envoyer par email » dans la fenêtre de pré-devis automatique ouvrait le logiciel e-mail du client (mailto:). Il ne transmettait rien à Netlify Forms.
+La page Airbnb comportait déjà un vrai formulaire Netlify en bas, mais le calculateur ne l'utilisait pas directement : l'estimation pouvait seulement être envoyée sur WhatsApp.
+
+MODIFICATIONS
+1. index.html : après le calcul de pré-devis, un vrai formulaire demande nom, téléphone, e-mail et ville, et inclut automatiquement le détail du calcul. Le clic « Envoyer ma demande de devis » transmet le formulaire « pre-devis-clean-cite » à Netlify, puis mène à /merci.html après envoi réussi.
+2. nettoyage-airbnb.html : bouton « Demander ce devis » sous le calculateur. Il recalcule le devis, remplit automatiquement le message détaillé et conduit au formulaire « demande-devis-airbnb » déjà présent sur la même page. Celui-ci est envoyé à Netlify via « ENVOYER MA DEMANDE ». WhatsApp reste disponible.
+
+INSTALLATION GITHUB
+- Sauvegarder le site existant et vérifier que vous utilisez le dépôt GitHub de clean-cite.org.
+- Extraire ce ZIP.
+- Remplacer uniquement les fichiers index.html et nettoyage-airbnb.html à la RACINE du dépôt GitHub (et non dans un dossier supplémentaire).
+- Valider (Commit changes). Attendre Netlify > Deploys > Published.
+- Ne pas supprimer les autres fichiers. Ne pas modifier Supabase ou les modules admin.
+
+VÉRIFICATIONS APRÈS DÉPLOIEMENT
+A. Page d'accueil > Pré-devis : calculer une estimation, remplir nom + téléphone, puis envoyer. Contrôler Netlify > Forms > pre-devis-clean-cite > Submissions.
+B. Page /nettoyage-airbnb.html : remplir le calculateur, cliquer « Demander ce devis », terminer les coordonnées et « ENVOYER MA DEMANDE » ; contrôler Netlify > Forms > demande-devis-airbnb.
+C. Vérifier la réception d'alertes dans Netlify > Forms > Submission notifications, à configurer sur nettoyage-pro@clean-cite.org (la détection de formulaire seule n'envoie pas automatiquement une alerte e-mail).
+D. Vérifier le résultat sur ordinateur et téléphone. Les envois de test sont à identifier par TEST.
+
+IMPORTANT
+Les modifications de code ont été vérifiées statiquement mais aucun envoi réel Netlify n'est effectué par ce ZIP. Le bouton WhatsApp reste une voie différente : un clic WhatsApp n'est pas une soumission Netlify.
+Une page /merci.html ne doit être comptée comme conversion Ads que lorsque l'envoi du formulaire a réellement réussi.

@@ -499,7 +499,10 @@ footer p{opacity:.9;margin:6px 0}
 <span class="section-label">Pré-devis Airbnb</span>
 <h2 class="section-title">ESTIMEZ UNE ROTATION AIRBNB</h2>
 <p class="section-sub">Indiquez la surface <strong>par niveau ou totale</strong>, la configuration du logement et les éventuels travaux de sol. Le calcul affiche séparément le ménage courant et le décapage ponctuel.</p>
-<div class="devis-box"><div class="devis-grid"><div class="form-group"><label>Surface renseignée (m²)</label><input id="surface" min="1" placeholder="Ex : 140" type="number"/></div><div class="form-group"><label>Cette surface correspond à</label><select id="surfaceMode"><option value="per_level" selected>Surface par niveau</option><option value="total">Surface totale du logement</option></select></div><div class="form-group"><label>Nombre de niveaux</label><input id="niveaux" min="1" value="1" type="number"/></div><div class="form-group"><label>Chambres</label><input id="chambres" min="0" value="1" type="number"/></div><div class="form-group"><label>Salles d’eau / douches</label><input id="sde" min="0" value="1" type="number"/></div><div class="form-group"><label>WC</label><input id="wc" min="0" value="1" type="number"/></div><div class="form-group"><label>Cuisines</label><input id="cuisines" min="0" value="1" type="number"/></div><div class="form-group"><label>Salons / séjours</label><input id="sejours" min="0" value="1" type="number"/></div><div class="form-group"><label>Type de sol</label><select id="floorType"><option value="standard">Standard / mixte</option><option value="pvc">PVC / vinyle</option><option value="tile">Carrelage</option><option value="wood">Parquet</option><option value="carpet">Moquette</option></select></div><div class="form-group"><label>Traitement du sol</label><select id="floorTreatment"><option value="none">Entretien courant</option><option value="strip">Décapage / remise en état — 6,50 €/m²</option><option value="strip_heavy">Décapage lourd — 8,50 €/m²</option></select></div><div class="form-group"><label>Surface de sol à décaper (m²)</label><input id="stripArea" min="0" value="0" type="number"/></div><div class="form-group"><label>Nombre de rotations à chiffrer</label><input id="option" min="1" value="1" type="number"/></div><div class="form-group"><label>Fréquence</label><select id="etat"><option value="once">Une rotation</option><option value="regular">Rotations régulières</option></select></div><div class="form-group"><label>Ville</label><input id="ville" placeholder="Ex : Paris 11e, Bobigny..." type="text"/></div></div><button class="btn-submit" onclick="calculer()" type="button">Calculer mon estimation</button><div class="estimate" id="resultat">Estimation indicative : renseignez la surface puis cliquez sur calculer.</div><div style="margin-top:16px"><a class="btn-primary" href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20un%20devis%20Airbnb." id="wa-devis" target="_blank">Envoyer sur WhatsApp</a></div></div>
+<div class="devis-box"><div class="devis-grid"><div class="form-group"><label>Surface renseignée (m²)</label><input id="surface" min="1" placeholder="Ex : 140" type="number"/></div><div class="form-group"><label>Cette surface correspond à</label><select id="surfaceMode"><option value="per_level" selected>Surface par niveau</option><option value="total">Surface totale du logement</option></select></div><div class="form-group"><label>Nombre de niveaux</label><input id="niveaux" min="1" value="1" type="number"/></div><div class="form-group"><label>Chambres</label><input id="chambres" min="0" value="1" type="number"/></div><div class="form-group"><label>Salles d’eau / douches</label><input id="sde" min="0" value="1" type="number"/></div><div class="form-group"><label>WC</label><input id="wc" min="0" value="1" type="number"/></div><div class="form-group"><label>Cuisines</label><input id="cuisines" min="0" value="1" type="number"/></div><div class="form-group"><label>Salons / séjours</label><input id="sejours" min="0" value="1" type="number"/></div><div class="form-group"><label>Type de sol</label><select id="floorType"><option value="standard">Standard / mixte</option><option value="pvc">PVC / vinyle</option><option value="tile">Carrelage</option><option value="wood">Parquet</option><option value="carpet">Moquette</option></select></div><div class="form-group"><label>Traitement du sol</label><select id="floorTreatment"><option value="none">Entretien courant</option><option value="strip">Décapage / remise en état — 6,50 €/m²</option><option value="strip_heavy">Décapage lourd — 8,50 €/m²</option></select></div><div class="form-group"><label>Surface de sol à décaper (m²)</label><input id="stripArea" min="0" value="0" type="number"/></div><div class="form-group"><label>Nombre de rotations à chiffrer</label><input id="option" min="1" value="1" type="number"/></div><div class="form-group"><label>Fréquence</label><select id="etat"><option value="once">Une rotation</option><option value="regular">Rotations régulières</option></select></div><div class="form-group"><label>Ville</label><input id="ville" placeholder="Ex : Paris 11e, Bobigny..." type="text"/></div></div><button class="btn-submit" onclick="calculer()" type="button">Calculer mon estimation</button><div class="estimate" id="resultat">Estimation indicative : renseignez la surface puis cliquez sur calculer.</div><div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+  <button class="btn-submit" type="button" onclick="devisAirbnbVersFormulaire()" style="width:auto;min-width:200px;">✅ Demander ce devis</button>
+  <a class="btn-primary" href="https://wa.me/33766536154?text=Bonjour%20Clean-Cit%C3%A9%2C%20je%20souhaite%20un%20devis%20Airbnb." id="wa-devis" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>
+</div></div>
 </section>
 <section class="seo-links-section"><div class="seo-wrap"><span class="seo-kicker">Zones d’intervention</span><h2 class="seo-title">Nettoyage Airbnb à Paris, Bobigny et en Île-de-France</h2><p class="seo-copy">Clean-Cité accompagne les hôtes, propriétaires et conciergeries pour les rotations de locations courte durée à Paris, en Seine-Saint-Denis et dans les communes voisines.</p><div class="seo-city-links"><a href="nettoyage-paris.html">Paris</a><a href="nettoyage-bobigny.html">Bobigny</a><a href="nettoyage-pantin.html">Pantin</a><a href="nettoyage-drancy.html">Drancy</a><a href="nettoyage-aubervilliers.html">Aubervilliers</a><a href="nettoyage-saint-denis.html">Saint-Denis</a><a href="nettoyage-montreuil.html">Montreuil</a><a href="nettoyage-ile-de-france.html">Île-de-France</a></div></div></section>
 <section class="seo-faq-section" id="faq"><div class="seo-wrap"><span class="seo-kicker">FAQ</span><h2 class="seo-title">Questions fréquentes sur le ménage Airbnb</h2><p class="seo-copy">Les points essentiels avant de mettre en place une rotation régulière.</p><div class="seo-faq-list"><details><summary>Quel est le prix d’un ménage Airbnb ?</summary><p>Clean-Cité calcule désormais le pré-devis Airbnb selon la surface et la configuration réelle du logement : niveaux, chambres, salles d’eau/douches, WC, cuisines et salons/séjours. Les anciennes bases par typologie restent le point de départ du calcul. Le tarif final dépend de la surface, du nombre de niveaux, de chambres, de salles d’eau, de WC, de cuisines, de salons/séjours, du linge et de l’état réel.</p></details><details><summary>Le changement de linge est-il compris ?</summary><p>Le changement du linge peut être réalisé dans la rotation standard lorsque les draps et serviettes propres sont fournis sur place par l’hôte. La blanchisserie et la fourniture de linge sont chiffrées séparément.</p></details><details><summary>Pouvez-vous intervenir plusieurs fois par semaine ?</summary><p>Oui. Un planning de rotations peut être organisé selon les réservations, les horaires de check-out/check-in et les modalités d’accès au logement.</p></details></div></div></section>
@@ -528,7 +531,9 @@ function calcAirbnbDetailed(surfaceInput, bedrooms, bathrooms, toilets, kitchens
   return{base,typology,totalArea,rotationPrice,configurationExtra,floorRate,floorExtra,stripArea,surfaceInput,surfaceMode};
 }
 
+let dernierCalculAirbnb = '';
 function calculer(){
+  dernierCalculAirbnb='';
   const surface = parseFloat($('surface').value || 0);
   const niveaux=Math.max(1,parseInt($('niveaux').value||1,10));
   const surfaceMode=$('surfaceMode').value||'per_level';
@@ -568,8 +573,38 @@ Ville : ${ville}
 Estimation ménage courant : ${a.rotationPrice} € par rotation${rotations>1?` soit ${a.rotationPrice*rotations} € pour ${rotations} rotations`:''}.${a.floorExtra?` Décapage ponctuel : ${a.floorExtra} €.`:''} Total indicatif : ${total} € HT.
 
 Merci.`;
+  dernierCalculAirbnb = msg;
   $('wa-devis').href='https://wa.me/33766536154?text='+encodeURIComponent(msg);
+ }
+function devisAirbnbVersFormulaire(){
+  // Garder le détail du simulateur dans la soumission de devis Airbnb.
+  calculer();
+  if(!dernierCalculAirbnb){
+    const surface=document.getElementById('surface');
+    if(surface) surface.focus();
+    return;
+  }
+  const form=document.querySelector('form[name="demande-devis-airbnb"]');
+  if(!form) return;
+  const msg=form.querySelector('textarea[name="message"]');
+  const ville=form.querySelector('input[name="ville"]');
+  if(msg){
+    if(!msg.value.trim() || msg.dataset.autoFilled==='1'){
+      msg.value=dernierCalculAirbnb;
+      msg.dataset.autoFilled='1';
+    }
+  }
+  if(ville && !ville.value.trim()){
+    const villeCalculee=document.getElementById('ville')?.value?.trim();
+    if(villeCalculee) ville.value=villeCalculee;
+  }
+  form.scrollIntoView({behavior:'smooth',block:'start'});
+  const nom=form.querySelector('input[name="nom"]');
+  if(nom) setTimeout(()=>nom.focus({preventScroll:true}),450);
 }
+document.addEventListener('input',function(e){
+  if(e.target && e.target.matches('form[name="demande-devis-airbnb"] textarea[name="message"]')) e.target.dataset.autoFilled='0';
+});
 </script>
 <script>
 /* Charge Netlify Identity uniquement pour les liens d’invitation/récupération. */
