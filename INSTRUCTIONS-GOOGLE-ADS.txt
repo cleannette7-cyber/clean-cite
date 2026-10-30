@@ -1,0 +1,48 @@
+CLEAN-CITÉ — SUIVI GOOGLE ADS DES DEVIS — 30/10/2026
+============================================================
+
+FICHIERS: 1 nouveau JS et 28 pages HTML existantes (pages publiques uniquement).
+Archive construite à partir de la version complète du site du 21/10/2026,
+complétée des correctifs conversion/devis et formulaires du 22/10/2026.
+
+Données Google Ads relevées sur vos captures :
+  ID balise : AW-18531816572
+  Identifiant d’événement : AW-18531816572/T6fDCOT4ya4dEPyo1IRF
+
+FONCTIONNEMENT
+- À la première visite, le site propose Accepter / Refuser les cookies publicitaires.
+- Si refus : aucun script Google Ads n'est chargé, les devis restent possibles.
+- Si accord : le script Google Ads se charge avec un consentement limité à la mesure.
+- Les demandes de devis publiques sont transmises par POST AJAX à Netlify.
+- Après confirmation HTTP de Netlify seulement, le script envoie l'événement Google Ads
+  puis redirige vers /merci.html. Visiter /merci.html directement ne déclenche rien.
+- Le client peut rouvrir ses choix avec « Gérer les cookies ».
+- Pas de suivi avancé des conversions (aucune adresse mail client envoyée au tag).
+- L'espace client et son formulaire « demande-client » ne sont PAS instrumentés dans
+  cette archive : module séparé, conservé intact pour éviter toute régression.
+
+DÉPLOIEMENT :
+1. SAUVEGARDEZ la version GitHub actuelle avant tout remplacement.
+2. Comparez les fichiers HTML de votre dépôt aux versions datées du 22/10/2026 :
+   si vous avez modifié ces pages depuis, ne les écrasez pas, faites fusionner
+   uniquement l'ajout de la balise script avant </head>.
+3. Ajoutez assets/cc-google-ads.js puis les pages HTML publiques correspondantes,
+   À LA RACINE de votre dépôt GitHub, sans dossier supplémentaire.
+4. Commit changes ; vérifier Netlify → Deploys → Published.
+5. Dans Netlify → Forms, testez au moins devis général, pré-devis et Airbnb.
+6. Autorisez le suivi sur un navigateur test, validez qu'une demande confirmée
+   déclenche UNE conversion dans Google Tag Assistant, et que le simple affichage
+   de /merci.html ne déclenche aucun événement.
+7. Tester la décision « Refuser » : aucun tag publicitaire ne doit être chargé.
+8. N’activez AUCUNE campagne payante avant ces essais et la confirmation du
+   traitement du consentement par un examen de conformité.
+
+IMPORTANT
+- Google Ads affichera « balise non installée » tant que le déploiement n'est pas fait.
+- Les utilisateurs qui refusent le suivi ne sont pas comptés dans Google Ads.
+- Un HTTP 200 côté Netlify ne certifie pas à lui seul que la soumission n’a pas été
+  classée spam : les essais doivent être confirmés dans Netlify Forms.
+- Ce patch ne change pas le compte bancaire, Supabase, Netlify Identity, Gmail ni
+  les modules administrateurs.
+- Les remplacements des pages HTML peuvent écraser des MODIFICATIONS plus récentes :
+  n'appliquez pas automatiquement une ancienne version sur GitHub sans vérifier.

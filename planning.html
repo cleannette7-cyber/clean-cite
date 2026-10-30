@@ -55,6 +55,7 @@
 }
 </style>
   <!-- CLEAN-CITE DEPLOY VERSION: AIRBNB-JIMMY-V8-2026-08-31 -->
+<script defer src="/assets/cc-google-ads.js?v=20261030"></script>
 </head>
 <body>
 <nav aria-label="Navigation principale">
@@ -143,7 +144,7 @@
 </footer>
 
 <script>
-const ADMIN_EMAILS = new Set(['cleannette7@gmail.com','nettoyage-pro@clean-cite.org']);
+const ADMIN_EMAIL = "cleannette7@gmail.com";
 let currentUser = null;
 let allPlanning = [];
 let isAdmin = false;
@@ -167,7 +168,7 @@ function showPlanningShell(user) {
   document.getElementById("planning-panel").classList.remove("hidden");
   document.getElementById("loading").classList.remove("hidden");
   document.getElementById("planning-content").classList.add("hidden");
-  document.getElementById("planning-title").textContent = ADMIN_EMAILS.has(normalizeEmail(user.email)) ? "Planning général administrateur" : "Mon planning client";
+  document.getElementById("planning-title").textContent = normalizeEmail(user.email) === ADMIN_EMAIL ? "Planning général administrateur" : "Mon planning client";
   document.getElementById("planning-subtitle").textContent = "Compte connecté : " + (user.email || "");
 }
 
