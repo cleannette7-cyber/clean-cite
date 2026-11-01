@@ -137,7 +137,9 @@
   }
 
   function activateForms() {
-    document.querySelectorAll('form[data-netlify="true"]').forEach(function (form) {
+    // Netlify retire data-netlify="true" du HTML publie apres detection du formulaire.
+    // Selectionner les formulaires par leur nom, qui est conserve au deploiement.
+    document.querySelectorAll('form[name]').forEach(function (form) {
       if (!FORM_NAMES.has(form.getAttribute('name')) || form.dataset.ccAdsBound) return;
       form.dataset.ccAdsBound = '1';
       form.addEventListener('submit', async function (event) {
